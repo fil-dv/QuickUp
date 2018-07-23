@@ -1,0 +1,16 @@
+﻿<Window x:Class="QUp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QUp"
+        mc:Ignorable="d"
+        Title="QuickUp" Height="450" Width="800">
+    <Grid>
+        <StackPanel Orientation="Vertical" Margin="10, 20" HorizontalAlignment="Center">
+            <Button Click="OpenDir">Путь к папке</Button>
+            <Button>Путь к папке</Button>
+        </StackPanel>
+        
+    </Grid>
+</Window>
