@@ -8,8 +8,12 @@ namespace QUp.Infrastr
 {
     public static class QMediator
     {
-        public static string PathToReg { get; set; }
-        public static string PathToProg { get; set; }
-        public static string ResultReport { get; set; }
+        public static string PathToRegSource { get; set; }
+        public static string PathToRegDest { get; set; }
+
+        public static string PathToProgSource { get; set; }
+        public static string PathToProgDest { get; set; }
+
+        public static string ResultReport { get; set; }        
     }
 }

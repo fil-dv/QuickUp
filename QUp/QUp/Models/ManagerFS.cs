@@ -24,14 +24,18 @@ namespace QUp.Models
             using (var fbd = new FolderBrowserDialog())
             {
                 //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
-                fbd.SelectedPath = @"x:\Реєстри\ЦиФРа\999  5555 Test";
+                fbd.SelectedPath = @"x:\Реєстри\Акцент\test";
                 DialogResult result = fbd.ShowDialog();
 
                 if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
                 {
-                    QMediator.PathToReg = fbd.SelectedPath;
-                    QMediator.PathToProg = QMediator.PathToReg.Replace("Реєстри", "Progs\\Registry");
-                    FindSource(QMediator.PathToReg, FileType.Reg);
+                    QMediator.PathToRegDest = fbd.SelectedPath;
+                    QMediator.PathToProgDest = QMediator.PathToRegDest.Replace("Реєстри", "Progs\\Registry");
+                    if (!QMediator.PathToRegDest.Contains("ЦиФРа"))          // для ЦФР ничего не создаем
+                        Directory.CreateDirectory(QMediator.PathToProgDest);
+                    FindSource(QMediator.PathToRegDest, FileType.Reg);
+                    if(!QMediator.PathToRegDest.Contains("ЦиФРа"))          // для ЦФР ничего не копируем
+                        FindSource(QMediator.PathToProgDest, FileType.Prog);
                 }
             }
         }
@@ -55,11 +59,18 @@ namespace QUp.Models
             if (dirList[dirList.Count - 2] != null)
             {
                 sourceDir = dirList[dirList.Count - 2];
-
+                
                 if (fileType == FileType.Reg)
-                    CopyRegFiles(sourceDir);
+                {
+                    QMediator.PathToRegSource = sourceDir.FullName;
+                    CopyRegFiles();
+                }
+                    
                 else
-                    CopyProgFiles(sourceDir);
+                {
+                    QMediator.PathToProgSource = sourceDir.FullName;
+                    CopyProgFiles();
+                }                    
             }
             else
             {
@@ -68,8 +79,9 @@ namespace QUp.Models
             }
         }
 
-        static void CopyRegFiles(DirectoryInfo sourceDir)
+        static void CopyRegFiles()
         {
+            DirectoryInfo sourceDir = new DirectoryInfo(QMediator.PathToRegSource);
             FileInfo[] files = sourceDir.GetFiles();
             List<FileInfo> listToCopy = new List<FileInfo>();
             for (int i = 0; i < files.Length; i++)
@@ -81,34 +93,30 @@ namespace QUp.Models
                     listToCopy.Add(files[i]);
                 }
             }
-            DirectoryInfo destDir = new DirectoryInfo(QMediator.PathToReg);
+            DirectoryInfo destDir = new DirectoryInfo(QMediator.PathToRegDest);
 
-            QMediator.ResultReport += "Копируем файлы из " + sourceDir + " в " + destDir + "." + Environment.NewLine;
+            QMediator.ResultReport += Environment.NewLine + "Копируем файлы из " + Environment.NewLine + sourceDir + Environment.NewLine + " в " + destDir + "." + Environment.NewLine;
 
             foreach (var item in listToCopy)
             {
                 File.Copy(item.FullName, destDir + "\\" + item.Name, true);
                 QMediator.ResultReport += item.Name + Environment.NewLine;
             }
-            CopyProgFiles(sourceDir);
         }
 
-        static void CopyProgFiles(DirectoryInfo sourceDir)
+        static void CopyProgFiles()
         {
+            DirectoryInfo sourceDir = new DirectoryInfo(QMediator.PathToProgSource);
             FileInfo[] files = sourceDir.GetFiles();
             List<FileInfo> listToCopy = new List<FileInfo>();
-            for (int i = 0; i < files.Length; i++)
+            foreach (var item in files)
             {
-                if (files[i].Extension.ToLower() == ".bat" ||
-                    files[i].Extension.ToLower() == ".ctl" ||
-                    files[i].Extension.ToLower() == ".txt")
-                {
-                    listToCopy.Add(files[i]);
-                }
+                listToCopy.Add(item);
             }
-            DirectoryInfo destDir = new DirectoryInfo(QMediator.PathToReg);
 
-            QMediator.ResultReport += "Копируем файлы из " + sourceDir + " в " + destDir + "." + Environment.NewLine;
+            DirectoryInfo destDir = new DirectoryInfo(QMediator.PathToProgDest);
+
+            QMediator.ResultReport += Environment.NewLine + "Копируем файлы из " + Environment.NewLine + sourceDir + Environment.NewLine + " в " + destDir + "." + Environment.NewLine;
 
             foreach (var item in listToCopy)
             {
