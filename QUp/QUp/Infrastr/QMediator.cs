@@ -8,10 +8,12 @@ namespace QUp.Infrastr
 {
     public static class QMediator
     {
-        public static string PathToRegSource { get; set; }
+        static string _pathToRegSource = @"X:\Реєстри\Default!!!";
+        public static string PathToRegSource { get { return _pathToRegSource; } set { _pathToRegSource = value; } }
         public static string PathToRegDest { get; set; }
 
-        public static string PathToProgSource { get; set; }
+        static string _pathToProgSource = @"X:\Progs\Registry\Default!!!";
+        public static string PathToProgSource { get { return _pathToProgSource; } set { _pathToProgSource = value; } }
         public static string PathToProgDest { get; set; }
 
         public static string ResultReport { get; set; }        
