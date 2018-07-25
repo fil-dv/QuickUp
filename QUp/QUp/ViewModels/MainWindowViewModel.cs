@@ -4,6 +4,7 @@ using QUp.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -22,7 +23,7 @@ namespace QUp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        private string _resultText;
+        string _resultText;
         public string ResultText
         {
             get { return _resultText; }
@@ -33,7 +34,7 @@ namespace QUp
             }
         }
 
-        private ICommand _createNewFilesCommand;
+        ICommand _createNewFilesCommand;
         public ICommand CreateNewFilesCommand
         {
             get
@@ -41,8 +42,8 @@ namespace QUp
                 if (_createNewFilesCommand == null)
                 {
                     _createNewFilesCommand = new RelayCommand(
-                        p => true,
-                        p => CreateNewFiles());
+                    p => true,
+                    p => CreateNewFiles());
                 }
                 return _createNewFilesCommand;
             }
@@ -50,12 +51,30 @@ namespace QUp
 
         void CreateNewFiles()
         {
-            //System.Windows.Forms.MessageBox.Show("Команда работает");
             ManagerFS.CreateNewFiles();           
             ResultText = QMediator.ResultReport;
         }
 
+        
+        ICommand _createCtrlCommand;
+        public ICommand CreateCtrlCommand
+        {
+            get
+            {
+                if (_createCtrlCommand == null)
+                {
+                    _createCtrlCommand = new RelayCommand(
+                    p => true,
+                    p => CreateCtrl());
+                }
+                return _createCtrlCommand;
+            }
+        }
 
-
+        void CreateCtrl()
+        {
+            ManagerFS.RunCtrlCreator();
+            ResultText = QMediator.ResultReport;            
+        }
     }
 }

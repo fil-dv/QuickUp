@@ -1,6 +1,7 @@
 ﻿using QUp.Infrastr;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,8 @@ namespace QUp.Models
     
     public static class ManagerFS
     {
-         enum FileType
+        #region creating files
+        enum FileType
         {
             Reg,
             Prog
@@ -127,6 +129,30 @@ namespace QUp.Models
                 File.Copy(newPath, newPath.Replace(QMediator.PathToProgSource, QMediator.PathToProgDest), true);
             }
         }
+        #endregion
+
+        #region RunControlCreator
+        public static void RunCtrlCreator()
+        {
+            QMediator.ResultReport = "";
+
+            ProcessStartInfo pInfo = new ProcessStartInfo("c-creator.exe");
+            DirectoryInfo directoryInfo = new DirectoryInfo(QMediator.PathToRegDest);
+            FileInfo[] files = directoryInfo.GetFiles("*.xls*");
+            string path = "";
+            if (files.Length > 0)
+            {
+                path = files[0].FullName;
+            }
+            pInfo.Arguments = "\"" + path + "\"";
+            pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
+            Process p = Process.Start(pInfo);
+        }
+        #endregion
+
+
+
+
 
         private static void UpdateResultReport()
         {
