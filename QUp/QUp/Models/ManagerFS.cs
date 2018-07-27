@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -13,6 +14,8 @@ namespace QUp.Models
     
     public static class ManagerFS
     {
+        
+
         #region creating files
         enum FileType
         {
@@ -20,9 +23,10 @@ namespace QUp.Models
             Prog
         };
 
-        public static void CreateNewFiles()
-        {
-            QMediator.ResultReport = "";
+        static string _report = "";
+
+        public static string CreateNewFiles()
+        {            
             using (var fbd = new FolderBrowserDialog())
             {
                 //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
@@ -37,10 +41,10 @@ namespace QUp.Models
                         Directory.CreateDirectory(QMediator.PathToProgDest);
                     FindSource(QMediator.PathToRegDest, FileType.Reg);
                     if(!QMediator.PathToRegDest.Contains("ЦиФРа"))          // для ЦФР ничего не копируем
-                        FindSource(QMediator.PathToProgDest, FileType.Prog);
-                    UpdateResultReport();
+                        FindSource(QMediator.PathToProgDest, FileType.Prog);                    
                 }
             }
+            return UpdateResultReport();
         }
 
         static void FindSource(string path, FileType fileType )
@@ -80,12 +84,12 @@ namespace QUp.Models
             {
                 if (fileType == FileType.Reg)
                 {
-                    QMediator.ResultReport += "У данного контрагента не найдена папка для копирования файлов заливки.";
+                    _report += "У данного контрагента не найдена папка для копирования файлов заливки.";
                     CopyRegFiles();
                 }
                 else
                 {
-                    QMediator.ResultReport += Environment.NewLine + "У данного контрагента не найдена папка для копирования программ.";
+                    _report += Environment.NewLine + "У данного контрагента не найдена папка для копирования программ.";
                     CopyProgFiles();
                 }
             }
@@ -107,18 +111,18 @@ namespace QUp.Models
             }
             DirectoryInfo destDir = new DirectoryInfo(QMediator.PathToRegDest);
 
-            QMediator.ResultReport += Environment.NewLine + "Копируем файлы из " + Environment.NewLine + "   " +  sourceDir + Environment.NewLine + "в " + destDir + Environment.NewLine + Environment.NewLine;
+            _report += Environment.NewLine + "Копируем файлы из " + Environment.NewLine + "   " +  sourceDir + Environment.NewLine + "в " + destDir + Environment.NewLine + Environment.NewLine;
 
             foreach (var item in listToCopy)
             {
                 File.Copy(item.FullName, destDir + "\\" + item.Name, true);
-                QMediator.ResultReport += item.Name + Environment.NewLine;
+                _report += item.Name + Environment.NewLine;
             }
         }
 
         static void CopyProgFiles()
         {
-            QMediator.ResultReport += Environment.NewLine + Environment.NewLine + "Копируем содержимое папки  " + Environment.NewLine + "    " + QMediator.PathToProgSource + Environment.NewLine + " в " + QMediator.PathToProgDest + "." + Environment.NewLine;
+            _report += Environment.NewLine + Environment.NewLine + "Копируем содержимое папки  " + Environment.NewLine + "    " + QMediator.PathToProgSource + Environment.NewLine + " в " + QMediator.PathToProgDest + "." + Environment.NewLine;
 
             foreach (string dirPath in Directory.GetDirectories(QMediator.PathToProgSource, "*", SearchOption.AllDirectories))
             {
@@ -132,9 +136,9 @@ namespace QUp.Models
         #endregion
 
         #region RunControlCreator
-        public static void RunCtrlCreator()
+        public static string RunCtrlCreator()
         {
-            QMediator.ResultReport = "";
+            _report = "";
 
             ProcessStartInfo pInfo = new ProcessStartInfo("c-creator.exe");
             DirectoryInfo directoryInfo = new DirectoryInfo(QMediator.PathToRegDest);
@@ -147,16 +151,57 @@ namespace QUp.Models
             pInfo.Arguments = "\"" + path + "\"";
             pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
             Process p = Process.Start(pInfo);
+
+            return _report;
         }
         #endregion
 
-
-
-
-
-        private static void UpdateResultReport()
+        public static string SplitAdr()
         {
-            QMediator.ResultReport = Environment.NewLine + Environment.NewLine + "   " + QMediator.ResultReport.Replace(Environment.NewLine, Environment.NewLine + "   ");
+            Thread thread = new Thread(Split);
+            thread.Start();          
+
+            return UpdateResultReport();
+        }
+
+        private static void Split()
+        {
+            _report = "";
+
+            var pInfo = new System.Diagnostics.ProcessStartInfo(@"d:\Dima\Programming\git\AdressSpliter\Adr\Adr\bin\Debug\Adr.exe");
+            pInfo.CreateNoWindow = true;
+            pInfo.UseShellExecute = false;
+            pInfo.RedirectStandardError = true;
+            pInfo.RedirectStandardOutput = true;
+
+            Process process = Process.Start(pInfo);
+
+            process.OutputDataReceived += (
+                object sender, System.Diagnostics.DataReceivedEventArgs e
+            ) => _report += Environment.NewLine + e.Data;
+
+            process.BeginOutputReadLine();
+
+            process.ErrorDataReceived += (
+                object sender, System.Diagnostics.DataReceivedEventArgs e
+            ) => _report += Environment.NewLine + e.Data;
+
+            process.BeginErrorReadLine();
+
+            process.WaitForExit();
+
+            _report += Environment.NewLine + (process.ExitCode == 0 ? "Успешное завершение." : "Во время работы возникли ошибки.");
+            process.Close();
+        }
+
+        private static void P_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static string UpdateResultReport()
+        {
+            return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
         }
     }
 }

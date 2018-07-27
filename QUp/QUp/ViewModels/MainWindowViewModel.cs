@@ -17,12 +17,14 @@ namespace QUp
     public class MainWindowViewModel : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
+        
 
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        
         string _resultText;
         public string ResultText
         {
@@ -34,6 +36,7 @@ namespace QUp
             }
         }
 
+        #region CreateNewFiles
         ICommand _createNewFilesCommand;
         public ICommand CreateNewFilesCommand
         {
@@ -50,12 +53,12 @@ namespace QUp
         }
 
         void CreateNewFiles()
-        {
-            ManagerFS.CreateNewFiles();           
-            ResultText = QMediator.ResultReport;
+        {                       
+            ResultText = ManagerFS.CreateNewFiles();
         }
+        #endregion
 
-        
+        #region CreateCtrl
         ICommand _createCtrlCommand;
         public ICommand CreateCtrlCommand
         {
@@ -72,9 +75,33 @@ namespace QUp
         }
 
         void CreateCtrl()
-        {
-            ManagerFS.RunCtrlCreator();
-            ResultText = QMediator.ResultReport;            
+        {            
+            ResultText = ManagerFS.RunCtrlCreator();            
         }
+        #endregion
+
+
+        #region SplitAdress
+        ICommand _splitAdressCommand;
+        public ICommand SplitAdressCommand
+        {
+            get
+            {
+                if (_splitAdressCommand == null)
+                {
+                    _splitAdressCommand = new RelayCommand(
+                    p => true,
+                    p => SplitAdress());
+                }
+                return _splitAdressCommand;
+            }
+        }
+
+        void SplitAdress()
+        {
+            //MessageBox.Show("SplitAdress");
+            ResultText = ManagerFS.SplitAdr();
+        }
+        #endregion
     }
 }
