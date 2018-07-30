@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QUp"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="QuickUp" Height="570" Width="800" Icon="/Resources/Icon1.ico">
+        Title="QuickUp" Height="570" Width="1100" Icon="/Resources/Icon1.ico">
 
     <Window.DataContext>
         <local:MainWindowViewModel />

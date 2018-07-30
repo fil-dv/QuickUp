@@ -11,10 +11,14 @@ using System.Windows.Forms;
 
 namespace QUp.Models
 {
-    
+
+    public delegate void ResultIsReady(string res);
+
     public static class ManagerFS
     {
-        
+        static string _report = "";
+        static public event Action SplitCompletHandler;
+        public static event ResultIsReady ReportUpdated;
 
         #region creating files
         enum FileType
@@ -22,9 +26,7 @@ namespace QUp.Models
             Reg,
             Prog
         };
-
-        static string _report = "";
-
+        
         public static string CreateNewFiles()
         {            
             using (var fbd = new FolderBrowserDialog())
@@ -156,48 +158,67 @@ namespace QUp.Models
         }
         #endregion
 
-        public static string SplitAdr()
+        #region Split adress
+        public static void SplitAdr()
         {
-            Thread thread = new Thread(Split);
-            thread.Start();          
+            _report = "\n\n\t  Разбивка адресов...";
+            ReportUpdated?.Invoke(UpdateResultReport());
 
-            return UpdateResultReport();
-        }
+            SplitCompletHandler += UpdateReport;
 
-        private static void Split()
-        {
-            _report = "";
-
-            var pInfo = new System.Diagnostics.ProcessStartInfo(@"d:\Dima\Programming\git\AdressSpliter\Adr\Adr\bin\Debug\Adr.exe");
-            pInfo.CreateNoWindow = true;
-            pInfo.UseShellExecute = false;
-            pInfo.RedirectStandardError = true;
-            pInfo.RedirectStandardOutput = true;
-
+            ProcessStartInfo pInfo = new System.Diagnostics.ProcessStartInfo(@"d:\Dima\Programming\git\AdressSpliter\Adr\Adr\bin\Debug\Adr.exe");
+            if (QMediator.PathToRegDest != null)
+            {
+                pInfo.Arguments = ("\"" + QMediator.PathToRegDest + "\"");
+            }
             Process process = Process.Start(pInfo);
+            process.EnableRaisingEvents = true;
+            process.Exited += SplitFinished;
+           // process.Close();
 
-            process.OutputDataReceived += (
-                object sender, System.Diagnostics.DataReceivedEventArgs e
-            ) => _report += Environment.NewLine + e.Data;
 
-            process.BeginOutputReadLine();
-
-            process.ErrorDataReceived += (
-                object sender, System.Diagnostics.DataReceivedEventArgs e
-            ) => _report += Environment.NewLine + e.Data;
-
-            process.BeginErrorReadLine();
-
-            process.WaitForExit();
-
-            _report += Environment.NewLine + (process.ExitCode == 0 ? "Успешное завершение." : "Во время работы возникли ошибки.");
-            process.Close();
+                   
+            //Thread thread = new Thread(Split);
+            //thread.Start();  
+            //_report = ReadLog();
+            //ReportUpdated?.Invoke(UpdateResultReport());
         }
 
-        private static void P_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        private static void SplitFinished(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            SplitCompletHandler?.Invoke();
         }
+
+        private static void UpdateReport()
+        {
+            _report = ReadLog();
+            ReportUpdated?.Invoke(UpdateResultReport());
+        }
+
+        //private static void Split()
+        //{
+        //    ProcessStartInfo pInfo = new System.Diagnostics.ProcessStartInfo(@"d:\Dima\Programming\git\AdressSpliter\Adr\Adr\bin\Debug\Adr.exe");
+        //    if(QMediator.PathToRegDest != null)
+        //    {
+        //        pInfo.Arguments = ("\"" + QMediator.PathToRegDest + "\"");
+        //    }                
+        //    Process process = Process.Start(pInfo);
+        //   // process.Exited += SplitFinished;
+        //    process.Close();
+        //}
+
+
+
+        private static string ReadLog()
+        {
+            string str = File.ReadAllText("log.txt");
+            int index = str.LastIndexOf("------------------");
+            str = str.Substring(index + 18);
+            return str;
+        }
+        #endregion
+
+
 
         private static string UpdateResultReport()
         {

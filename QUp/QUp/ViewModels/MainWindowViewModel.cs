@@ -100,7 +100,13 @@ namespace QUp
         void SplitAdress()
         {
             //MessageBox.Show("SplitAdress");
-            ResultText = ManagerFS.SplitAdr();
+            ManagerFS.ReportUpdated += ReportUpdated; ;
+            ManagerFS.SplitAdr();
+        }
+
+        private void ReportUpdated(string res)
+        {
+            ResultText = res;
         }
         #endregion
     }
