@@ -36,6 +36,11 @@ namespace QUp
             }
         }
 
+        private void ReportUpdated(string res)
+        {
+            ResultText = res;
+        }
+
         #region CreateNewFiles
         ICommand _createNewFilesCommand;
         public ICommand CreateNewFilesCommand
@@ -53,8 +58,9 @@ namespace QUp
         }
 
         void CreateNewFiles()
-        {                       
-            ResultText = ManagerFS.CreateNewFiles();
+        {
+            ManagerFS.ReportUpdated += ReportUpdated;
+            ManagerFS.CreateNewFiles();
         }
         #endregion
 
@@ -75,11 +81,10 @@ namespace QUp
         }
 
         void CreateCtrl()
-        {            
-            ResultText = ManagerFS.RunCtrlCreator();            
+        {
+            ManagerFS.RunCtrlCreator();            
         }
         #endregion
-
 
         #region SplitAdress
         ICommand _splitAdressCommand;
@@ -98,15 +103,55 @@ namespace QUp
         }
 
         void SplitAdress()
-        {
-            //MessageBox.Show("SplitAdress");
-            ManagerFS.ReportUpdated += ReportUpdated; ;
+        {            
             ManagerFS.SplitAdr();
         }
 
-        private void ReportUpdated(string res)
+       
+        #endregion
+
+        #region PredProg
+        ICommand _predProgCommand;
+        public ICommand PredProgCommand
         {
-            ResultText = res;
+            get
+            {
+                if (_predProgCommand == null)
+                {
+                    _predProgCommand = new RelayCommand(
+                    p => true,
+                    p => PredProg());
+                }
+                return _predProgCommand;
+            }
+        }
+
+        void PredProg()
+        {
+            ManagerFS.ProgsToExec(TaskName.PredProgs);
+        }
+        #endregion
+
+        #region PostProg
+        ICommand _postProgCommand;
+        public ICommand PostProgCommand
+        {
+            get
+            {
+                if (_postProgCommand == null)
+                {
+                    _postProgCommand = new RelayCommand(
+                    p => true,
+                    p => PostProg());
+                }
+                return _postProgCommand;
+            }
+        }
+
+        void PostProg()
+        {
+            //MessageBox.Show("PostProgCommand");
+            ManagerFS.ProgsToExec(TaskName.PostProgs);
         }
         #endregion
     }

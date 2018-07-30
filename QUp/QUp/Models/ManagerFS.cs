@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace QUp.Models
 {
-
+    public enum TaskName { PredProgs, PostProgs };
     public delegate void ResultIsReady(string res);
 
     public static class ManagerFS
@@ -27,8 +27,11 @@ namespace QUp.Models
             Prog
         };
         
-        public static string CreateNewFiles()
-        {            
+        public static void CreateNewFiles()
+        {
+            _report = "";
+            ReportUpdated?.Invoke(UpdateResultReport());
+
             using (var fbd = new FolderBrowserDialog())
             {
                 //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
@@ -46,7 +49,7 @@ namespace QUp.Models
                         FindSource(QMediator.PathToProgDest, FileType.Prog);                    
                 }
             }
-            return UpdateResultReport();
+            ReportUpdated?.Invoke(UpdateResultReport()); 
         }
 
         static void FindSource(string path, FileType fileType )
@@ -138,23 +141,26 @@ namespace QUp.Models
         #endregion
 
         #region RunControlCreator
-        public static string RunCtrlCreator()
+        public static void RunCtrlCreator()
         {
-            _report = "";
+            _report = "Создание контрола...";
+            ReportUpdated?.Invoke(UpdateResultReport());
 
             ProcessStartInfo pInfo = new ProcessStartInfo("c-creator.exe");
-            DirectoryInfo directoryInfo = new DirectoryInfo(QMediator.PathToRegDest);
-            FileInfo[] files = directoryInfo.GetFiles("*.xls*");
-            string path = "";
-            if (files.Length > 0)
+            if (QMediator.PathToRegDest != null)
             {
-                path = files[0].FullName;
+                DirectoryInfo directoryInfo = new DirectoryInfo(QMediator.PathToRegDest);
+                FileInfo[] files = directoryInfo.GetFiles("*.xls*");
+                string path = "";
+                if (files.Length > 0)
+                {
+                    path = files[0].FullName;
+                }
+                pInfo.Arguments = "\"" + path + "\"";
+                pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
+                Process p = Process.Start(pInfo);
             }
-            pInfo.Arguments = "\"" + path + "\"";
-            pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
-            Process p = Process.Start(pInfo);
-
-            return _report;
+            ReportUpdated?.Invoke(UpdateResultReport());
         }
         #endregion
 
@@ -215,6 +221,65 @@ namespace QUp.Models
             int index = str.LastIndexOf("------------------");
             str = str.Substring(index + 18);
             return str;
+        }
+        #endregion
+
+        #region ProgsToExexute
+        public static void ProgsToExec(TaskName taskName)
+        {
+            _report = "Выполнение программ...\n\n";
+            ReportUpdated?.Invoke("");
+            if (QMediator.PathToProgDest != null)
+            {
+                string str = taskName == TaskName.PredProgs ? "\\!pred" : "\\post!";
+                string path = QMediator.PathToProgDest + str;
+                if (!new DirectoryInfo(path).Exists)
+                {
+                    Directory.CreateDirectory(path);
+                    _report = "Нет программ для выполнения.";
+                }
+                else
+                {
+                    List<string> filePathList = GetFilesForExec(path);
+                    foreach (var item in filePathList)
+                    {
+                        string[] queryList = SplitFile(item);
+                        foreach (var query in queryList)
+                        {                            
+                            ManagerDB.ExecCommand(query);
+                        }
+                        _report += Environment.NewLine + "Отработал файл " + item.Substring(item.LastIndexOf("\\") + 1);
+                    }                    
+                }                
+            }
+            else
+            {
+                _report = "Не определен путь к программам.";
+            }
+
+            ReportUpdated?.Invoke(UpdateResultReport());
+        }
+
+        private static string[] SplitFile(string path)
+        {            
+            string fileText = File.ReadAllText(path);
+            string[] queries = fileText.Split(';');
+            return queries;
+        }
+
+        private static List<string> GetFilesForExec(string path)
+        {
+            DirectoryInfo di = new DirectoryInfo(path);
+            FileInfo[] fiArr = di.GetFiles();
+            List<string> fileList = new List<string>();
+            foreach (var item in fiArr)
+            {
+                if (!item.Name.Contains("--"))
+                {
+                    fileList.Add(item.FullName);
+                }
+            }
+            return fileList;
         }
         #endregion
 
