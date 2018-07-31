@@ -36,6 +36,17 @@ namespace QUp
             }
         }
 
+        bool _isInitialize = false;
+        public bool IsInitialize
+        {
+            get { return _isInitialize; }
+            set
+            {
+                _isInitialize = value;
+                OnPropertyChanged();
+            }
+        }
+
         private void ReportUpdated(string res)
         {
             ResultText = res;
@@ -60,7 +71,13 @@ namespace QUp
         void CreateNewFiles()
         {
             ManagerFS.ReportUpdated += ReportUpdated;
+            ManagerFS.Initialized += Initialized;
             ManagerFS.CreateNewFiles();
+        }
+
+        private void Initialized(bool b)
+        {
+            IsInitialize = b;
         }
         #endregion
 
@@ -154,5 +171,26 @@ namespace QUp
             ManagerFS.ProgsToExec(TaskName.PostProgs);
         }
         #endregion
+
+        ICommand _oktelProgCommand;
+        public ICommand OktelProgCommand
+        {
+            get
+            {
+                if (_oktelProgCommand == null)
+                {
+                    _oktelProgCommand = new RelayCommand(
+                    p => true,
+                    p => OktelProg());
+                }
+                return _oktelProgCommand;
+            }
+        }
+
+        void OktelProg()
+        {
+            MessageBox.Show("OktelProg");
+            //ManagerFS.ProgsToExec(TaskName.Oktel);
+        }
     }
 }

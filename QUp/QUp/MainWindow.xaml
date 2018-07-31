@@ -30,6 +30,12 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <!--<Style.Triggers>
+                --><!--binding to the same view model property which sets IsEnabled--><!--
+                <DataTrigger Binding="{Binding IsInitialize}" Value="False">
+                    <Setter Property="Foreground" Value="Black"/>
+                </DataTrigger>
+            </Style.Triggers>-->
         </Style>
 
 
@@ -55,7 +61,7 @@
 
     </Window.Resources>
 
-        <Grid Background="White" Margin="0,10,0,10">
+    <Grid Background="White" Margin="0,10,0,10">
             <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.7*" />
             <ColumnDefinition Width="1.3*" />
@@ -76,15 +82,15 @@
 
         <Button Grid.Column="0" Grid.Row="0" Command="{Binding CreateNewFilesCommand}" Style="{StaticResource TabButtonLast}" ToolTip="Копирование файлов *.bat, *.ctl в x:\Реєстри, а так же файлов *.sql в x:\Progs\Registry из предыдущей папки данного контрагента.">Копирование файлов</Button>
         <Button Grid.Column="0" Grid.Row="1" Command="{Binding CreateCtrlCommand}" Style="{StaticResource TabButtonLast}">Создание контрола</Button>
-        <Button Grid.Column="0" Grid.Row="2" Style="{StaticResource TabButtonLast}">Подготовка XLS-файла</Button>
-        <Button Grid.Column="0" Grid.Row="3" Style="{StaticResource TabButtonLast}">Залить в Temp - таблицу</Button>
-        <Button Grid.Column="0" Grid.Row="4" Command="{Binding PredProgCommand}" Style="{StaticResource TabButtonLast}">Запустить предпрограммы</Button>
-        <Button Grid.Column="0" Grid.Row="5" Command="{Binding SplitAdressCommand}" Style="{StaticResource TabButtonLast}">Разсплитить адреса</Button>
+        <Button Grid.Column="0" Grid.Row="2" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" >Подготовка XLS-файла</Button>
+        <Button Grid.Column="0" Grid.Row="3" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Залить в Temp - таблицу</Button>
+        <Button Grid.Column="0" Grid.Row="4" Command="{Binding PredProgCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить предпрограммы</Button>
+        <Button Grid.Column="0" Grid.Row="5" Command="{Binding SplitAdressCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Разсплитить адреса</Button>
         <Button Grid.Column="0" Grid.Row="6" Style="{StaticResource TabButtonLast}">Еще что-нибудь 1</Button>
-        <Button Grid.Column="0" Grid.Row="7" Style="{StaticResource TabButtonLast}">Еще что-нибудь 2</Button>
-        <Button Grid.Column="0" Grid.Row="8" Style="{StaticResource TabButtonLast}">Еще что-нибудь 3</Button>
-        <Button Grid.Column="0" Grid.Row="9" Command="{Binding PostProgCommand}" Style="{StaticResource TabButtonLast}">Запустить постпрограммы</Button>
-
+        <Button Grid.Column="0" Grid.Row="7" Style="{StaticResource TabButtonLast}">Еще что-нибудь 3</Button>
+        <Button Grid.Column="0" Grid.Row="8" Command="{Binding PostProgCommand}"  IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить постпрограммы</Button>
+        <Button Grid.Column="0" Grid.Row="9" Command="{Binding OktelProgCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Октел</Button>
+        
         <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="10" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>
                 <Style TargetType="TextBlock">

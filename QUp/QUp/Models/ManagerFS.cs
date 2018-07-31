@@ -11,14 +11,17 @@ using System.Windows.Forms;
 
 namespace QUp.Models
 {
-    public enum TaskName { PredProgs, PostProgs };
+    public enum TaskName { PredProgs, PostProgs, Oktel };
     public delegate void ResultIsReady(string res);
+    
 
     public static class ManagerFS
     {
         static string _report = "";
         static public event Action SplitCompletHandler;
+        static public event Action<bool> Initialized;
         public static event ResultIsReady ReportUpdated;
+         
 
         #region creating files
         enum FileType
@@ -46,7 +49,9 @@ namespace QUp.Models
                         Directory.CreateDirectory(QMediator.PathToProgDest);
                     FindSource(QMediator.PathToRegDest, FileType.Reg);
                     if(!QMediator.PathToRegDest.Contains("ЦиФРа"))          // для ЦФР ничего не копируем
-                        FindSource(QMediator.PathToProgDest, FileType.Prog);                    
+                        FindSource(QMediator.PathToProgDest, FileType.Prog);
+
+                    Initialized?.Invoke(true);
                 }
             }
             ReportUpdated?.Invoke(UpdateResultReport()); 
@@ -156,10 +161,10 @@ namespace QUp.Models
                 {
                     path = files[0].FullName;
                 }
-                pInfo.Arguments = "\"" + path + "\"";
-                pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
-                Process p = Process.Start(pInfo);
+                pInfo.Arguments = "\"" + path + "\"";                
             }
+            pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
+            Process p = Process.Start(pInfo);
             ReportUpdated?.Invoke(UpdateResultReport());
         }
         #endregion
@@ -231,7 +236,16 @@ namespace QUp.Models
             ReportUpdated?.Invoke("");
             if (QMediator.PathToProgDest != null)
             {
-                string str = taskName == TaskName.PredProgs ? "\\!pred" : "\\post!";
+                string str;
+                if (taskName == TaskName.Oktel)
+                {
+                    str = "\\post!\\oktel";
+                }
+                else
+                {
+                    str = taskName == TaskName.PredProgs ? "\\!pred" : "\\post!";
+                }
+                
                 string path = QMediator.PathToProgDest + str;
                 if (!new DirectoryInfo(path).Exists)
                 {
@@ -248,7 +262,7 @@ namespace QUp.Models
                         {                            
                             ManagerDB.ExecCommand(query);
                         }
-                        _report += Environment.NewLine + "Отработал файл " + item.Substring(item.LastIndexOf("\\") + 1);
+                        _report += Environment.NewLine + "Отработал файл:\t\t" + item.Substring(item.LastIndexOf("\\") + 1);
                     }                    
                 }                
             }
