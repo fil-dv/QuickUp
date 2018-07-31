@@ -20,8 +20,7 @@ namespace QUp.Models
         static string _report = "";
         static public event Action SplitCompletHandler;
         static public event Action<bool> Initialized;
-        public static event ResultIsReady ReportUpdated;
-         
+        public static event ResultIsReady ReportUpdated;         
 
         #region creating files
         enum FileType
@@ -255,12 +254,19 @@ namespace QUp.Models
                 else
                 {
                     List<string> filePathList = GetFilesForExec(path);
+                    if (filePathList.Count < 1)
+                    {
+                        _report = "Нет программ для выполнения.";
+                        ReportUpdated?.Invoke("");
+                        return;
+                    }
                     foreach (var item in filePathList)
                     {
                         string[] queryList = SplitFile(item);
                         foreach (var query in queryList)
-                        {                            
+                        {
                             ManagerDB.ExecCommand(query);
+                            //MessageBox.Show(query);
                         }
                         _report += Environment.NewLine + "Отработал файл:\t\t" + item.Substring(item.LastIndexOf("\\") + 1);
                     }                    
@@ -276,7 +282,7 @@ namespace QUp.Models
 
         private static string[] SplitFile(string path)
         {            
-            string fileText = File.ReadAllText(path);
+            string fileText = File.ReadAllText(path, Encoding.Default);
             string[] queries = fileText.Split(';');
             return queries;
         }
@@ -297,8 +303,7 @@ namespace QUp.Models
         }
         #endregion
 
-
-
+        
         private static string UpdateResultReport()
         {
             return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");

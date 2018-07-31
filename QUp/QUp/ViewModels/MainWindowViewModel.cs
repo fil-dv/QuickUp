@@ -24,7 +24,7 @@ namespace QUp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        
+        #region properties
         string _resultText;
         public string ResultText
         {
@@ -52,7 +52,13 @@ namespace QUp
             ResultText = res;
         }
 
-        #region CreateNewFiles
+        private void Initialized(bool b)
+        {
+            IsInitialize = b;
+        }
+        #endregion
+
+        #region CreateNewFilesCommand
         ICommand _createNewFilesCommand;
         public ICommand CreateNewFilesCommand
         {
@@ -74,14 +80,9 @@ namespace QUp
             ManagerFS.Initialized += Initialized;
             ManagerFS.CreateNewFiles();
         }
-
-        private void Initialized(bool b)
-        {
-            IsInitialize = b;
-        }
         #endregion
 
-        #region CreateCtrl
+        #region CreateCtrlCommand
         ICommand _createCtrlCommand;
         public ICommand CreateCtrlCommand
         {
@@ -103,7 +104,7 @@ namespace QUp
         }
         #endregion
 
-        #region SplitAdress
+        #region SplitAdressCommand
         ICommand _splitAdressCommand;
         public ICommand SplitAdressCommand
         {
@@ -124,10 +125,10 @@ namespace QUp
             ManagerFS.SplitAdr();
         }
 
-       
+
         #endregion
 
-        #region PredProg
+        #region PredProgCommand
         ICommand _predProgCommand;
         public ICommand PredProgCommand
         {
@@ -149,7 +150,7 @@ namespace QUp
         }
         #endregion
 
-        #region PostProg
+        #region PostProgCommand
         ICommand _postProgCommand;
         public ICommand PostProgCommand
         {
@@ -172,6 +173,7 @@ namespace QUp
         }
         #endregion
 
+        #region OktelCommand
         ICommand _oktelProgCommand;
         public ICommand OktelProgCommand
         {
@@ -192,5 +194,6 @@ namespace QUp
             MessageBox.Show("OktelProg");
             //ManagerFS.ProgsToExec(TaskName.Oktel);
         }
+        #endregion
     }
 }
