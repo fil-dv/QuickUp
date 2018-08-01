@@ -82,7 +82,7 @@
 
         <Button Grid.Column="0" Grid.Row="0" Command="{Binding CreateNewFilesCommand}" Style="{StaticResource TabButtonLast}" ToolTip="Копирование файлов *.bat, *.ctl в x:\Реєстри, а так же файлов *.sql в x:\Progs\Registry из предыдущей папки данного контрагента.">Копирование файлов</Button>
         <Button Grid.Column="0" Grid.Row="1" Command="{Binding CreateCtrlCommand}" Style="{StaticResource TabButtonLast}">Создание контрола</Button>
-        <Button Grid.Column="0" Grid.Row="2" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" >Подготовка XLS-файла</Button>
+        <Button Grid.Column="0" Grid.Row="2" Command="{Binding SearchCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" >Подбор контрола</Button>
         <Button Grid.Column="0" Grid.Row="3" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Залить в Temp - таблицу</Button>
         <Button Grid.Column="0" Grid.Row="4" Command="{Binding PredProgCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить предпрограммы</Button>
         <Button Grid.Column="0" Grid.Row="5" Command="{Binding SplitAdressCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Разсплитить адреса</Button>

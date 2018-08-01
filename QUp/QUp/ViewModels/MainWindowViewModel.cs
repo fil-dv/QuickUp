@@ -195,5 +195,28 @@ namespace QUp
             //ManagerFS.ProgsToExec(TaskName.Oktel);
         }
         #endregion
+
+        #region SearchControlCommand
+        ICommand _searchCtrlCommand;
+        public ICommand SearchCtrlCommand
+        {
+            get
+            {
+                if (_searchCtrlCommand == null)
+                {
+                    _searchCtrlCommand = new RelayCommand(
+                    p => true,
+                    p => SearchCtrl());
+                }
+                return _searchCtrlCommand;
+            }
+        }
+
+        void SearchCtrl()
+        {
+            ManagerFS.SearchCtrl();
+            //MessageBox.Show("PostProgCommand");           
+        }
+        #endregion
     }
 }

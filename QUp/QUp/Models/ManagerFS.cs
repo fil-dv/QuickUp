@@ -232,7 +232,7 @@ namespace QUp.Models
         public static void ProgsToExec(TaskName taskName)
         {
             _report = "Выполнение программ...\n\n";
-            ReportUpdated?.Invoke("");
+            ReportUpdated?.Invoke(UpdateResultReport());
             if (QMediator.PathToProgDest != null)
             {
                 string str;
@@ -257,7 +257,7 @@ namespace QUp.Models
                     if (filePathList.Count < 1)
                     {
                         _report = "Нет программ для выполнения.";
-                        ReportUpdated?.Invoke("");
+                        ReportUpdated?.Invoke(UpdateResultReport());
                         return;
                     }
                     foreach (var item in filePathList)
@@ -266,7 +266,6 @@ namespace QUp.Models
                         foreach (var query in queryList)
                         {
                             ManagerDB.ExecCommand(query);
-                            //MessageBox.Show(query);
                         }
                         _report += Environment.NewLine + "Отработал файл:\t\t" + item.Substring(item.LastIndexOf("\\") + 1);
                     }                    
@@ -303,7 +302,61 @@ namespace QUp.Models
         }
         #endregion
 
-        
+        #region SearchCtrl
+        public static void SearchCtrl()
+        {
+            DirectoryInfo di = new DirectoryInfo(QMediator.PathToRegDest);
+            FileInfo[] fArr = di.GetFiles("imp.xls*");
+            if (fArr.Length < 1)
+            {
+                _report = string.Format("В папке {0} не найден файл imp.xls* ", di.FullName);
+                ReportUpdated?.Invoke(UpdateResultReport());
+                return;
+            }
+            string pathToImp = fArr[0].FullName;
+            int xlsCollCount = ManagerXls.GetFileCollCount(pathToImp);
+            FileInfo[] csvArr = GetCsvList();
+            List<FileInfo> csvShortList = GetRightList(csvArr, xlsCollCount);
+
+
+            csvShortList.Sort((x, y) => DateTime.Compare(y.LastWriteTime, x.LastWriteTime));
+
+            //foreach (var item in csvList)
+            //{
+            //    _report += (item.FullName + "\t" + item.LastWriteTime + Environment.NewLine);
+            //}
+            //ReportUpdated?.Invoke(UpdateResultReport());
+        }
+
+        private static List<FileInfo> GetRightList(FileInfo[] csvArr, int rowCount)
+        {
+            List<FileInfo> resList = new List<FileInfo>();
+
+            foreach (var item in csvArr)
+            {
+                if (GetCsvRowCount(item) == rowCount)
+                {
+                    resList.Add(item);
+                }
+            }
+            return resList;
+        }
+
+        private static int GetCsvRowCount(FileInfo item)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static FileInfo[] GetCsvList()
+        {            
+            string path = QMediator.PathToRegDest.Substring(0, QMediator.PathToRegDest.LastIndexOf("\\"));
+            DirectoryInfo di = new DirectoryInfo(path);
+            return di.GetFiles("*.ctl", SearchOption.AllDirectories);
+        }
+        #endregion
+
+
+
         private static string UpdateResultReport()
         {
             return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
