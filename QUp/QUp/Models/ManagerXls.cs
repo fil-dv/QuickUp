@@ -19,7 +19,7 @@ namespace QUp.Models
         {
             int count = 0;
             _xlApp = new Application();
-            _xlWorkBook = _xlApp.Workbooks.Open(path, 0, false, 5, "", "", false, XlPlatform.xlWindows, "", true, false, 0, true, false, false);
+            _xlWorkBook = _xlApp.Workbooks.Open(path, 0, true, 5, "", "", false, XlPlatform.xlWindows, "", true, false, 0, true, false, false);
             _xlWorkSheet = _xlWorkBook.Sheets[1];
             _xlRange = _xlWorkSheet.UsedRange;
             var v = _xlRange.Columns;

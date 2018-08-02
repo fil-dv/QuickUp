@@ -305,6 +305,9 @@ namespace QUp.Models
         #region SearchCtrl
         public static void SearchCtrl()
         {
+            _report = "Подбор контрола..." + Environment.NewLine;
+            ReportUpdated?.Invoke(UpdateResultReport());
+
             DirectoryInfo di = new DirectoryInfo(QMediator.PathToRegDest);
             FileInfo[] fArr = di.GetFiles("imp.xls*");
             if (fArr.Length < 1)
@@ -316,19 +319,35 @@ namespace QUp.Models
             string pathToImp = fArr[0].FullName;
             int xlsCollCount = ManagerXls.GetFileCollCount(pathToImp);
             FileInfo[] csvArr = GetCsvList();
-            List<FileInfo> csvShortList = GetRightList(csvArr, xlsCollCount);
+            List<FileInfo> csvCheckedList = GetCheckedList(csvArr, xlsCollCount);
 
+            csvCheckedList.Sort((x, y) => DateTime.Compare(y.LastWriteTime, x.LastWriteTime));
 
-            csvShortList.Sort((x, y) => DateTime.Compare(y.LastWriteTime, x.LastWriteTime));
+            FileInfo resultFile = csvCheckedList[0];            
 
-            //foreach (var item in csvList)
+            if (resultFile.DirectoryName != QMediator.PathToRegDest)
+            {
+                File.Copy(resultFile.FullName, QMediator.PathToRegDest + "\\" + resultFile.Name, true);
+                _report += "Скопирован, подходящий по размеру контрол, из " + resultFile.FullName + Environment.NewLine;
+            }
+            else
+            {
+                _report += "Текущий контрол подходит по размеру." + Environment.NewLine;
+            }
+
+            //_report += "путь к екселю: " + pathToImp + Environment.NewLine;
+            _report += "С толбцов в экселе: " + xlsCollCount + Environment.NewLine;
+            _report += "Строк в контроле: " + GetCsvRowCount(resultFile);
+
+            //foreach (var item in csvCheckedList)
             //{
-            //    _report += (item.FullName + "\t" + item.LastWriteTime + Environment.NewLine);
+            //    _report += (item.FullName + "\t" + "в контроле строк: " + GetCsvRowCount(item) + "   " + item.LastWriteTime + Environment.NewLine);
             //}
-            //ReportUpdated?.Invoke(UpdateResultReport());
+
+            ReportUpdated?.Invoke(UpdateResultReport());
         }
 
-        private static List<FileInfo> GetRightList(FileInfo[] csvArr, int rowCount)
+        private static List<FileInfo> GetCheckedList(FileInfo[] csvArr, int rowCount)
         {
             List<FileInfo> resList = new List<FileInfo>();
 
@@ -344,7 +363,19 @@ namespace QUp.Models
 
         private static int GetCsvRowCount(FileInfo item)
         {
-            throw new NotImplementedException();
+            int count = 0;
+            bool countFlag = false;
+            string[] lines = File.ReadAllLines(item.FullName);
+
+            for (int i = 0; i < lines.Length; i++)
+            {
+                if (lines[i].Length < 1)    continue;
+                if (lines[i][0] == '-' && lines[i][1] == '-')   continue;
+                if (lines[i][0] == '(') countFlag = true;
+                if (lines[i].ToLower().Contains("end_of_reg"))  countFlag = false;
+                if (countFlag)  count++;
+            }
+            return count;
         }
 
         private static FileInfo[] GetCsvList()
