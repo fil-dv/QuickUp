@@ -20,20 +20,11 @@ namespace QUp.Models
         static string _report = "";
         static public event Action SplitCompletHandler;
         static public event Action<bool> Initialized;
-        public static event ResultIsReady ReportUpdated;         
+        public static event ResultIsReady ReportUpdated;
 
-        #region creating files
-        enum FileType
+        #region InitializeApp
+        static public void Initialize()
         {
-            Reg,
-            Prog
-        };
-        
-        public static void CreateNewFiles()
-        {
-            _report = "";
-            ReportUpdated?.Invoke(UpdateResultReport());
-
             using (var fbd = new FolderBrowserDialog())
             {
                 //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
@@ -44,15 +35,32 @@ namespace QUp.Models
                 {
                     QMediator.PathToRegDest = fbd.SelectedPath;
                     QMediator.PathToProgDest = QMediator.PathToRegDest.Replace("Реєстри", "Progs\\Registry");
-                    if (!QMediator.PathToRegDest.Contains("ЦиФРа"))          // для ЦФР ничего не создаем
-                        Directory.CreateDirectory(QMediator.PathToProgDest);
-                    FindSource(QMediator.PathToRegDest, FileType.Reg);
-                    if(!QMediator.PathToRegDest.Contains("ЦиФРа"))          // для ЦФР ничего не копируем
-                        FindSource(QMediator.PathToProgDest, FileType.Prog);
-
                     Initialized?.Invoke(true);
                 }
             }
+            ReportUpdated?.Invoke(UpdateResultReport());
+        }
+
+        #endregion
+
+        #region creating files
+        enum FileType
+        {
+            Reg,
+            Prog
+        };
+        
+        public static void CreateNewFiles()
+        {
+            Directory.CreateDirectory(QMediator.PathToProgDest);
+            FindSource(QMediator.PathToRegDest, FileType.Reg);
+            FindSource(QMediator.PathToProgDest, FileType.Prog);
+
+            for (int i = 0; i < 300; i++)
+            {
+                _report += i + Environment.NewLine;
+            }
+
             ReportUpdated?.Invoke(UpdateResultReport()); 
         }
 
@@ -263,11 +271,19 @@ namespace QUp.Models
                     foreach (var item in filePathList)
                     {
                         string[] queryList = SplitFile(item);
+                        _report += Environment.NewLine + "Файл:\t\t" + item + Environment.NewLine + Environment.NewLine;
                         foreach (var query in queryList)
                         {
-                            ManagerDB.ExecCommand(query);
+                            try
+                            {
+                                ManagerDB.ExecCommand(query);
+                                _report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                            }
+                            catch (Exception)
+                            {
+                                _report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                            }                            
                         }
-                        _report += Environment.NewLine + "Отработал файл:\t\t" + item.Substring(item.LastIndexOf("\\") + 1);
                     }                    
                 }                
             }
@@ -320,6 +336,13 @@ namespace QUp.Models
             int xlsCollCount = ManagerXls.GetFileCollCount(pathToImp);
             FileInfo[] csvArr = GetCsvList();
             List<FileInfo> csvCheckedList = GetCheckedList(csvArr, xlsCollCount);
+
+            if (csvCheckedList.Count < 1)
+            {
+                _report += "Нет подходящего контрола.";
+                ReportUpdated?.Invoke(UpdateResultReport());
+                return;
+            }
 
             csvCheckedList.Sort((x, y) => DateTime.Compare(y.LastWriteTime, x.LastWriteTime));
 

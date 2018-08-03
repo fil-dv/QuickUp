@@ -58,6 +58,30 @@ namespace QUp
         }
         #endregion
 
+        #region InitializeCommand
+        ICommand _initializeCommand;
+        public ICommand InitializeCommand
+        {
+            get
+            {
+                if (_initializeCommand == null)
+                {
+                    _initializeCommand = new RelayCommand(
+                    p => true,
+                    p => Initialize());
+                }
+                return _initializeCommand;
+            }
+        }
+
+        void Initialize()
+        {
+            ManagerFS.ReportUpdated += ReportUpdated;
+            ManagerFS.Initialized += Initialized;
+            ManagerFS.Initialize();
+        }
+        #endregion
+
         #region CreateNewFilesCommand
         ICommand _createNewFilesCommand;
         public ICommand CreateNewFilesCommand
@@ -76,8 +100,6 @@ namespace QUp
 
         void CreateNewFiles()
         {
-            ManagerFS.ReportUpdated += ReportUpdated;
-            ManagerFS.Initialized += Initialized;
             ManagerFS.CreateNewFiles();
         }
         #endregion

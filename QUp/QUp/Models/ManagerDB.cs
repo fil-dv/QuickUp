@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 using DbLayer;
 using Oracle.ManagedDataAccess.Client;
 using QUp.Infrastr;
@@ -22,6 +23,7 @@ namespace QUp.Models
             }
             catch (Exception)
             {
+                throw;
                 //MessageBox.Show("Exception from MyLetterManager.LetterManager.CreateConnect()" + ex.Message);
             }
         }
@@ -37,6 +39,7 @@ namespace QUp.Models
             }
             catch (Exception)
             {
+                throw;
                 //MessageBox.Show("Exception from MyLetterManager.PriorityManager.ExecCommand()" + ex.Message);
             }
         }
