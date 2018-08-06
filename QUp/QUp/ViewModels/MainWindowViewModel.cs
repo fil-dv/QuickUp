@@ -25,6 +25,7 @@ namespace QUp
         }
 
         #region properties
+
         string _resultText;
         public string ResultText
         {

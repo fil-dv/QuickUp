@@ -40,12 +40,11 @@
         </Style>
 
 
-
         <Style  x:Key="MyLabelStyle" TargetType="Label">
             <Setter Property="Padding" Value="120" />
             <Setter Property="Margin" Value="10,10,10,3" />
             <Setter Property="Template">
-                
+
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Label}">
                         <Border BorderBrush="{TemplateBinding BorderBrush}" 
@@ -55,10 +54,11 @@
                                 CornerRadius="30, 7, 30, 7">
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
-                       </ControlTemplate>
+                    </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
 
         <Style  x:Key="MyLowLabelStyle" TargetType="Label">
             <Setter Property="Padding" Value="120" />
@@ -123,6 +123,7 @@
                 </LinearGradientBrush>
             </Label.Background>
         </Label>
+
 
         <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="9"  Style="{StaticResource MyLowLabelStyle}" FontFamily="Calibri" FontSize="14">
             <Label.Resources>

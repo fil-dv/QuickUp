@@ -19,7 +19,7 @@ namespace QUp.Models
             try
             {
                 _con = new OracleConnect(QSettings.ConnentionString);
-                _con.OpenConnect();
+                _con.OpenConnect();               
             }
             catch (Exception)
             {

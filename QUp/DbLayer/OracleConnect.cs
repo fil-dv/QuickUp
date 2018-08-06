@@ -18,7 +18,29 @@ namespace DbLayer
         }
         public void OpenConnect()
         {
-            _con.Open();
+            try
+            {
+                _con.Open();
+                //OracleGlobalization info = _con.GetSessionInfo();
+                //System.Globalization.CultureInfo lCultureInfo = System.Threading.Thread.CurrentThread.CurrentCulture;
+                ////var ri = new System.Globalization.RegionInfo(lCultureInfo.LCID);
+                ////info.Calendar = lCultureInfo.Calendar.GetType().Name.Replace("Calendar", String.Empty);
+                ////info.Currency = ri.CurrencySymbol;
+                ////info.DualCurrency = ri.CurrencySymbol;
+                ////info.ISOCurrency = ri.ISOCurrencySymbol;
+                ////info.DateFormat = lCultureInfo.DateTimeFormat.ShortDatePattern + " " + lCultureInfo.DateTimeFormat.ShortTimePattern.Replace("HH", "HH24").Replace("mm", "mi");
+                ////info.DateLanguage = System.Text.RegularExpressions.Regex.Replace(lCultureInfo.EnglishName, @" \(.+\)", String.Empty);
+                //string str = lCultureInfo.NumberFormat.NumberDecimalSeparator;
+                //string str1 = lCultureInfo.NumberFormat.NumberGroupSeparator;
+                //info.NumericCharacters = lCultureInfo.NumberFormat.NumberDecimalSeparator;// + lCultureInfo.NumberFormat.NumberGroupSeparator;
+                ////info.TimeZone = String.Format("{0}:{1}", TimeZoneInfo.Local.BaseUtcOffset.Hours, TimeZoneInfo.Local.BaseUtcOffset.Minutes);
+                //_con.SetSessionInfo(info);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
         }
 
         public void CloseConnect()

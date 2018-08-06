@@ -56,10 +56,10 @@ namespace QUp.Models
             FindSource(QMediator.PathToRegDest, FileType.Reg);
             FindSource(QMediator.PathToProgDest, FileType.Prog);
 
-            for (int i = 0; i < 300; i++)
-            {
-                _report += i + Environment.NewLine;
-            }
+            //for (int i = 0; i < 300; i++)
+            //{
+            //    _report += i + Environment.NewLine;
+            //}
 
             ReportUpdated?.Invoke(UpdateResultReport()); 
         }
@@ -270,20 +270,23 @@ namespace QUp.Models
                     }
                     foreach (var item in filePathList)
                     {
-                        string[] queryList = SplitFile(item);
-                        _report += Environment.NewLine + "Файл:\t\t" + item + Environment.NewLine + Environment.NewLine;
+                        List<string> queryList = SplitFile(item);
+                        _report += Environment.NewLine + "Файл:\t\t" + item;
+                        bool isOk = true;
                         foreach (var query in queryList)
                         {
                             try
                             {
                                 ManagerDB.ExecCommand(query);
-                                _report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                                //_report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
                             }
-                            catch (Exception)
+                            catch (Exception ex)
                             {
-                                _report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                                isOk = false;
+                                //_report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
                             }                            
                         }
+                        _report += ("\t" + (isOk == true ? "отработал нормально." : "отработал с ошибками.") + Environment.NewLine);
                     }                    
                 }                
             }
@@ -295,11 +298,20 @@ namespace QUp.Models
             ReportUpdated?.Invoke(UpdateResultReport());
         }
 
-        private static string[] SplitFile(string path)
+        private static List<string> SplitFile(string path)
         {            
             string fileText = File.ReadAllText(path, Encoding.Default);
-            string[] queries = fileText.Split(';');
-            return queries;
+            string[] queries = fileText.Trim().Split(';');
+            List<string> listStr = new List<string>();
+
+            foreach (var item in queries)
+            {
+                if (item.Trim().Length > 0)
+                {
+                    listStr.Add(item.Trim());
+                }
+            }
+            return listStr;
         }
 
         private static List<string> GetFilesForExec(string path)
