@@ -43,6 +43,27 @@ namespace QUp.Models
                 //MessageBox.Show("Exception from MyLetterManager.PriorityManager.ExecCommand()" + ex.Message);
             }
         }
-        
+
+        public static void FirstCheckPlProc(string count)
+        {
+            try
+            {
+
+                OracleCommand cmd = new OracleCommand
+                {
+                    CommandText = "reg_upload.set_r_status_loop",
+                    CommandType = System.Data.CommandType.StoredProcedure
+                };
+
+                cmd.ExecuteNonQuery();
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+            
+
+        }
+
     }
 }

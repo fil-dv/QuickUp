@@ -97,6 +97,7 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
 
         </Grid.RowDefinitions>
 
@@ -109,7 +110,10 @@
         <Button Grid.Column="0" Grid.Row="6" Command="{Binding PostProgCommand}"  IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить постпрограммы</Button>
         <Button Grid.Column="0" Grid.Row="7" Command="{Binding OktelProgCommand}" IsEnabled="False" Style="{StaticResource TabButtonLast}">Октел</Button>
 
-        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="8" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <Button Grid.Column="0" Grid.Row="8" Command="{Binding FirstCheckCommand}"  IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Предпроверка</Button>
+        
+        
+        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="9" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="TextWrapping" Value="Wrap" />

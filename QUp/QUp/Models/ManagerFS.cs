@@ -421,6 +421,11 @@ namespace QUp.Models
         }
         #endregion
 
+        public static void FirstCheck()
+        {
+
+        }
+
 
 
         private static string UpdateResultReport()

@@ -1,4 +1,5 @@
-﻿using QUp.Infrastr;
+﻿using DbLayer;
+using QUp.Infrastr;
 using QUp.Models;
 using QUp.ViewModels;
 using System;
@@ -239,6 +240,32 @@ namespace QUp
         {
             ManagerFS.SearchCtrl();
             //MessageBox.Show("PostProgCommand");           
+        }
+        #endregion
+
+        #region FirstCheckCommand
+        ICommand _firstCheckCommand;
+        public ICommand FirstCheckCommand
+        {
+            get
+            {
+                if (_firstCheckCommand == null)
+                {
+                    _firstCheckCommand = new RelayCommand(
+                    p => true,
+                    p => FirstCheck());
+                }
+                return _firstCheckCommand;
+            }
+        }
+
+        void FirstCheck()
+        {
+            OracleDataAccess oda = new OracleDataAccess();
+            oda.SetRStatus();
+
+            ManagerDB.FirstCheckPlProc("65");
+            //MessageBox.Show("FirstCheck");           
         }
         #endregion
     }
