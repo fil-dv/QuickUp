@@ -48,6 +48,18 @@ namespace QUp
             }
         }
 
+        string _currentPath = String.Empty;
+        public string CurrentPath
+        {
+            get { return _currentPath; }
+            set
+            {
+                _currentPath = value;
+                OnPropertyChanged();
+            }
+        }
+
+
         private void ReportUpdated(string res)
         {
             ResultText = res;
@@ -56,6 +68,7 @@ namespace QUp
         private void Initialized(bool b)
         {
             IsInitialize = b;
+            CurrentPath = QMediator.PathToRegDest;
         }
         #endregion
 
