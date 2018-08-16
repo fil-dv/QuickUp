@@ -114,6 +114,7 @@ namespace QUp
 
         void CreateNewFiles()
         {
+            ResultText = String.Empty;
             ManagerFS.CreateNewFiles();
         }
         #endregion
@@ -136,6 +137,7 @@ namespace QUp
 
         void CreateCtrl()
         {
+            ResultText = String.Empty;
             ManagerFS.RunCtrlCreator();            
         }
         #endregion
@@ -157,7 +159,8 @@ namespace QUp
         }
 
         void SplitAdress()
-        {            
+        {
+            ResultText = String.Empty;
             ManagerFS.SplitAdr();
         }
 
@@ -182,6 +185,7 @@ namespace QUp
 
         void PredProg()
         {
+            ResultText = String.Empty;
             ManagerFS.ProgsToExec(TaskName.PredProgs);
         }
         #endregion
@@ -205,6 +209,7 @@ namespace QUp
         void PostProg()
         {
             //MessageBox.Show("PostProgCommand");
+            ResultText = String.Empty;
             ManagerFS.ProgsToExec(TaskName.PostProgs);
         }
         #endregion
@@ -228,6 +233,7 @@ namespace QUp
         void OktelProg()
         {
             MessageBox.Show("OktelProg");
+            ResultText = String.Empty;
             //ManagerFS.ProgsToExec(TaskName.Oktel);
         }
         #endregion
@@ -250,6 +256,7 @@ namespace QUp
 
         void SearchCtrl()
         {
+            ResultText = String.Empty;
             ManagerFS.SearchCtrl();
             //MessageBox.Show("PostProgCommand");           
         }

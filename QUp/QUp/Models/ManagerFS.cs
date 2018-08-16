@@ -25,6 +25,7 @@ namespace QUp.Models
         #region InitializeApp
         static public void Initialize()
         {
+            _report = "";
             using (var fbd = new FolderBrowserDialog())
             {
                 //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
