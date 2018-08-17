@@ -255,8 +255,7 @@ namespace QUp
         }
 
         void SearchCtrl()
-        {
-            ResultText = String.Empty;
+        {            
             ManagerFS.SearchCtrl();
             //MessageBox.Show("PostProgCommand");           
         }
