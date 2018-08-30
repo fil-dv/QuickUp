@@ -122,7 +122,8 @@ namespace QUp.Models
             {
                 if (files[i].Extension.ToLower() == ".bat" ||
                     files[i].Extension.ToLower() == ".ctl" ||
-                    files[i].Extension.ToLower() == ".txt")
+                    files[i].Extension.ToLower() == ".txt" ||
+                    files[i].Extension.ToLower() == ".exe")
                 {
                     listToCopy.Add(files[i]);
                 }
