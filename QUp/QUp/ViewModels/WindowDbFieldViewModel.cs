@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QUp.Models;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -49,7 +50,7 @@ namespace QUp.ViewModels
                 if (_getColumnNumberCommand == null)
                 {
                     _getColumnNumberCommand = new RelayCommand(
-                    p => FieldName.Length > 0? true : false,
+                    p => true,
                     p => GetColumnNumber());
                 }
                 return _getColumnNumberCommand;
@@ -59,7 +60,9 @@ namespace QUp.ViewModels
         private void GetColumnNumber()
         {
             //MessageBox.Show("GetColumnNumber()");
-            ColumnNumber = "Hello!";
+            //ColumnNumber = "Hello!";
+            ColumnNumber = ManagerFS.GetNumberFromCtl(FieldName);
+
         }
     }
 }

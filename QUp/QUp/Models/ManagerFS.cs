@@ -65,11 +65,6 @@ namespace QUp.Models
             ReportUpdated?.Invoke(UpdateResultReport()); 
         }
 
-        internal static string GetNumberFromCtl(string fieldName)
-        {
-            throw new NotImplementedException();
-        }
-
         static void FindSource(string path, FileType fileType )
         {
             int index = path.LastIndexOfAny(new char[] { '\\' });
@@ -428,7 +423,56 @@ namespace QUp.Models
         }
         #endregion
 
+        internal static string GetNumberFromCtl(string fieldName)
+        {
+            string res = "Нет результата";
+            try
+            {
+                DirectoryInfo di = new DirectoryInfo(QMediator.PathToRegDest);
+                FileInfo[] arr = di.GetFiles("*.ctl");
+                if (arr.Length == 0)
+                {
+                    res = "Не найден файл контрола";
+                    return res;
+                }
+                if (arr.Length > 1)
+                {
+                    res = "Найдено несколько файлов контрола.";
+                    return res;
+                }
+                string[] lines = File.ReadAllLines(arr[0].FullName, Encoding.Default);
+                int count = 1;
+                bool startCount = false;
+                foreach (var item in lines)
+                {   
+                    if (startCount)
+                    {
+                        if (item.Length > 0 && item.Trim()[0] == '-')
+                            continue;
+                        string ctlField = item.Substring(0, item.IndexOf(',')).Trim();
+                        if (ctlField.ToLower() == fieldName.ToLower())
+                            return count.ToString();
+                        else count++;
+                    }
 
+                    if (item.Trim() == "(")
+                    {
+                        startCount = true;
+                    }
+
+                    if (item.Trim() == ")")
+                    {
+                        res = " Поле " + fieldName + " не найдено в контроле.";
+                        return res;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }            
+            return res;
+        }
 
         private static string UpdateResultReport()
         {
