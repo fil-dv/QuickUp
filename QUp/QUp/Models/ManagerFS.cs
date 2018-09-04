@@ -65,6 +65,11 @@ namespace QUp.Models
             ReportUpdated?.Invoke(UpdateResultReport()); 
         }
 
+        internal static string GetNumberFromCtl(string fieldName)
+        {
+            throw new NotImplementedException();
+        }
+
         static void FindSource(string path, FileType fileType )
         {
             int index = path.LastIndexOfAny(new char[] { '\\' });

@@ -56,6 +56,7 @@
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
+                
             </Setter>
         </Style>
 
@@ -97,6 +98,7 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
 
         </Grid.RowDefinitions>
 
@@ -104,12 +106,13 @@
         <Button Grid.Column="0" Grid.Row="1" Command="{Binding CreateNewFilesCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" ToolTip="Копирование файлов *.bat, *.ctl в x:\Реєстри, а так же файлов *.sql в x:\Progs\Registry из предыдущей папки данного контрагента.">Копирование файлов</Button>
         <Button Grid.Column="0" Grid.Row="2" Command="{Binding SearchCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" >Подбор контрола</Button>
         <Button Grid.Column="0" Grid.Row="3" Command="{Binding CreateCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Создание контрола</Button>
-        <Button Grid.Column="0" Grid.Row="4" Command="{Binding PredProgCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить предпрограммы</Button>
-        <Button Grid.Column="0" Grid.Row="5" Command="{Binding SplitAdressCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Разсплитить адреса</Button>
-        <Button Grid.Column="0" Grid.Row="6" Command="{Binding PostProgCommand}"  IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить постпрограммы</Button>
-        <Button Grid.Column="0" Grid.Row="7" Command="{Binding OktelProgCommand}" IsEnabled="False" Style="{StaticResource TabButtonLast}">Октел</Button>
+        <Button Grid.Column="0" Grid.Row="4" Command="{Binding GetExcelPosCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Позиция поля в Excel</Button>
+        <Button Grid.Column="0" Grid.Row="5" Command="{Binding PredProgCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить предпрограммы</Button>
+        <Button Grid.Column="0" Grid.Row="6" Command="{Binding SplitAdressCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Разсплитить адреса</Button>
+        <Button Grid.Column="0" Grid.Row="7" Command="{Binding PostProgCommand}"  IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить постпрограммы</Button>
+        <Button Grid.Column="0" Grid.Row="8" Command="{Binding OktelProgCommand}" IsEnabled="False" Style="{StaticResource TabButtonLast}">Октел</Button>
 
-        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="8" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="9" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="TextWrapping" Value="Wrap" />
@@ -125,7 +128,7 @@
         </Label>
 
 
-        <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="9"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+        <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="10"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
 
             <Label.Resources>
                 <Style TargetType="TextBlock">

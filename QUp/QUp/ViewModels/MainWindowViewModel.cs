@@ -260,5 +260,29 @@ namespace QUp
             //MessageBox.Show("PostProgCommand");           
         }
         #endregion
+
+        #region GetExcelPosCommand
+        ICommand _getExcelPosCommand;
+        public ICommand GetExcelPosCommand
+        {
+            get
+            {
+                if (_getExcelPosCommand == null)
+                {
+                    _getExcelPosCommand = new RelayCommand(
+                    p => true,
+                    p => GetExcelPos());
+                }
+                return _getExcelPosCommand;
+            }
+        }
+
+        void GetExcelPos()
+        {
+            ManagerWin mw = new ManagerWin();
+            mw.CreateDbFielNameWin();
+            //MessageBox.Show("GetExcelPos");           
+        }
+        #endregion
     }
 }
