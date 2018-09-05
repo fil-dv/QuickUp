@@ -60,9 +60,15 @@ namespace QUp.ViewModels
         private void GetColumnNumber()
         {
             //MessageBox.Show("GetColumnNumber()");
-            //ColumnNumber = "Hello!";
-            ColumnNumber = ManagerFS.GetNumberFromCtl(FieldName);
-
+            string number = ManagerFS.GetNumberFromCtl(FieldName);
+            if (number.Any(char.IsLetter))
+            {
+                ColumnNumber = number;
+            }
+            else
+            {
+                ColumnNumber = ManagerXls.TranslitNumberToLetters(number);
+            }
         }
     }
 }

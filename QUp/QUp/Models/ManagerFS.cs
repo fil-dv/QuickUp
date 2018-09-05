@@ -443,23 +443,22 @@ namespace QUp.Models
                 string[] lines = File.ReadAllLines(arr[0].FullName, Encoding.Default);
                 int count = 1;
                 bool startCount = false;
-                foreach (var item in lines)
+                List<string> list = GetCleanList(lines);                 
+
+                foreach (var item in list)
                 {   
                     if (startCount)
                     {
-                        if (item.Length > 0 && item.Trim()[0] == '-')
-                            continue;
-                        string ctlField = item.Substring(0, item.IndexOf(',')).Trim();
-                        if (ctlField.ToLower() == fieldName.ToLower())
+                        if (item.ToLower() == fieldName.ToLower().Trim())
+                        {
                             return count.ToString();
+                        }                            
                         else count++;
                     }
-
                     if (item.Trim() == "(")
                     {
                         startCount = true;
                     }
-
                     if (item.Trim() == ")")
                     {
                         res = " Поле " + fieldName + " не найдено в контроле.";
@@ -472,6 +471,20 @@ namespace QUp.Models
                 throw;
             }            
             return res;
+        }
+
+        private static List<string> GetCleanList(string[] lines)
+        {
+            List<string> list = new List<string>();
+            foreach (var item in lines)
+            {
+                if (item.Length == 0 || (item.Length > 0 && item.Trim()[0] == '-')) continue;
+                string line = item;
+                if (line.Contains(",")) line = line.Substring(0, item.IndexOf(',')).Trim();
+                if (line.Contains(" ")) line = line.Substring(0, item.IndexOf(' ')).Trim();
+                list.Add(line);
+            }
+            return list;
         }
 
         private static string UpdateResultReport()
