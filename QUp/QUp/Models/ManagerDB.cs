@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -43,6 +44,29 @@ namespace QUp.Models
                 //MessageBox.Show("Exception from MyLetterManager.PriorityManager.ExecCommand()" + ex.Message);
             }
         }
-        
+
+        #region SqlProc
+        public static void ExecProc(string procName)
+        {
+            try
+            {
+                using (OracleConnection _con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand(procName, _con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("count_of_deals", OracleDbType.Int32).Value = 1282;
+                        _con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        #endregion
+
     }
 }

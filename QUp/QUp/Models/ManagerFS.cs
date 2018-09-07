@@ -423,6 +423,7 @@ namespace QUp.Models
         }
         #endregion
 
+        #region GetExcelPosition
         internal static string GetNumberFromCtl(string fieldName)
         {
             string res = "Нет результата";
@@ -486,6 +487,10 @@ namespace QUp.Models
             }
             return list;
         }
+        #endregion
+
+
+
 
         private static string UpdateResultReport()
         {

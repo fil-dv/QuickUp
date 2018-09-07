@@ -214,30 +214,6 @@ namespace QUp
         }
         #endregion
 
-        #region OktelCommand
-        ICommand _oktelProgCommand;
-        public ICommand OktelProgCommand
-        {
-            get
-            {
-                if (_oktelProgCommand == null)
-                {
-                    _oktelProgCommand = new RelayCommand(
-                    p => true,
-                    p => OktelProg());
-                }
-                return _oktelProgCommand;
-            }
-        }
-
-        void OktelProg()
-        {
-            MessageBox.Show("OktelProg");
-            ResultText = String.Empty;
-            //ManagerFS.ProgsToExec(TaskName.Oktel);
-        }
-        #endregion
-
         #region SearchControlCommand
         ICommand _searchCtrlCommand;
         public ICommand SearchCtrlCommand
@@ -282,6 +258,32 @@ namespace QUp
             ManagerWin mw = new ManagerWin();
             mw.CreateDbFielNameWin();
             //MessageBox.Show("GetExcelPos");           
+        }
+        #endregion
+
+        #region OktelCommand
+        ICommand _oktelProgCommand;
+        public ICommand OktelProgCommand
+        {
+            get
+            {
+                if (_oktelProgCommand == null)
+                {
+                    _oktelProgCommand = new RelayCommand(
+                    p => true,
+                    p => OktelProg());
+                }
+                return _oktelProgCommand;
+            }
+        }
+
+        void OktelProg()
+        {
+            //MessageBox.Show("OktelProg");
+            //ResultText = String.Empty;
+            //ManagerFS.ProgsToExec(TaskName.Oktel);
+
+            ManagerDB.ExecProc("reg_upload.first_check");
         }
         #endregion
     }
