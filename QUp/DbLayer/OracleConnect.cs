@@ -11,10 +11,10 @@ namespace DbLayer
     {
         OracleConnection _con;
         OracleCommand _cmd;
-        public OracleConnect(string cinnectionString)
+        public OracleConnect(string connectionString)
         {
             _con = new OracleConnection();
-            _con.ConnectionString = cinnectionString;
+            _con.ConnectionString = connectionString;
         }
         public void OpenConnect()
         {

@@ -67,7 +67,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Infrastr\QSettings.cs" />
-    <Compile Include="Models\ManagerDB.cs" />
+    <Compile Include="Models\DbLayer\DbNotification.cs" />
+    <Compile Include="Models\DbLayer\ManagerDB.cs" />
     <Compile Include="Models\ManagerFS.cs" />
     <Compile Include="Models\ManagerWin.cs" />
     <Compile Include="Models\ManagerXls.cs" />

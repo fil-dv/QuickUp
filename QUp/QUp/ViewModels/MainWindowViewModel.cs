@@ -1,5 +1,6 @@
 ﻿using QUp.Infrastr;
 using QUp.Models;
+using QUp.Models.DbLayer;
 using QUp.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -283,7 +284,9 @@ namespace QUp
             //ResultText = String.Empty;
             //ManagerFS.ProgsToExec(TaskName.Oktel);
 
-            ManagerDB.ExecProc("reg_upload.first_check");
+            //ManagerDB.ExecProc("reg_upload.first_check");
+            DbNotification.Start();
+
         }
         #endregion
     }
