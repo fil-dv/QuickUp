@@ -1,15 +1,15 @@
-﻿<Window x:Class="QUp.MainWindow"         
+﻿<Window x:Class="QUp.Views.UploadWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:QUp"
+        xmlns:local="clr-namespace:QUp.ViewModels"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Подготовка" Height="480" Width="1100" Icon="/Resources/Icon1.ico">
+        Title="Заливка реестра" Height="700" Width="1100" Icon="/Resources/Icon1.ico">
 
     <Window.DataContext>
-        <local:MainWindowViewModel />
+        <local:UploadWindowViewModel />
     </Window.DataContext>
 
     <Window.Resources>
@@ -56,7 +56,7 @@
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
-                
+
             </Setter>
         </Style>
 
@@ -83,7 +83,7 @@
     </Window.Resources>
 
     <Grid Background="White" Margin="0,10,0,10">
-            <Grid.ColumnDefinitions>
+        <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.7*" />
             <ColumnDefinition Width="1.3*" />
         </Grid.ColumnDefinitions>
@@ -97,41 +97,30 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="1*" />
+
+
         </Grid.RowDefinitions>
 
-        <Button Grid.Column="0" Grid.Row="0" Command="{Binding InitializeCommand}" Style="{StaticResource TabButtonLast}" >Инициализация</Button>
-        <Button Grid.Column="0" Grid.Row="1" Command="{Binding CreateNewFilesCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" ToolTip="Копирование файлов *.bat, *.ctl в x:\Реєстри, а так же файлов *.sql в x:\Progs\Registry из предыдущей папки данного контрагента.">Копирование файлов</Button>
-        <Button Grid.Column="0" Grid.Row="2" Command="{Binding SearchCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" >Подбор контрола</Button>
-        <Button Grid.Column="0" Grid.Row="3" Command="{Binding CreateCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Создание контрола</Button>
-        <Button Grid.Column="0" Grid.Row="4" Command="{Binding GetExcelPosCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Позиция поля в Excel</Button>
+        <Button Grid.Column="0" Grid.Row="0" Command="{Binding CreateNewFilesCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" ToolTip="Копирование файлов *.bat, *.ctl в x:\Реєстри, а так же файлов *.sql в x:\Progs\Registry из предыдущей папки данного контрагента.">Инициализация реестра</Button>
+        <Button Grid.Column="0" Grid.Row="1" Command="{Binding PredProgCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить предпрограммы</Button>
+        <Button Grid.Column="0" Grid.Row="2" Command="{Binding CreateCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Создание backUp</Button>
+        <Button Grid.Column="0" Grid.Row="3" Command="{Binding SplitAdressCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Разсплитить адреса</Button>
+        <Button Grid.Column="0" Grid.Row="4" Command="{Binding PredProgCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Заливка в projects</Button>
+        <Button Grid.Column="0" Grid.Row="5" Command="{Binding SplitAdressCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Перевод в валюту кредита</Button>
+        <Button Grid.Column="0" Grid.Row="6" Command="{Binding PostProgCommand}"  IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">заливка инфо</Button>
+        <Button Grid.Column="0" Grid.Row="7" Command="{Binding PostProgCommand}"  IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Запустить постпрограммы</Button>
+        <Button Grid.Column="0" Grid.Row="8" Command="{Binding NextCommand}" IsEnabled="True" Style="{StaticResource TabButtonLast}">Постпроверка</Button>
+        <Button Grid.Column="0" Grid.Row="9" Command="{Binding NextCommand}" IsEnabled="True" Style="{StaticResource TabButtonLast}">Списание в архив</Button>
+        <Button Grid.Column="0" Grid.Row="10" Command="{Binding OktelProgCommand}" IsEnabled="True" Style="{StaticResource TabButtonLast}">Октел</Button>
+        <Button Grid.Column="0" Grid.Row="11" Command="{Binding NextCommand}" IsEnabled="True" Style="{StaticResource TabButtonLast}">Статус R</Button>
+        
 
-        <Grid Grid.Column="0" Grid.Row="5" FocusManager.FocusedElement="{Binding ElementName=TextBox}">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="3*" />
-                <ColumnDefinition Width="2*" />
-            </Grid.ColumnDefinitions>
-            
-            <Button Grid.Column="0" Command="{Binding InitializeCommand}" Style="{StaticResource TabButtonLast}" >Предпроверка</Button>
-            <TextBox Name="TextBox" Grid.Column="1" Focusable="True" FontFamily="Calibri" FontSize="21" Margin="3,10,3,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding FieldName, Mode=TwoWay}" >
-                <TextBox.Resources>
-                    <Style TargetType="{x:Type Border}">
-                        <Setter Property="CornerRadius" Value="10,3,10,3"/>
-                    </Style>
-                </TextBox.Resources>
-                <TextBox.Background>
-                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                        <GradientStop Color="#999999" Offset="0"/>
-                        <GradientStop Color="White" Offset="1"/>
-                    </LinearGradientBrush>
-                </TextBox.Background>
-            </TextBox>
-        </Grid>
-        
-        
-        
-        <Button Grid.Column="0" Grid.Row="6" Command="{Binding NextCommand}" IsEnabled="True" Style="{StaticResource TabButtonLast}">Далее</Button>
-
-        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="7" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=DealCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="12" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="TextWrapping" Value="Wrap" />
@@ -147,7 +136,7 @@
         </Label>
 
 
-        <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="7"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+        <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="12"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
 
             <Label.Resources>
                 <Style TargetType="TextBlock">

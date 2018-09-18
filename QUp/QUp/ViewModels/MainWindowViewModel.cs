@@ -60,6 +60,23 @@ namespace QUp
             }
         }
 
+        
+        string _dealCount = "0";
+        public string DealCount
+        {
+            get { return _dealCount; }
+            set
+            {
+                _dealCount = value;
+                OnPropertyChanged();
+            }
+        }
+
+
+
+
+
+
 
         private void ReportUpdated(string res)
         {
@@ -143,77 +160,75 @@ namespace QUp
         }
         #endregion
 
-        #region SplitAdressCommand
-        ICommand _splitAdressCommand;
-        public ICommand SplitAdressCommand
-        {
-            get
-            {
-                if (_splitAdressCommand == null)
-                {
-                    _splitAdressCommand = new RelayCommand(
-                    p => true,
-                    p => SplitAdress());
-                }
-                return _splitAdressCommand;
-            }
-        }
+        //#region SplitAdressCommand
+        //ICommand _splitAdressCommand;
+        //public ICommand SplitAdressCommand
+        //{
+        //    get
+        //    {
+        //        if (_splitAdressCommand == null)
+        //        {
+        //            _splitAdressCommand = new RelayCommand(
+        //            p => true,
+        //            p => SplitAdress());
+        //        }
+        //        return _splitAdressCommand;
+        //    }
+        //}
 
-        void SplitAdress()
-        {
-            ResultText = String.Empty;
-            ManagerFS.SplitAdr();
-        }
+        //void SplitAdress()
+        //{
+        //    ResultText = String.Empty;
+        //    ManagerFS.SplitAdr();
+        //}
+        //#endregion
 
+        //#region PredProgCommand
+        //ICommand _predProgCommand;
+        //public ICommand PredProgCommand
+        //{
+        //    get
+        //    {
+        //        if (_predProgCommand == null)
+        //        {
+        //            _predProgCommand = new RelayCommand(
+        //            p => true,
+        //            p => PredProg());
+        //        }
+        //        return _predProgCommand;
+        //    }
+        //}
 
-        #endregion
+        //void PredProg()
+        //{
+        //    ResultText = String.Empty;
+        //    ManagerFS.ProgsToExec(TaskName.PredProgs);
+        //}
+        //#endregion
 
-        #region PredProgCommand
-        ICommand _predProgCommand;
-        public ICommand PredProgCommand
-        {
-            get
-            {
-                if (_predProgCommand == null)
-                {
-                    _predProgCommand = new RelayCommand(
-                    p => true,
-                    p => PredProg());
-                }
-                return _predProgCommand;
-            }
-        }
+        //#region PostProgCommand
+        //ICommand _postProgCommand;
+        //public ICommand PostProgCommand
+        //{
+        //    get
+        //    {
+        //        if (_postProgCommand == null)
+        //        {
+        //            _postProgCommand = new RelayCommand(
+        //            p => true,
+        //            p => PostProg());
+        //        }
+        //        return _postProgCommand;
+        //    }
+        //}
 
-        void PredProg()
-        {
-            ResultText = String.Empty;
-            ManagerFS.ProgsToExec(TaskName.PredProgs);
-        }
-        #endregion
-
-        #region PostProgCommand
-        ICommand _postProgCommand;
-        public ICommand PostProgCommand
-        {
-            get
-            {
-                if (_postProgCommand == null)
-                {
-                    _postProgCommand = new RelayCommand(
-                    p => true,
-                    p => PostProg());
-                }
-                return _postProgCommand;
-            }
-        }
-
-        void PostProg()
-        {
-            //MessageBox.Show("PostProgCommand");
-            ResultText = String.Empty;
-            ManagerFS.ProgsToExec(TaskName.PostProgs);
-        }
-        #endregion
+        //void PostProg()
+        //{
+        //    //MessageBox.Show("PostProgCommand");
+        //    ResultText = String.Empty;
+        //    ManagerFS.ProgsToExec(TaskName.PostProgs);
+        //}
+        //#endregion
 
         #region SearchControlCommand
         ICommand _searchCtrlCommand;
@@ -256,37 +271,58 @@ namespace QUp
 
         void GetExcelPos()
         {
-            ManagerWin mw = new ManagerWin();
-            mw.CreateDbFielNameWin();
-            //MessageBox.Show("GetExcelPos");           
+            ManagerWin.CreateDbFielNameWin();          
         }
         #endregion
 
-        #region OktelCommand
-        ICommand _oktelProgCommand;
-        public ICommand OktelProgCommand
+        //#region OktelCommand
+        //ICommand _oktelProgCommand;
+        //public ICommand OktelProgCommand
+        //{
+        //    get
+        //    {
+        //        if (_oktelProgCommand == null)
+        //        {
+        //            _oktelProgCommand = new RelayCommand(
+        //            p => true,
+        //            p => OktelProg());
+        //        }
+        //        return _oktelProgCommand;
+        //    }
+        //}
+
+        //void OktelProg()
+        //{
+        //    MessageBox.Show("OktelProg");
+        //    //ResultText = String.Empty;
+        //    //ManagerFS.ProgsToExec(TaskName.Oktel);
+
+        //    //ManagerDB.ExecProc("reg_upload.first_check");
+        //    //DbNotification.Start();
+
+        //}
+        //#endregion
+
+        #region NextCommand
+        ICommand _nextCommand;
+        public ICommand NextCommand
         {
             get
             {
-                if (_oktelProgCommand == null)
+                if (_nextCommand == null)
                 {
-                    _oktelProgCommand = new RelayCommand(
+                    _nextCommand = new RelayCommand(
                     p => true,
-                    p => OktelProg());
+                    p => Next());
                 }
-                return _oktelProgCommand;
+                return _nextCommand;
             }
         }
 
-        void OktelProg()
+        void Next()
         {
-            //MessageBox.Show("OktelProg");
-            //ResultText = String.Empty;
-            //ManagerFS.ProgsToExec(TaskName.Oktel);
-
-            //ManagerDB.ExecProc("reg_upload.first_check");
-            DbNotification.Start();
-
+            //MessageBox.Show("Next");
+            ManagerWin.CreateRegUploadWin();
         }
         #endregion
     }

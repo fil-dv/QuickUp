@@ -8,13 +8,17 @@ using System.Threading.Tasks;
 
 namespace QUp.Models
 {
-    class ManagerWin
+    public static class ManagerWin
     {
-        public void CreateDbFielNameWin()
+        public static void CreateDbFielNameWin()
         {
             WindowDbField win = new WindowDbField();
-            //ElementHost.EnableModelessKeyboardInterop(win);
+            win.ShowDialog();
+        }
 
+        public static void CreateRegUploadWin()
+        {
+            UploadWindow win = new UploadWindow();            
             win.ShowDialog();
         }
     }
