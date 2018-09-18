@@ -44,7 +44,20 @@ namespace QUp
             get { return _isInitialize; }
             set
             {
+
                 _isInitialize = value;
+                OnPropertyChanged();
+            }
+        }
+
+        bool _isCountEntered = false;
+        public bool IsCountEntered
+        {
+            get { return _isCountEntered; }
+            set
+            {
+
+                _isCountEntered = value;
                 OnPropertyChanged();
             }
         }
@@ -60,14 +73,23 @@ namespace QUp
             }
         }
 
-        
-        string _dealCount = "0";
+
+        string _dealCount = String.Empty;
         public string DealCount
         {
             get { return _dealCount; }
             set
             {
-                _dealCount = value;
+                if (System.Text.RegularExpressions.Regex.IsMatch(value, "[^0-9]"))
+                {
+                    _dealCount = String.Empty;
+                    IsCountEntered = false;                    
+                }
+                else
+                {
+                    _dealCount = value;
+                    IsCountEntered = true;
+                }                
                 OnPropertyChanged();
             }
         }
@@ -275,33 +297,34 @@ namespace QUp
         }
         #endregion
 
-        //#region OktelCommand
-        //ICommand _oktelProgCommand;
-        //public ICommand OktelProgCommand
-        //{
-        //    get
-        //    {
-        //        if (_oktelProgCommand == null)
-        //        {
-        //            _oktelProgCommand = new RelayCommand(
-        //            p => true,
-        //            p => OktelProg());
-        //        }
-        //        return _oktelProgCommand;
-        //    }
-        //}
+        #region CheckCommand
+        ICommand _checkCommand;
+        public ICommand CheckCommand
+        {
+            get
+            {
+                if (_checkCommand == null)
+                {
+                    _checkCommand = new RelayCommand(
+                    p => true,
+                    p => Check());
+                }
+                return _checkCommand;
+            }
+        }
 
-        //void OktelProg()
-        //{
-        //    MessageBox.Show("OktelProg");
-        //    //ResultText = String.Empty;
-        //    //ManagerFS.ProgsToExec(TaskName.Oktel);
-
-        //    //ManagerDB.ExecProc("reg_upload.first_check");
-        //    //DbNotification.Start();
-
-        //}
-        //#endregion
+        void Check()
+        {
+            if (IsCountEntered)
+            {
+                MessageBox.Show("Check");
+            }
+            else
+            {
+                ResultText = "\n\n\tВведите количество заливаемых дел.";
+            }   
+        }
+        #endregion
 
         #region NextCommand
         ICommand _nextCommand;

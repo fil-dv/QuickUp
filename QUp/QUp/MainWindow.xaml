@@ -110,9 +110,9 @@
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
-            
-            <Button Grid.Column="0" Command="{Binding InitializeCommand}" Style="{StaticResource TabButtonLast}" >Предпроверка</Button>
-            <TextBox Name="TextBox" Grid.Column="1" Focusable="True" FontFamily="Calibri" FontSize="21" Margin="3,10,3,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding FieldName, Mode=TwoWay}" >
+
+            <Button Grid.Column="0" Command="{Binding CheckCommand}" Style="{StaticResource TabButtonLast}" >Предпроверка</Button>
+            <TextBox Name="TextBox" Grid.Column="1" Focusable="True" FontFamily="Calibri" FontSize="21" Margin="3,10,3,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding DealCount, Mode=TwoWay}" >
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="10,3,10,3"/>
@@ -131,7 +131,7 @@
         
         <Button Grid.Column="0" Grid.Row="6" Command="{Binding NextCommand}" IsEnabled="True" Style="{StaticResource TabButtonLast}">Далее</Button>
 
-        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="7" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=DealCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+        <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="7" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="TextWrapping" Value="Wrap" />

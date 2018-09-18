@@ -69,6 +69,32 @@ namespace QUp.Models
         }
         #endregion
 
+        #region PreCheck
+        public static void PreCheck(string count)
+        {
+            try
+            {
+
+
+                using (OracleConnection _con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand("first_check", _con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("count_of_deals", OracleDbType.Int32).Value = count;
+                        _con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        #endregion
+
 
 
     }
