@@ -133,6 +133,13 @@ namespace QUp
             ManagerFS.ReportUpdated += ReportUpdated;
             ManagerFS.Initialized += Initialized;
             ManagerFS.Initialize();
+
+            ManagerDB.ReportUpdated += ManagerDB_ReportUpdated;
+        }
+
+        private void ManagerDB_ReportUpdated(string res)
+        {
+            ResultText = res;
         }
         #endregion
 
@@ -317,7 +324,8 @@ namespace QUp
         {
             if (IsCountEntered)
             {
-                MessageBox.Show("Check");
+                //MessageBox.Show("Check");
+                ManagerDB.PreCheck(DealCount);
             }
             else
             {
