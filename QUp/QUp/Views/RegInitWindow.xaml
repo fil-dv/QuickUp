@@ -61,7 +61,7 @@
 
     <Style  x:Key="MyLowLabelStyle" TargetType="Label">
             <Setter Property="Padding" Value="120" />
-            <Setter Property="Margin" Value="10,1,10,3" />
+            <Setter Property="Margin" Value="10,1,10,1" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Label}">
@@ -105,7 +105,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height=".5*"/>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height=".5*"/>
+            <RowDefinition Height=".7*"/>
             <RowDefinition Height="8*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
@@ -128,7 +128,7 @@
             </Label.Background>
         </Label>
 
-        <TextBox  Name="RegName" Grid.Row="1" Grid.ColumnSpan="2"  FontFamily="Calibri" FontSize="21" Margin="10,10,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding RegName, Mode=TwoWay}" >
+        <TextBox  Name="RegName" Grid.Row="1" Grid.ColumnSpan="2"  FontFamily="Calibri" FontSize="21" Margin="10,9,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding RegName, Mode=TwoWay}" >
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="7,3,7,3"/>

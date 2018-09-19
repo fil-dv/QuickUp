@@ -39,7 +39,7 @@ namespace QUp.ViewModels
             get { return _regName; }
             set
             {
-                _regName = value;
+                _regName = value.Trim();
                 OnPropertyChanged();
             }
         }
@@ -50,7 +50,7 @@ namespace QUp.ViewModels
             get { return _startDate; }
             set
             {
-                _startDate = value;
+                _startDate = value.Trim();
                 OnPropertyChanged();
             }
         }
@@ -61,7 +61,7 @@ namespace QUp.ViewModels
             get { return _stopDate; }
             set
             {
-                _stopDate = value;
+                _stopDate = value.Trim();
                 OnPropertyChanged();
             }
         }
@@ -104,10 +104,6 @@ namespace QUp.ViewModels
                 //MessageBox.Show("Init");
                 ManagerDB.RegInit(RegName, StartDate, StopDate);
             }
-            else
-            {
-                ResultText = "\n\tВведены некорректные данные.";
-            }
         }
 
         private void ManagerDB_ReportUpdated(string res)
@@ -117,7 +113,31 @@ namespace QUp.ViewModels
 
         private bool VerifyData()
         {
-            return true;
+            bool res = true;            
+
+            try
+            {
+
+                if (RegName.ToUpper()[0] != 1050 && RegName.ToUpper()[0] != 1060)
+                {
+                    res = false;
+                    ResultText = "\n\tИмя реестра должно начинаться на буквы \"К\" или \"Ф\".";
+                }
+                if (!RegName.Contains("(") || !RegName.Contains(")"))
+                {
+                    res = false;
+                    ResultText += "\n\tИмя реестра должно содержать скобки.";
+                } 
+
+                DateTime start = DateTime.Parse(StartDate);
+                DateTime stop = DateTime.Parse(StopDate);
+            }            
+            catch (Exception ex)
+            {
+                res = false;
+                ResultText += "\n\tНекорректный формат даты.";
+            }
+            return res;
         }
         #endregion
 
