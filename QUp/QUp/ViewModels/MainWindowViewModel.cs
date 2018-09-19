@@ -94,7 +94,16 @@ namespace QUp
             }
         }
 
-
+        bool _isChecked = false;
+        public bool IsChecked
+        {
+            get { return _isChecked; }
+            set
+            {
+                _isChecked = value;
+                OnPropertyChanged();
+            }
+        }
 
 
 
@@ -102,6 +111,10 @@ namespace QUp
 
         private void ReportUpdated(string res)
         {
+            if (res.Contains("По количеству дел и по контролу все норм."))
+            {
+                IsChecked = true;
+            }
             ResultText = res;
         }
 
@@ -132,15 +145,16 @@ namespace QUp
         {
             ManagerFS.ReportUpdated += ReportUpdated;
             ManagerFS.Initialized += Initialized;
-            ManagerDB.ReportUpdated += ManagerDB_ReportUpdated;
+            ManagerDB.ReportUpdated += ReportUpdated;
 
             ManagerFS.Initialize();
         }
 
-        private void ManagerDB_ReportUpdated(string res)
-        {
-            ResultText = res;
-        }
+        //private void ManagerDB_ReportUpdated(string res)
+        //{
+           
+        //    ResultText = res;
+        //}
         #endregion
 
         #region CreateNewFilesCommand
@@ -325,7 +339,7 @@ namespace QUp
             if (IsCountEntered)
             {
                 //MessageBox.Show("Check");
-                ManagerDB.PreCheck(DealCount);
+                ManagerDB.PreCheck(DealCount);               
             }
             else
             {

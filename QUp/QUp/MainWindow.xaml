@@ -105,14 +105,14 @@
         <Button Grid.Column="0" Grid.Row="3" Command="{Binding CreateCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Создание контрола</Button>
         <Button Grid.Column="0" Grid.Row="4" Command="{Binding GetExcelPosCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}">Позиция поля в Excel</Button>
 
-        <Grid Grid.Column="0" Grid.Row="5" IsEnabled="{Binding IsInitialize}" FocusManager.FocusedElement="{Binding ElementName=TextBox}">
+        <Grid Grid.Column="0" Grid.Row="5" IsEnabled="{Binding IsInitialize}" >
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="3*" />
                 <ColumnDefinition Width="2*" />
             </Grid.ColumnDefinitions>
 
             <Button Grid.Column="0" Command="{Binding CheckCommand}" Style="{StaticResource TabButtonLast}" >Предпроверка</Button>
-            <TextBox Name="TextBox" Grid.Column="1" Focusable="True" FontFamily="Calibri" FontSize="21" Margin="3,10,3,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding DealCount, Mode=TwoWay}" >
+            <TextBox Name="TextBox" Grid.Column="1" Focusable="True" FontFamily="Calibri" FontSize="21" Margin="3,10,3,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding DealCount, Mode=TwoWay}" ToolTip="Введите количество заливаемых дел">
                 <TextBox.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="10,3,10,3"/>
@@ -129,7 +129,7 @@
 
 
 
-        <Button Grid.Column="0" Grid.Row="6" IsEnabled="{Binding IsInitialize}" Command="{Binding NextCommand}" Style="{StaticResource TabButtonLast}">Далее</Button>
+        <Button Grid.Column="0" Grid.Row="6" IsEnabled="{Binding IsChecked}" Command="{Binding NextCommand}" Style="{StaticResource TabButtonLast}">Далее</Button>
 
         <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="7" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>

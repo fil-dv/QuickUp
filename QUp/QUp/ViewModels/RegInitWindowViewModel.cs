@@ -97,11 +97,12 @@ namespace QUp.ViewModels
         void RegInit()
         {
             ResultText = String.Empty;
+            ManagerDB.ReportUpdated += ManagerDB_ReportUpdated;
 
             if (VerifyData())
             {
-                MessageBox.Show("Init");
-                ManagerDB.RegInit();
+                //MessageBox.Show("Init");
+                ManagerDB.RegInit(RegName, StartDate, StopDate);
             }
             else
             {
@@ -109,9 +110,14 @@ namespace QUp.ViewModels
             }
         }
 
+        private void ManagerDB_ReportUpdated(string res)
+        {
+            ResultText = res;
+        }
+
         private bool VerifyData()
         {
-            return false;
+            return true;
         }
         #endregion
 

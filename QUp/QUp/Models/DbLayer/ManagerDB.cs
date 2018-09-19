@@ -19,7 +19,7 @@ namespace QUp.Models
         static string _report = "";
         static System.Windows.Threading.DispatcherTimer _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
 
-        static event Action PreCheckHandler;
+        static event Action ProcDoneHandler;
         public static event ResultIsReady ReportUpdated;
 
         static ManagerDB()
@@ -80,7 +80,7 @@ namespace QUp.Models
         {
             try
             {
-                PreCheckHandler += ManagerDB_PreCheckHandler;
+                ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
                 using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
@@ -99,8 +99,9 @@ namespace QUp.Models
                 throw;
             }
         }
+        #endregion
 
-        private static void ManagerDB_PreCheckHandler()
+        private static void ManagerDB_ProcDoneHandler()
         {
             GetResultFromDb();
         }
@@ -131,11 +132,10 @@ namespace QUp.Models
                 throw;
             }
         }
-        #endregion
 
+        #region ResultWaiter
         private static void ResultWaiter()
-        {
-            
+        {            
             _dispatcherTimer.Tick += DispatcherTimer_Tick;
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             _dispatcherTimer.Start();
@@ -157,7 +157,7 @@ namespace QUp.Models
                             if (Convert.ToInt32(reader[0]) > 0)
                             {
                                 _dispatcherTimer.Stop();
-                                PreCheckHandler?.Invoke();
+                                ProcDoneHandler?.Invoke();
                             }
                         }
                     }
@@ -168,10 +168,35 @@ namespace QUp.Models
                 throw;
             }
         }
+        #endregion
 
-        public static void RegInit()
+        public static void RegInit(string regName, string startDate, string stopDate)
         {
+            try
+            {
+                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                ResultWaiter();
 
+                DateTime start = DateTime.Parse(startDate);
+                DateTime stop = DateTime.Parse(stopDate);
+
+                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand("reg_upload.initReg", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.Add("regLongName", OracleDbType.Varchar2).Value = regName;
+                        cmd.Parameters.Add("payStart", OracleDbType.Date).Value = start;
+                        cmd.Parameters.Add("payStop", OracleDbType.Date).Value = stop;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
 
