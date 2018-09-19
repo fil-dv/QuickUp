@@ -1,0 +1,221 @@
+﻿<Window x:Class="QUp.Views.RegInitWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QUp.ViewModels"
+        mc:Ignorable="d"
+        WindowStartupLocation="CenterScreen"
+        Title="Инициализация реестра" Height="700" Width="700">
+
+
+    <Window.DataContext>
+        <local:RegInitWindowViewModel />
+    </Window.DataContext>
+
+    <Window.Resources>
+
+        <Style TargetType="Button" x:Key="TabButtonLast">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="Calibri" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="10,0,10,0" />
+            <Setter Property="FontSize" Value="21" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="7,3,7,3" Background="#999999" BorderBrush="White" BorderThickness="2,2,1,1" >
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="false">
+                    <Setter Property="Foreground" Value="#FFADADAD"/>
+                    <Setter Property="Cursor" Value="Arrow" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        
+        <!--<Style TargetType="TextBox" x:Key="TBox">
+            <Setter Property="Background" Value="White" />
+            <Setter Property="TextBlock.TextAlignment" Value="Center" />
+            <Setter Property="FontFamily" Value="Calibri" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Margin" Value="7,10,3,0" />
+            <Setter Property="FontSize" Value="21" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border CornerRadius="10,3,10,3" Background="#999999" BorderBrush="White" BorderThickness="2,2,1,1" >
+                            <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>-->
+
+    <Style  x:Key="MyLowLabelStyle" TargetType="Label">
+            <Setter Property="Padding" Value="120" />
+            <Setter Property="Margin" Value="10,1,10,3" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Label}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                SnapsToDevicePixels="true" 
+                                CornerRadius="10, 3, 10, 3">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style  x:Key="MyLabelStyle" TargetType="Label">
+            <Setter Property="Padding" Value="120" />
+            <Setter Property="Margin" Value="10,10,10,10" />
+            <Setter Property="Template">
+
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Label}">
+                        <Border BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="{TemplateBinding BorderThickness}" 
+                                Background="{TemplateBinding Background}" 
+                                SnapsToDevicePixels="true" 
+                                CornerRadius="30, 7, 30, 7">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+
+            </Setter>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid FocusManager.FocusedElement="{Binding ElementName=RegName}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height=".5*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height=".5*"/>
+            <RowDefinition Height="1*"/>
+            <RowDefinition Height=".5*"/>
+            <RowDefinition Height="8*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="1*"/>
+            <ColumnDefinition Width="1*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="18" Content="Название реестра:" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+
+            <Label.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                </Style>
+            </Label.Resources>
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#f2f2f2" Offset="0"/>
+                    <GradientStop Color="#999999" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
+        </Label>
+
+        <TextBox  Name="RegName" Grid.Row="1" Grid.ColumnSpan="2"  FontFamily="Calibri" FontSize="21" Margin="10,10,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding RegName, Mode=TwoWay}" >
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="7,3,7,3"/>
+                </Style>
+            </TextBox.Resources>
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#999999" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
+
+        <Label Grid.Column="0" Grid.Row="2"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="18" Content="Дата начала зачисления платежей:" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+
+            <Label.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                </Style>
+            </Label.Resources>
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#f2f2f2" Offset="0"/>
+                    <GradientStop Color="#999999" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
+        </Label>
+
+        <Label Grid.Column="1" Grid.Row="2"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="18" Content="Дата окончания зачисления платежей:" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+
+            <Label.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                </Style>
+            </Label.Resources>
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#f2f2f2" Offset="0"/>
+                    <GradientStop Color="#999999" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
+        </Label>
+
+        <TextBox  Grid.Row="3" Grid.Column="0" FontFamily="Calibri" FontSize="21" Margin="10,10,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding StartDate, Mode=TwoWay}" >
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="7,3,7,3"/>
+                </Style>
+            </TextBox.Resources>
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#999999" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
+
+        <TextBox  Grid.Row="3" Grid.Column="1" FontFamily="Calibri" FontSize="21" Margin="10,10,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding StopDate, Mode=TwoWay}" >
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="7,3,7,3"/>
+                </Style>
+            </TextBox.Resources>
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#999999" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
+
+        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Command="{Binding RegInitCommand}" Style="{StaticResource TabButtonLast}" >Инициализировать реестр</Button>
+
+        <Label Grid.Column="0" Grid.Row="6" Grid.ColumnSpan="2" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <Label.Resources>
+                <Style TargetType="TextBlock">
+                    <Setter Property="TextWrapping" Value="Wrap" />
+                    <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+                </Style>
+            </Label.Resources>
+            <Label.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#f2f2f2" Offset="0"/>
+                    <GradientStop Color="#999999" Offset="1"/>
+                </LinearGradientBrush>
+            </Label.Background>
+        </Label>
+
+    </Grid>
+</Window>

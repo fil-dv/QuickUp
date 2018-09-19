@@ -137,5 +137,32 @@ namespace QUp.ViewModels
             ManagerFS.SplitAdr();
         }
         #endregion
+
+
+        #region RegInitWindowCommand
+        ICommand _regInitWindowCommand;
+        public ICommand RegInitWindowCommand
+        {
+            get
+            {
+                if (_regInitWindowCommand == null)
+                {
+                    _regInitWindowCommand = new RelayCommand(
+                    p => true,
+                    p => RegInitWindow());
+                }
+                return _regInitWindowCommand;
+            }
+        }
+
+        void RegInitWindow()
+        {
+            ResultText = String.Empty;
+            ManagerWin.CreateRegInitWin();
+        }
+        #endregion
+
+
+
     }
 }

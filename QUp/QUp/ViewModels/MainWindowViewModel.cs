@@ -132,9 +132,9 @@ namespace QUp
         {
             ManagerFS.ReportUpdated += ReportUpdated;
             ManagerFS.Initialized += Initialized;
-            ManagerFS.Initialize();
-
             ManagerDB.ReportUpdated += ManagerDB_ReportUpdated;
+
+            ManagerFS.Initialize();
         }
 
         private void ManagerDB_ReportUpdated(string res)

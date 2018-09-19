@@ -73,9 +73,13 @@
     <Compile Include="Models\ManagerWin.cs" />
     <Compile Include="Models\ManagerXls.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
+    <Compile Include="ViewModels\RegInitWindowViewModel.cs" />
     <Compile Include="ViewModels\RelayCommand.cs" />
     <Compile Include="ViewModels\UploadWindowViewModel.cs" />
     <Compile Include="ViewModels\WindowDbFieldViewModel.cs" />
+    <Compile Include="Views\RegInitWindow.xaml.cs">
+      <DependentUpon>RegInitWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\UploadWindow.xaml.cs">
       <DependentUpon>UploadWindow.xaml</DependentUpon>
     </Compile>
@@ -95,6 +99,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\RegInitWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\UploadWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

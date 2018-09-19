@@ -21,5 +21,11 @@ namespace QUp.Models
             UploadWindow win = new UploadWindow();            
             win.ShowDialog();
         }
+
+        public static void CreateRegInitWin()
+        {
+            RegInitWindow win = new RegInitWindow();
+            win.ShowDialog();
+        }
     }
 }

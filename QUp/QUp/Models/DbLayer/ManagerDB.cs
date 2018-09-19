@@ -169,6 +169,12 @@ namespace QUp.Models
             }
         }
 
+        public static void RegInit()
+        {
+
+        }
+
+
         private static string UpdateResultReport()
         {
             return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
