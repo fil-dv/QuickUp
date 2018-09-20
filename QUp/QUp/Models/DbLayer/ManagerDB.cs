@@ -200,6 +200,133 @@ namespace QUp.Models
         }
 
 
+        #region FillTables
+        public static void FillTables()
+        {
+            try
+            {
+                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                ResultWaiter();
+
+                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand("reg_upload.fill_suvd", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region StepByStep
+        public static void StepByStep()
+        {
+            try
+            {
+                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                ResultWaiter();
+
+                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand("reg_upload.step_by_step", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region FinishCheck
+        public static void FinishCheck()
+        {
+            try
+            {
+                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                ResultWaiter();
+
+                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand("reg_upload.finish_check", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+        #region ToArchive
+        public static void ToArchive()
+        {
+            try
+            {
+                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                ResultWaiter();
+
+                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand("reg_upload.move_arc_and_lpd", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+
+        #region StatusR
+        public static void StatusR()
+        {
+            try
+            {
+                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                ResultWaiter();
+
+                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand("reg_upload.set_r_status_loop", con))
+                    {
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        con.Open();
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+        #endregion
+
+
         private static string UpdateResultReport()
         {
             return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");

@@ -163,6 +163,127 @@ namespace QUp.ViewModels
         #endregion
 
 
+        #region FillTablesCommand
+        ICommand _fillTablesCommand;
+        public ICommand FillTablesCommand
+        {
+            get
+            {
+                if (_fillTablesCommand == null)
+                {
+                    _fillTablesCommand = new RelayCommand(
+                    p => true,
+                    p => FillTables());
+                }
+                return _fillTablesCommand;
+            }
+        }
+
+        void FillTables()
+        {
+            //MessageBox.Show("Fill");
+            ManagerDB.FillTables();            
+        }
+        #endregion
+
+        #region StepByStepCommand
+        ICommand _stepByStepCommand;
+        public ICommand StepByStepCommand
+        {
+            get
+            {
+                if (_stepByStepCommand == null)
+                {
+                    _stepByStepCommand = new RelayCommand(
+                    p => true,
+                    p => StepByStep());
+                }
+                return _stepByStepCommand;
+            }
+        }
+
+        void StepByStep()
+        {
+            //MessageBox.Show("Fill");
+            ManagerDB.StepByStep();
+        }
+        #endregion
+
+
+
+        #region FinishCheckCommand
+        ICommand _finishCheckCommand;
+        public ICommand FinishCheckCommand
+        {
+            get
+            {
+                if (_finishCheckCommand == null)
+                {
+                    _finishCheckCommand = new RelayCommand(
+                    p => true,
+                    p => FinishCheck());
+                }
+                return _finishCheckCommand;
+            }
+        }
+
+        void FinishCheck()
+        {
+            //MessageBox.Show("Fill");
+            ManagerDB.FinishCheck();
+        }
+        #endregion
+
+
+
+        #region ToArchiveCommand
+        ICommand _toArchiveCommand;
+        public ICommand ToArchiveCommand
+        {
+            get
+            {
+                if (_toArchiveCommand == null)
+                {
+                    _toArchiveCommand = new RelayCommand(
+                    p => true,
+                    p => ToArchive());
+                }
+                return _toArchiveCommand;
+            }
+        }
+
+        void ToArchive()
+        {
+            //MessageBox.Show("Fill");
+            ManagerDB.ToArchive();
+        }
+        #endregion
+
+
+
+        #region StatusRCommand
+        ICommand _statusRCommand;
+        public ICommand StatusRCommand
+        {
+            get
+            {
+                if (_statusRCommand == null)
+                {
+                    _statusRCommand = new RelayCommand(
+                    p => true,
+                    p => StatusR());
+                }
+                return _statusRCommand;
+            }
+        }
+
+        void StatusR()
+        {
+            //MessageBox.Show("Fill");
+            ManagerDB.StatusR();
+        }
+        #endregion
+
 
     }
 }
