@@ -39,7 +39,7 @@ namespace QUp.ViewModels
             get { return _regName; }
             set
             {
-                _regName = value.Trim();
+                _regName = value;
                 OnPropertyChanged();
             }
         }
