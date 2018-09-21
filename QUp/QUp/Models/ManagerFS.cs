@@ -25,21 +25,29 @@ namespace QUp.Models
         #region InitializeApp
         static public void Initialize()
         {
-            _report = "";
-            using (var fbd = new FolderBrowserDialog())
+            try
             {
-                //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
-                fbd.SelectedPath = @"x:\Реєстри\ЯЯЯTest\1  1111";
-                DialogResult result = fbd.ShowDialog();
-
-                if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                _report = "";
+                using (var fbd = new FolderBrowserDialog())
                 {
-                    QMediator.PathToRegDest = fbd.SelectedPath;
-                    QMediator.PathToProgDest = QMediator.PathToRegDest.Replace("Реєстри", "Progs\\Registry");
-                    Initialized?.Invoke(true);
+                    //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
+                    fbd.SelectedPath = @"x:\Реєстри\ЯЯЯTest\1  1111";
+                    DialogResult result = fbd.ShowDialog();
+
+                    if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                    {
+                        QMediator.PathToRegDest = fbd.SelectedPath;
+                        QMediator.PathToProgDest = QMediator.PathToRegDest.Replace("Реєстри", "Progs\\Registry");
+                        Initialized?.Invoke(true);
+                    }
                 }
+                ReportUpdated?.Invoke(UpdateResultReport());
             }
-            ReportUpdated?.Invoke(UpdateResultReport());
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from Initialize()" + ex.Message); ;
+            }
+            
         }
 
         #endregion
@@ -53,103 +61,126 @@ namespace QUp.Models
         
         public static void CreateNewFiles()
         {
-            Directory.CreateDirectory(QMediator.PathToProgDest);
-            FindSource(QMediator.PathToRegDest, FileType.Reg);
-            FindSource(QMediator.PathToProgDest, FileType.Prog);
+            try
+            {
+                Directory.CreateDirectory(QMediator.PathToProgDest);
+                FindSource(QMediator.PathToRegDest, FileType.Reg);
+                FindSource(QMediator.PathToProgDest, FileType.Prog);
 
-            //for (int i = 0; i < 300; i++)
-            //{
-            //    _report += i + Environment.NewLine;
-            //}
-
-            ReportUpdated?.Invoke(UpdateResultReport()); 
+                ReportUpdated?.Invoke(UpdateResultReport());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from CreateNewFiles()" + ex.Message);
+            }
         }
 
         static void FindSource(string path, FileType fileType )
         {
-            int index = path.LastIndexOfAny(new char[] { '\\' });
-            string pathToParent = path.Substring(0, index);
-            string[] dirs = Directory.GetDirectories(pathToParent);
-            List<DirectoryInfo> dirList = new List<DirectoryInfo>();
-            for (int i = 0; i < dirs.Length; i++)
+            try
             {
-                if (dirs[i].Contains("  "))
+                int index = path.LastIndexOfAny(new char[] { '\\' });
+                string pathToParent = path.Substring(0, index);
+                string[] dirs = Directory.GetDirectories(pathToParent);
+                List<DirectoryInfo> dirList = new List<DirectoryInfo>();
+                for (int i = 0; i < dirs.Length; i++)
                 {
-                    DirectoryInfo directory = new DirectoryInfo(dirs[i]);
-                    dirList.Add(directory);
+                    if (dirs[i].Contains("  "))
+                    {
+                        DirectoryInfo directory = new DirectoryInfo(dirs[i]);
+                        dirList.Add(directory);
+                    }
                 }
-            }
-            dirList.Sort((x, y) => DateTime.Compare(x.CreationTime, y.CreationTime));
-            DirectoryInfo sourceDir = null;
+                dirList.Sort((x, y) => DateTime.Compare(x.CreationTime, y.CreationTime));
+                DirectoryInfo sourceDir = null;
 
-            if (dirList.Count > 1 && dirList[dirList.Count - 2] != null)
-            {
-                sourceDir = dirList[dirList.Count - 2];
-
-                if (fileType == FileType.Reg)
+                if (dirList.Count > 1 && dirList[dirList.Count - 2] != null)
                 {
-                    QMediator.PathToRegSource = sourceDir.FullName;
-                    CopyRegFiles();
+                    sourceDir = dirList[dirList.Count - 2];
+
+                    if (fileType == FileType.Reg)
+                    {
+                        QMediator.PathToRegSource = sourceDir.FullName;
+                        CopyRegFiles();
+                    }
+                    else
+                    {
+                        QMediator.PathToProgSource = sourceDir.FullName;
+                        CopyProgFiles();
+                    }
                 }
+
                 else
                 {
-                    QMediator.PathToProgSource = sourceDir.FullName;
-                    CopyProgFiles();
+                    if (fileType == FileType.Reg)
+                    {
+                        _report += "У данного контрагента не найдена папка для копирования файлов заливки.";
+                        CopyRegFiles();
+                    }
+                    else
+                    {
+                        _report += Environment.NewLine + "У данного контрагента не найдена папка для копирования программ.";
+                        CopyProgFiles();
+                    }
                 }
             }
-
-            else
+            catch (Exception ex)
             {
-                if (fileType == FileType.Reg)
-                {
-                    _report += "У данного контрагента не найдена папка для копирования файлов заливки.";
-                    CopyRegFiles();
-                }
-                else
-                {
-                    _report += Environment.NewLine + "У данного контрагента не найдена папка для копирования программ.";
-                    CopyProgFiles();
-                }
-            }
+                MessageBox.Show("Exception from FindSource()" + ex.Message);
+            }            
         }
 
         static void CopyRegFiles()
         {
-            DirectoryInfo sourceDir = new DirectoryInfo(QMediator.PathToRegSource);
-            FileInfo[] files = sourceDir.GetFiles();
-            List<FileInfo> listToCopy = new List<FileInfo>();
-            for (int i = 0; i < files.Length; i++)
+            try
             {
-                if (files[i].Extension.ToLower() == ".bat" ||
-                    files[i].Extension.ToLower() == ".ctl" ||
-                    files[i].Extension.ToLower() == ".txt" ||
-                    files[i].Extension.ToLower() == ".exe")
+                DirectoryInfo sourceDir = new DirectoryInfo(QMediator.PathToRegSource);
+                FileInfo[] files = sourceDir.GetFiles();
+                List<FileInfo> listToCopy = new List<FileInfo>();
+                for (int i = 0; i < files.Length; i++)
                 {
-                    listToCopy.Add(files[i]);
+                    if (files[i].Extension.ToLower() == ".bat" ||
+                        files[i].Extension.ToLower() == ".ctl" ||
+                        files[i].Extension.ToLower() == ".txt" ||
+                        files[i].Extension.ToLower() == ".exe")
+                    {
+                        listToCopy.Add(files[i]);
+                    }
+                }
+                DirectoryInfo destDir = new DirectoryInfo(QMediator.PathToRegDest);
+
+                _report += Environment.NewLine + "Копируем файлы из " + Environment.NewLine + "   " + sourceDir + Environment.NewLine + "в " + destDir + Environment.NewLine + Environment.NewLine;
+
+                foreach (var item in listToCopy)
+                {
+                    File.Copy(item.FullName, destDir + "\\" + item.Name, true);
+                    _report += item.Name + Environment.NewLine;
                 }
             }
-            DirectoryInfo destDir = new DirectoryInfo(QMediator.PathToRegDest);
-
-            _report += Environment.NewLine + "Копируем файлы из " + Environment.NewLine + "   " +  sourceDir + Environment.NewLine + "в " + destDir + Environment.NewLine + Environment.NewLine;
-
-            foreach (var item in listToCopy)
+            catch (Exception ex)
             {
-                File.Copy(item.FullName, destDir + "\\" + item.Name, true);
-                _report += item.Name + Environment.NewLine;
-            }
+                MessageBox.Show("Exception from CopyRegFiles()" + ex.Message);
+            }            
         }
 
         static void CopyProgFiles()
         {
-            _report += Environment.NewLine + Environment.NewLine + "Копируем содержимое папки  " + Environment.NewLine + "    " + QMediator.PathToProgSource + Environment.NewLine + " в " + QMediator.PathToProgDest + "." + Environment.NewLine;
+            try
+            {
+                _report += Environment.NewLine + Environment.NewLine + "Копируем содержимое папки  " + Environment.NewLine + "    " + QMediator.PathToProgSource + Environment.NewLine + " в " + QMediator.PathToProgDest + "." + Environment.NewLine;
 
-            foreach (string dirPath in Directory.GetDirectories(QMediator.PathToProgSource, "*", SearchOption.AllDirectories))
-            {
-                Directory.CreateDirectory(dirPath.Replace(QMediator.PathToProgSource, QMediator.PathToProgDest));
+                foreach (string dirPath in Directory.GetDirectories(QMediator.PathToProgSource, "*", SearchOption.AllDirectories))
+                {
+                    Directory.CreateDirectory(dirPath.Replace(QMediator.PathToProgSource, QMediator.PathToProgDest));
+                }
+                foreach (string newPath in Directory.GetFiles(QMediator.PathToProgSource, "*.*", SearchOption.AllDirectories))
+                {
+                    File.Copy(newPath, newPath.Replace(QMediator.PathToProgSource, QMediator.PathToProgDest), true);
+                }
             }
-            foreach (string newPath in Directory.GetFiles(QMediator.PathToProgSource, "*.*", SearchOption.AllDirectories))
+            catch (Exception ex)
             {
-                File.Copy(newPath, newPath.Replace(QMediator.PathToProgSource, QMediator.PathToProgDest), true);
+                MessageBox.Show("Exception from CopyProgFiles()" + ex.Message); 
             }
         }
         #endregion
@@ -157,51 +188,57 @@ namespace QUp.Models
         #region RunControlCreator
         public static void RunCtrlCreator()
         {
-            _report = "Создание контрола...";
-            ReportUpdated?.Invoke(UpdateResultReport());
-
-            ProcessStartInfo pInfo = new ProcessStartInfo("c-creator.exe");
-            if (QMediator.PathToRegDest != null)
+            try
             {
-                DirectoryInfo directoryInfo = new DirectoryInfo(QMediator.PathToRegDest);
-                FileInfo[] files = directoryInfo.GetFiles("*.xls*");
-                string path = "";
-                if (files.Length > 0)
+                _report = "Создание контрола...";
+                ReportUpdated?.Invoke(UpdateResultReport());
+
+                ProcessStartInfo pInfo = new ProcessStartInfo("c-creator.exe");
+                if (QMediator.PathToRegDest != null)
                 {
-                    path = files[0].FullName;
+                    DirectoryInfo directoryInfo = new DirectoryInfo(QMediator.PathToRegDest);
+                    FileInfo[] files = directoryInfo.GetFiles("*.xls*");
+                    string path = "";
+                    if (files.Length > 0)
+                    {
+                        path = files[0].FullName;
+                    }
+                    pInfo.Arguments = "\"" + path + "\"";
                 }
-                pInfo.Arguments = "\"" + path + "\"";                
+                pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
+                Process p = Process.Start(pInfo);
+                ReportUpdated?.Invoke(UpdateResultReport());
             }
-            pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
-            Process p = Process.Start(pInfo);
-            ReportUpdated?.Invoke(UpdateResultReport());
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from RunCtrlCreator()" + ex.Message);
+            }            
         }
         #endregion
 
         #region Split adress
         public static void SplitAdr()
         {
-            _report = "\n\n\t  Разбивка адресов...";
-            ReportUpdated?.Invoke(UpdateResultReport());
-
-            SplitCompletHandler += UpdateReport;
-
-            ProcessStartInfo pInfo = new System.Diagnostics.ProcessStartInfo(@"d:\Dima\Programming\git\AdressSpliter\Adr\Adr\bin\Debug\Adr.exe");
-            if (QMediator.PathToRegDest != null)
+            try
             {
-                pInfo.Arguments = ("\"" + QMediator.PathToRegDest + "\"");
+                _report = "\n\n\t  Разбивка адресов...";
+                ReportUpdated?.Invoke(UpdateResultReport());
+
+                SplitCompletHandler += UpdateReport;
+
+                ProcessStartInfo pInfo = new System.Diagnostics.ProcessStartInfo(@"d:\Dima\Programming\git\AdressSpliter\Adr\Adr\bin\Debug\Adr.exe");
+                if (QMediator.PathToRegDest != null)
+                {
+                    pInfo.Arguments = ("\"" + QMediator.PathToRegDest + "\"");
+                }
+                Process process = Process.Start(pInfo);
+                process.EnableRaisingEvents = true;
+                process.Exited += SplitFinished;
             }
-            Process process = Process.Start(pInfo);
-            process.EnableRaisingEvents = true;
-            process.Exited += SplitFinished;
-           // process.Close();
-
-
-                   
-            //Thread thread = new Thread(Split);
-            //thread.Start();  
-            //_report = ReadLog();
-            //ReportUpdated?.Invoke(UpdateResultReport());
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from SplitAdr()" + ex.Message);
+            }            
         }
 
         private static void SplitFinished(object sender, EventArgs e)
@@ -211,8 +248,15 @@ namespace QUp.Models
 
         private static void UpdateReport()
         {
-            _report = ReadLog();
-            ReportUpdated?.Invoke(UpdateResultReport());
+            try
+            {
+                _report = ReadLog();
+                ReportUpdated?.Invoke(UpdateResultReport());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from UpdateReport()" + ex.Message);
+            }            
         }
 
         //private static void Split()
@@ -232,8 +276,15 @@ namespace QUp.Models
         private static string ReadLog()
         {
             string str = File.ReadAllText("log.txt");
-            int index = str.LastIndexOf("------------------");
-            str = str.Substring(index + 18);
+            try
+            {                
+                int index = str.LastIndexOf("------------------");
+                str = str.Substring(index + 18);               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from ReadLog()" + ex.Message);
+            }
             return str;
         }
         #endregion
@@ -241,92 +292,113 @@ namespace QUp.Models
         #region ProgsToExexute
         public static void ProgsToExec(TaskName taskName)
         {
-            _report = "Выполнение программ...\n\n";
-            ReportUpdated?.Invoke(UpdateResultReport());
-            if (QMediator.PathToProgDest != null)
+            try
             {
-                string str;
-                if (taskName == TaskName.Oktel)
+                _report = "Выполнение программ...\n\n";
+                ReportUpdated?.Invoke(UpdateResultReport());
+                if (QMediator.PathToProgDest != null)
                 {
-                    str = "\\post!\\oktel";
-                }
-                else
-                {
-                    str = taskName == TaskName.PredProgs ? "\\!pred" : "\\post!";
-                }
-                
-                string path = QMediator.PathToProgDest + str;
-                if (!new DirectoryInfo(path).Exists)
-                {
-                    Directory.CreateDirectory(path);
-                    _report = "Нет программ для выполнения.";
-                }
-                else
-                {
-                    List<string> filePathList = GetFilesForExec(path);
-                    if (filePathList.Count < 1)
+                    string str;
+                    if (taskName == TaskName.Oktel)
                     {
-                        _report = "Нет программ для выполнения.";
-                        ReportUpdated?.Invoke(UpdateResultReport());
-                        return;
+                        str = "\\post!\\oktel";
                     }
-                    foreach (var item in filePathList)
+                    else
                     {
-                        List<string> queryList = SplitFile(item);
-                        _report += Environment.NewLine + "Файл:\t\t" + item;
-                        bool isOk = true;
-                        foreach (var query in queryList)
-                        {
-                            try
-                            {
-                                ManagerDB.ExecCommand(query);
-                                //_report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
-                            }
-                            catch (Exception ex)
-                            {
-                                isOk = false;
-                                //_report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
-                            }                            
-                        }
-                        _report += ("\t" + (isOk == true ? "отработал нормально." : "отработал с ошибками.") + Environment.NewLine);
-                    }                    
-                }                
-            }
-            else
-            {
-                _report = "Не определен путь к программам.";
-            }
+                        str = taskName == TaskName.PredProgs ? "\\!pred" : "\\post!";
+                    }
 
-            ReportUpdated?.Invoke(UpdateResultReport());
+                    string path = QMediator.PathToProgDest + str;
+                    if (!new DirectoryInfo(path).Exists)
+                    {
+                        Directory.CreateDirectory(path);
+                        _report = "Нет программ для выполнения.";
+                    }
+                    else
+                    {
+                        List<string> filePathList = GetFilesForExec(path);
+                        if (filePathList.Count < 1)
+                        {
+                            _report = "Нет программ для выполнения.";
+                            ReportUpdated?.Invoke(UpdateResultReport());
+                            return;
+                        }
+                        foreach (var item in filePathList)
+                        {
+                            List<string> queryList = SplitFile(item);
+                            _report += Environment.NewLine + "Файл:\t\t" + item;
+                            bool isOk = true;
+                            foreach (var query in queryList)
+                            {
+                                try
+                                {
+                                    ManagerDB.ExecCommand(query);
+                                    //_report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                                }
+                                catch (Exception ex)
+                                {
+                                    isOk = false;
+                                    //_report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                                }
+                            }
+                            _report += ("\t" + (isOk == true ? "отработал нормально." : "отработал с ошибками.") + Environment.NewLine);
+                        }
+                    }
+                }
+                else
+                {
+                    _report = "Не определен путь к программам.";
+                }
+
+                ReportUpdated?.Invoke(UpdateResultReport());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from ProgsToExec()" + ex.Message);
+            }            
         }
 
         private static List<string> SplitFile(string path)
-        {            
-            string fileText = File.ReadAllText(path, Encoding.Default);
-            string[] queries = fileText.Trim().Split(';');
+        {
             List<string> listStr = new List<string>();
-
-            foreach (var item in queries)
+            try
             {
-                if (item.Trim().Length > 0)
+                string fileText = File.ReadAllText(path, Encoding.Default);
+                string[] queries = fileText.Trim().Split(';');                
+
+                foreach (var item in queries)
                 {
-                    listStr.Add(item.Trim());
-                }
+                    if (item.Trim().Length > 0)
+                    {
+                        listStr.Add(item.Trim());
+                    }
+                }               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from SplitFile()" + ex.Message);
             }
             return listStr;
         }
 
         private static List<string> GetFilesForExec(string path)
         {
-            DirectoryInfo di = new DirectoryInfo(path);
-            FileInfo[] fiArr = di.GetFiles();
             List<string> fileList = new List<string>();
-            foreach (var item in fiArr)
+            try
             {
-                if (!item.Name.Contains("--"))
+                DirectoryInfo di = new DirectoryInfo(path);
+                FileInfo[] fiArr = di.GetFiles();                
+                foreach (var item in fiArr)
                 {
-                    fileList.Add(item.FullName);
-                }
+                    if (!item.Name.Contains("--"))
+                    {
+                        fileList.Add(item.FullName);
+                    }
+                }               
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from Method()" + ex.Message);
             }
             return fileList;
         }
@@ -335,90 +407,119 @@ namespace QUp.Models
         #region SearchCtrl
         public static void SearchCtrl()
         {
-            _report = "Подбор контрола..." + Environment.NewLine;
-            ReportUpdated?.Invoke(UpdateResultReport());
-
-            DirectoryInfo di = new DirectoryInfo(QMediator.PathToRegDest);
-            FileInfo[] fArr = di.GetFiles("imp.xls*");
-            if (fArr.Length < 1)
+            try
             {
-                _report = string.Format("В папке {0} не найден файл imp.xls* ", di.FullName);
+                _report = "Подбор контрола..." + Environment.NewLine;
                 ReportUpdated?.Invoke(UpdateResultReport());
-                return;
-            }
-            string pathToImp = fArr[0].FullName;
-            int xlsCollCount = ManagerXls.GetFileCollCount(pathToImp);
-            FileInfo[] csvArr = GetCsvList();
-            List<FileInfo> csvCheckedList = GetCheckedList(csvArr, xlsCollCount);
 
-            if (csvCheckedList.Count < 1)
-            {
-                _report += "Нет подходящего контрола.";
+                DirectoryInfo di = new DirectoryInfo(QMediator.PathToRegDest);
+                FileInfo[] fArr = di.GetFiles("imp.xls*");
+                if (fArr.Length < 1)
+                {
+                    _report = string.Format("В папке {0} не найден файл imp.xls* ", di.FullName);
+                    ReportUpdated?.Invoke(UpdateResultReport());
+                    return;
+                }
+                string pathToImp = fArr[0].FullName;
+                int xlsCollCount = ManagerXls.GetFileCollCount(pathToImp);
+                FileInfo[] csvArr = GetCsvList();
+                List<FileInfo> csvCheckedList = GetCheckedList(csvArr, xlsCollCount);
+
+                if (csvCheckedList.Count < 1)
+                {
+                    _report += "Нет подходящего контрола.";
+                    ReportUpdated?.Invoke(UpdateResultReport());
+                    return;
+                }
+
+                csvCheckedList.Sort((x, y) => DateTime.Compare(y.LastWriteTime, x.LastWriteTime));
+
+                FileInfo resultFile = csvCheckedList[0];
+
+                if (resultFile.DirectoryName != QMediator.PathToRegDest)
+                {
+                    File.Copy(resultFile.FullName, QMediator.PathToRegDest + "\\" + resultFile.Name, true);
+                    _report += "Скопирован, подходящий по размеру контрол, из " + resultFile.FullName + Environment.NewLine;
+                }
+                else
+                {
+                    _report += "Текущий контрол подходит по размеру." + Environment.NewLine;
+                }
+
+                //_report += "путь к екселю: " + pathToImp + Environment.NewLine;
+                _report += "С толбцов в экселе: " + xlsCollCount + Environment.NewLine;
+                _report += "Строк в контроле: " + GetCsvRowCount(resultFile);
+
+                //foreach (var item in csvCheckedList)
+                //{
+                //    _report += (item.FullName + "\t" + "в контроле строк: " + GetCsvRowCount(item) + "   " + item.LastWriteTime + Environment.NewLine);
+                //}
+
                 ReportUpdated?.Invoke(UpdateResultReport());
-                return;
             }
-
-            csvCheckedList.Sort((x, y) => DateTime.Compare(y.LastWriteTime, x.LastWriteTime));
-
-            FileInfo resultFile = csvCheckedList[0];            
-
-            if (resultFile.DirectoryName != QMediator.PathToRegDest)
+            catch (Exception ex)
             {
-                File.Copy(resultFile.FullName, QMediator.PathToRegDest + "\\" + resultFile.Name, true);
-                _report += "Скопирован, подходящий по размеру контрол, из " + resultFile.FullName + Environment.NewLine;
+                MessageBox.Show("Exception from SearchCtrl()" + ex.Message);
             }
-            else
-            {
-                _report += "Текущий контрол подходит по размеру." + Environment.NewLine;
-            }
-
-            //_report += "путь к екселю: " + pathToImp + Environment.NewLine;
-            _report += "С толбцов в экселе: " + xlsCollCount + Environment.NewLine;
-            _report += "Строк в контроле: " + GetCsvRowCount(resultFile);
-
-            //foreach (var item in csvCheckedList)
-            //{
-            //    _report += (item.FullName + "\t" + "в контроле строк: " + GetCsvRowCount(item) + "   " + item.LastWriteTime + Environment.NewLine);
-            //}
-
-            ReportUpdated?.Invoke(UpdateResultReport());
+            
         }
 
         private static List<FileInfo> GetCheckedList(FileInfo[] csvArr, int rowCount)
         {
             List<FileInfo> resList = new List<FileInfo>();
-
-            foreach (var item in csvArr)
+            try
             {
-                if (GetCsvRowCount(item) == rowCount)
+                foreach (var item in csvArr)
                 {
-                    resList.Add(item);
+                    if (GetCsvRowCount(item) == rowCount)
+                    {
+                        resList.Add(item);
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetCheckedList()" + ex.Message);
+            }            
             return resList;
         }
 
         private static int GetCsvRowCount(FileInfo item)
         {
             int count = 0;
-            bool countFlag = false;
-            string[] lines = File.ReadAllLines(item.FullName);
-
-            for (int i = 0; i < lines.Length; i++)
+            try
             {
-                if (lines[i].Length < 1)    continue;
-                if (lines[i][0] == '-' && lines[i][1] == '-')   continue;
-                if (lines[i][0] == '(') countFlag = true;
-                if (lines[i].ToLower().Contains("end_of_reg"))  countFlag = false;
-                if (countFlag)  count++;
+                bool countFlag = false;
+                string[] lines = File.ReadAllLines(item.FullName);
+
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    if (lines[i].Length < 1) continue;
+                    if (lines[i][0] == '-' && lines[i][1] == '-') continue;
+                    if (lines[i][0] == '(') countFlag = true;
+                    if (lines[i].ToLower().Contains("end_of_reg")) countFlag = false;
+                    if (countFlag) count++;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetCsvRowCount()" + ex.Message);
             }
             return count;
         }
 
         private static FileInfo[] GetCsvList()
-        {            
-            string path = QMediator.PathToRegDest.Substring(0, QMediator.PathToRegDest.LastIndexOf("\\"));
-            DirectoryInfo di = new DirectoryInfo(path);
+        {
+            DirectoryInfo di = null;
+            try
+            {
+                string path = QMediator.PathToRegDest.Substring(0, QMediator.PathToRegDest.LastIndexOf("\\"));
+                di = new DirectoryInfo(path);                
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetCsvList()" + ex.Message);
+            }
             return di.GetFiles("*.ctl", SearchOption.AllDirectories);
         }
         #endregion
@@ -467,9 +568,9 @@ namespace QUp.Models
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from GetNumberFromCtl()" + ex.Message);
             }            
             return res;
         }
@@ -477,20 +578,25 @@ namespace QUp.Models
         private static List<string> GetCleanList(string[] lines)
         {
             List<string> list = new List<string>();
-            foreach (var item in lines)
+            try
             {
-                if (item.Length == 0 || (item.Length > 0 && item.Trim()[0] == '-')) continue;
-                string line = item;
-                if (line.Contains(",")) line = line.Substring(0, item.IndexOf(',')).Trim();
-                if (line.Contains(" ")) line = line.Substring(0, item.IndexOf(' ')).Trim();
-                list.Add(line);
+                foreach (var item in lines)
+                {
+                    if (item.Length == 0 || (item.Length > 0 && item.Trim()[0] == '-')) continue;
+                    string line = item;
+                    if (line.Contains(",")) line = line.Substring(0, item.IndexOf(',')).Trim();
+                    if (line.Contains(" ")) line = line.Substring(0, item.IndexOf(' ')).Trim();
+                    list.Add(line);
+                }
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetCleanList()" + ex.Message);
+            }
+            
             return list;
         }
         #endregion
-
-
-
 
         private static string UpdateResultReport()
         {

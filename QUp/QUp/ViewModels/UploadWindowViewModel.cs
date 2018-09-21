@@ -31,6 +31,17 @@ namespace QUp.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        //bool _regInit;
+        //public bool RegInit
+        //{
+        //    get { return _regInit; }
+        //    set
+        //    {
+        //        _regInit = value;
+        //        OnPropertyChanged();
+        //    }
+        //}
         #endregion
 
 
@@ -52,10 +63,6 @@ namespace QUp.ViewModels
 
         void PredProg()
         {
-            ManagerFS.ReportUpdated += ReportUpdated; 
-           // ManagerFS.Initialized += Initialized;
-           // ManagerFS.Initialize();
-
             //MessageBox.Show("Pred");
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(TaskName.PredProgs);
@@ -85,7 +92,7 @@ namespace QUp.ViewModels
 
         void PostProg()
         {
-            MessageBox.Show("PostProgCommand");
+            //MessageBox.Show("PostProgCommand");
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(TaskName.PostProgs);
         }
@@ -138,7 +145,6 @@ namespace QUp.ViewModels
         }
         #endregion
 
-
         #region RegInitWindowCommand
         ICommand _regInitWindowCommand;
         public ICommand RegInitWindowCommand
@@ -157,11 +163,13 @@ namespace QUp.ViewModels
 
         void RegInitWindow()
         {
+            ManagerFS.ReportUpdated += ReportUpdated;
+            ManagerDB.ReportUpdated += ReportUpdated;
             ResultText = String.Empty;
             ManagerWin.CreateRegInitWin();
+          //RegInit = true;
         }
         #endregion
-
 
         #region FillTablesCommand
         ICommand _fillTablesCommand;
@@ -204,12 +212,10 @@ namespace QUp.ViewModels
 
         void StepByStep()
         {
-            //MessageBox.Show("Fill");
+           // MessageBox.Show("StepByStep");
             ManagerDB.StepByStep();
         }
         #endregion
-
-
 
         #region FinishCheckCommand
         ICommand _finishCheckCommand;
@@ -229,12 +235,10 @@ namespace QUp.ViewModels
 
         void FinishCheck()
         {
-            //MessageBox.Show("Fill");
+            //MessageBox.Show("FinishCheck");
             ManagerDB.FinishCheck();
         }
         #endregion
-
-
 
         #region ToArchiveCommand
         ICommand _toArchiveCommand;
@@ -254,12 +258,10 @@ namespace QUp.ViewModels
 
         void ToArchive()
         {
-            //MessageBox.Show("Fill");
+            //MessageBox.Show("ToArchive");
             ManagerDB.ToArchive();
         }
         #endregion
-
-
 
         #region StatusRCommand
         ICommand _statusRCommand;
@@ -279,11 +281,10 @@ namespace QUp.ViewModels
 
         void StatusR()
         {
-            //MessageBox.Show("Fill");
+            //MessageBox.Show("StatusRCommand");
             ManagerDB.StatusR();
         }
         #endregion
-
 
     }
 }

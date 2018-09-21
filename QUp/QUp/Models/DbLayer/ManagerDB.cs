@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using DbLayer;
 using Oracle.ManagedDataAccess.Client;
 using QUp.Infrastr;
 
@@ -14,7 +13,7 @@ namespace QUp.Models
 {
     public static class ManagerDB
     {
-        static OracleConnect _con;
+        static OracleConnection _con;
 
         static string _report = "";
         static System.Windows.Threading.DispatcherTimer _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
@@ -26,13 +25,12 @@ namespace QUp.Models
         {            
             try
             {
-                _con = new OracleConnect(QSettings.ConnentionString);
-                _con.OpenConnect();               
+                _con = new OracleConnection(QSettings.ConnentionString);
+                _con.Open();               
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
-                //MessageBox.Show("Exception from MyLetterManager.LetterManager.CreateConnect()" + ex.Message);
+                MessageBox.Show("Exception from ManagerDB()" + ex.Message);
             }
         }
 
@@ -40,15 +38,14 @@ namespace QUp.Models
         {
             try
             {
-                if (_con != null)
+                using (OracleCommand cmd = new OracleCommand(command, _con))
                 {
-                    _con.ExecCommand(command);
+                    cmd.ExecuteNonQuery();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
-                //MessageBox.Show("Exception from MyLetterManager.PriorityManager.ExecCommand()" + ex.Message);
+                MessageBox.Show("Exception from ExecCommand()" + ex.Message);
             }
         }
 
@@ -70,7 +67,7 @@ namespace QUp.Models
         //    }
         //    catch (Exception ex)
         //    {
-        //        throw;
+        //        MessageBox.Show("Exception from ExecProc()" + ex.Message);
         //    }
         //}
         #endregion
@@ -83,20 +80,17 @@ namespace QUp.Models
                 ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                using (OracleCommand cmd = new OracleCommand("reg_upload.first_check", _con))
                 {
-                    using (OracleCommand cmd = new OracleCommand("reg_upload.first_check", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("count_of_deals", OracleDbType.Int32).Value = Convert.ToInt32(count);
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("count_of_deals", OracleDbType.Int32).Value = Convert.ToInt32(count);
+                    cmd.ExecuteNonQuery();
                 }
+
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from PreCheck()" + ex.Message); 
             }
         }
         #endregion
@@ -112,24 +106,22 @@ namespace QUp.Models
             {
                 string query = "select t.comments from Q_REPORT t where t.done = 1";
                 string res = "";
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+
+                using (OracleCommand cmd = new OracleCommand(query, _con))
                 {
-                    using (OracleCommand cmd = new OracleCommand(query, con))
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
                     {
-                        con.Open();
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            res = reader[0].ToString();
-                        }
+                        res = reader[0].ToString();
                     }
                 }
+                
                 _report = res;
                 ReportUpdated?.Invoke(UpdateResultReport());
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from GetResultFromDb()" + ex.Message);
             }
         }
 
@@ -165,11 +157,12 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from DispatcherTimer_Tick()" + ex.Message);
             }
         }
         #endregion
 
+        #region RegInit
         public static void RegInit(string regName, string startDate, string stopDate)
         {
             try
@@ -177,27 +170,27 @@ namespace QUp.Models
                 ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
-                DateTime start = DateTime.Parse(startDate);
-                DateTime stop = DateTime.Parse(stopDate);
+                DateTime start = DateTime.Parse(startDate);              
 
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                 using (OracleCommand cmd = new OracleCommand("reg_upload.initReg", _con))
                 {
-                    using (OracleCommand cmd = new OracleCommand("reg_upload.initReg", con))
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("regLongName", OracleDbType.Varchar2).Value = regName;
+                    cmd.Parameters.Add("payStart", OracleDbType.Date).Value = start;
+                    if (stopDate != null)
                     {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        cmd.Parameters.Add("regLongName", OracleDbType.Varchar2).Value = regName;
-                        cmd.Parameters.Add("payStart", OracleDbType.Date).Value = start;
+                        DateTime stop = DateTime.Parse(stopDate);
                         cmd.Parameters.Add("payStop", OracleDbType.Date).Value = stop;
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
+                    }                  
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from RegInit()" + ex.Message);
             }
         }
+        #endregion
 
 
         #region FillTables
@@ -208,19 +201,15 @@ namespace QUp.Models
                 ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                using (OracleCommand cmd = new OracleCommand("reg_upload.fill_suvd", _con))
                 {
-                    using (OracleCommand cmd = new OracleCommand("reg_upload.fill_suvd", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from FillTables()" + ex.Message);
             }
         }
         #endregion
@@ -233,19 +222,16 @@ namespace QUp.Models
                 ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                using (OracleCommand cmd = new OracleCommand("reg_upload.step_by_step", _con))
                 {
-                    using (OracleCommand cmd = new OracleCommand("reg_upload.step_by_step", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    _con.Open();
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from StepByStep()" + ex.Message);
             }
         }
         #endregion
@@ -258,19 +244,15 @@ namespace QUp.Models
                 ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                using (OracleCommand cmd = new OracleCommand("reg_upload.finish_check", _con))
                 {
-                    using (OracleCommand cmd = new OracleCommand("reg_upload.finish_check", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from FinishCheck()" + ex.Message);
             }
         }
         #endregion
@@ -283,19 +265,15 @@ namespace QUp.Models
                 ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                using (OracleCommand cmd = new OracleCommand("reg_upload.move_arc_and_lpd", _con))
                 {
-                    using (OracleCommand cmd = new OracleCommand("reg_upload.move_arc_and_lpd", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from ToArchive()" + ex.Message);
             }
         }
         #endregion
@@ -309,19 +287,15 @@ namespace QUp.Models
                 ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                using (OracleCommand cmd = new OracleCommand("reg_upload.set_r_status_loop", _con))
                 {
-                    using (OracleCommand cmd = new OracleCommand("reg_upload.set_r_status_loop", con))
-                    {
-                        cmd.CommandType = CommandType.StoredProcedure;
-                        con.Open();
-                        cmd.ExecuteNonQuery();
-                    }
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
                 }
             }
             catch (Exception ex)
             {
-                throw;
+                MessageBox.Show("Exception from StatusR()" + ex.Message);
             }
         }
         #endregion

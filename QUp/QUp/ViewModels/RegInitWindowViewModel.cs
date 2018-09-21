@@ -132,7 +132,7 @@ namespace QUp.ViewModels
                 DateTime start = DateTime.Parse(StartDate);
                 DateTime stop = DateTime.Parse(StopDate);
             }            
-            catch (Exception ex)
+            catch (Exception)
             {
                 res = false;
                 ResultText += "\n\tНекорректный формат даты.";
