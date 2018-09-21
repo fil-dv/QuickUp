@@ -142,11 +142,5 @@
   <ItemGroup>
     <Resource Include="Resources\Icon1.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\DbLayer\DbLayer.csproj">
-      <Project>{33e67a07-9bae-4941-9ab0-8096514c4c02}</Project>
-      <Name>DbLayer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
