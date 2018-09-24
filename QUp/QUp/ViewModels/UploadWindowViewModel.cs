@@ -242,6 +242,29 @@ namespace QUp.ViewModels
         }
         #endregion
 
+        #region ChangeCurrencyCommand
+        ICommand _changeCurrencyCommand;
+        public ICommand ChangeCurrencyCommand
+        {
+            get
+            {
+                if (_changeCurrencyCommand == null)
+                {
+                    _changeCurrencyCommand = new RelayCommand(
+                    p => true,
+                    p => ChangeCurrency());
+                }
+                return _changeCurrencyCommand;
+            }
+        }
+
+        void ChangeCurrency()
+        {
+             MessageBox.Show("ChangeCurrency");
+            
+        }
+        #endregion
+
         #region FinishCheckCommand
         ICommand _finishCheckCommand;
         public ICommand FinishCheckCommand
