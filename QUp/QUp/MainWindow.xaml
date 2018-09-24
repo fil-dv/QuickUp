@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QUp"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Подготовка" Height="550" Width="1100" Icon="/Resources/Icon1.ico">
+        Title="Подготовка реестра" Height="550" Width="1100" Icon="/Resources/Icon1.ico">
 
     <Window.DataContext>
         <local:MainWindowViewModel />

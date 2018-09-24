@@ -225,7 +225,6 @@ namespace QUp.Models
                 using (OracleCommand cmd = new OracleCommand("reg_upload.step_by_step", _con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    _con.Open();
                     cmd.ExecuteNonQuery();
                 }
             }
