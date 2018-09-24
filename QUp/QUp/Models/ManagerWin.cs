@@ -27,5 +27,12 @@ namespace QUp.Models
             RegInitWindow win = new RegInitWindow();
             win.ShowDialog();
         }
+
+        public static void CreateBackUpWin()
+        {
+            BackUpWindow win = new BackUpWindow();
+            win.ShowDialog();
+        }
+        
     }
 }

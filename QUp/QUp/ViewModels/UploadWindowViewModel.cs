@@ -145,6 +145,31 @@ namespace QUp.ViewModels
         }
         #endregion
 
+
+        #region CreateBackUpCommand
+        ICommand _createBackUpCommand;
+        public ICommand CreateBackUpCommand
+        {
+            get
+            {
+                if (_createBackUpCommand == null)
+                {
+                    _createBackUpCommand = new RelayCommand(
+                    p => true,
+                    p => CreateBackUpWin());
+                }
+                return _createBackUpCommand;
+            }
+        }
+
+        void CreateBackUpWin()
+        {
+            ResultText = String.Empty;
+            ManagerWin.CreateBackUpWin();
+        }
+        #endregion
+
+
         #region RegInitWindowCommand
         ICommand _regInitWindowCommand;
         public ICommand RegInitWindowCommand

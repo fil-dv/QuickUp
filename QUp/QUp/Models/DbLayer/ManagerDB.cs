@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -167,7 +168,7 @@ namespace QUp.Models
         {
             try
             {
-                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
                 DateTime start = DateTime.Parse(startDate);              
@@ -198,7 +199,7 @@ namespace QUp.Models
         {
             try
             {
-                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.fill_suvd", _con))
@@ -219,7 +220,7 @@ namespace QUp.Models
         {
             try
             {
-                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.step_by_step", _con))
@@ -240,7 +241,7 @@ namespace QUp.Models
         {
             try
             {
-                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.finish_check", _con))
@@ -261,7 +262,7 @@ namespace QUp.Models
         {
             try
             {
-                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.move_arc_and_lpd", _con))
@@ -283,7 +284,7 @@ namespace QUp.Models
         {
             try
             {
-                ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
                 ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.set_r_status_loop", _con))
@@ -298,6 +299,155 @@ namespace QUp.Models
             }
         }
         #endregion
+
+        public static string GetBackUpName()
+        {
+            string name = "";
+            try
+            {
+                string stopDate = GetStopDate();
+                string updStopDate = UpdateStopDate(stopDate);
+                string alias = GetAlias();
+                string regNumbers = GetRegNumbers();
+
+                name = "ice_" + alias + "_" + updStopDate + "_" + regNumbers;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetBackUpName()" + ex.Message); 
+            }
+            return name;
+        }
+
+        private static string GetRegNumbers()
+        {
+            string regNums = "";
+            try
+            {
+                string str = Path.GetFileName(QMediator.PathToRegDest).Replace(' ', '_');
+                if (str.Contains("__")) str = str.Replace("__", "_");
+                regNums = str;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetRegNumbers()" + ex.Message); 
+            }
+            return regNums;
+        }
+
+        private static string UpdateStopDate(string date)
+        {
+            string res = "";
+            try
+            {
+                string str = date.Substring(0, date.IndexOf(' '));
+                str.IndexOf("/20", 2);
+                string year = str.Substring((str.IndexOf("/20") + 3), 2);
+                string month = str.Substring(0, 2);
+                res = year + month;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from UpdateStopDate()" + ex.Message);
+            }
+            return res;
+        }
+
+        private static string GetStopDate()
+        {
+            string stopDate = "";
+            try
+            {
+                using (OracleCommand cmd = new OracleCommand("reg_upload.get_stop_date", _con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.Add("g_v_reg_stop_date", OracleDbType.Date);
+                    cmd.Parameters["g_v_reg_stop_date"].Direction = ParameterDirection.ReturnValue;
+                    cmd.ExecuteNonQuery();
+
+                    stopDate = Convert.ToString(cmd.Parameters["g_v_reg_stop_date"].Value);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetStopDate()" + ex.Message);
+            }
+            return stopDate;
+        }
+
+        private static string GetAlias()
+        {
+            string alias = "";
+            try
+            {
+                using (OracleCommand cmd = new OracleCommand("select reg_upload.get_alias from dual", _con))
+                {
+                    //cmd.ExecuteNonQuery();
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        alias = Convert.ToString(reader[0]);
+                    }                    
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetAlias()" + ex.Message);
+            }
+            return alias;
+        }
+
+
+        //private static string GetAlias()
+        //{
+        //    string alias = "";
+        //    try
+        //    {
+        //        using (OracleCommand cmd = new OracleCommand("reg_upload.get_alias", _con))
+        //        {
+        //            cmd.CommandType = CommandType.StoredProcedure;
+        //            cmd.Parameters.Add("v_alias", OracleDbType.Varchar2);
+        //            cmd.Parameters["v_alias"].Direction = ParameterDirection.ReturnValue;
+        //            cmd.ExecuteNonQuery();
+
+        //            alias = Convert.ToString(cmd.Parameters["v_alias"].Value);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Exception from GetAlias()" + ex.Message);
+        //    }
+        //    return alias;
+        //}
+
+        public static string CreateBackUp(string tableName)
+        {
+            string recordCount = "";
+
+            try
+            {
+                using (OracleCommand cmd = new OracleCommand("create  table " + tableName + " as select* from import_clnt_example", _con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+                using (OracleCommand cmd = new OracleCommand("select count(*) from " + tableName, _con))
+                {
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        recordCount = Convert.ToString(reader[0]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from CreateBackUp()" + ex.Message);
+            }
+
+            return recordCount;
+        }
+
+
 
 
         private static string UpdateResultReport()

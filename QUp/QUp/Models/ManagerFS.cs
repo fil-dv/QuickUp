@@ -598,6 +598,10 @@ namespace QUp.Models
         }
         #endregion
 
+        
+
+
+
         private static string UpdateResultReport()
         {
             return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
