@@ -284,12 +284,19 @@ namespace QUp.Models
             string name = "";
             try
             {
-                string stopDate = GetStopDate();
-                string updStopDate = UpdateStopDate(stopDate);
-                string alias = GetAlias();
                 string regNumbers = GetRegNumbers();
 
-                name = "ice_" + alias + "_" + updStopDate + "_" + regNumbers;
+                if (QMediator.PathToRegDest.Contains("Факторинг"))
+                {
+                    name = "ice_f_" + regNumbers;
+                }
+                else
+                {
+                    string stopDate = GetStopDate();
+                    string updStopDate = UpdateStopDate(stopDate);
+                    string alias = GetAlias();
+                    name = "ice_" + alias + "_" + updStopDate + "_" + regNumbers;
+                }                
             }
             catch (Exception ex)
             {
@@ -303,7 +310,7 @@ namespace QUp.Models
             string regNums = "";
             try
             {
-                string str = Path.GetFileName(QMediator.PathToRegDest).Replace(' ', '_');
+                string str = Path.GetFileName(QMediator.PathToRegDest).Replace(' ', '_').Replace('-', '_');
                 if (str.Contains("__")) str = str.Replace("__", "_");
                 regNums = str;
             }
