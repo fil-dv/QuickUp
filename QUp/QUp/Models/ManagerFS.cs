@@ -205,7 +205,7 @@ namespace QUp.Models
                     }
                     pInfo.Arguments = "\"" + path + "\"";
                 }
-                pInfo.WorkingDirectory = @"d:\Dima\Programming\git\Control-creator\c-creator\bin\Release";
+                pInfo.WorkingDirectory = @"x:\utils\Control-creator\c-creator\bin\Debug\c-creator.exe";
                 Process p = Process.Start(pInfo);
                 ReportUpdated?.Invoke(UpdateResultReport());
             }
@@ -226,7 +226,7 @@ namespace QUp.Models
 
                 SplitCompletHandler += UpdateReport;
 
-                ProcessStartInfo pInfo = new System.Diagnostics.ProcessStartInfo(@"d:\Dima\Programming\git\AdressSpliter\Adr\Adr\bin\Debug\Adr.exe");
+                ProcessStartInfo pInfo = new System.Diagnostics.ProcessStartInfo(@"x:\utils\AdressSpliter\Adr\Adr\bin\Debug\Adr.exe");
                 if (QMediator.PathToRegDest != null)
                 {
                     pInfo.Arguments = ("\"" + QMediator.PathToRegDest + "\"");

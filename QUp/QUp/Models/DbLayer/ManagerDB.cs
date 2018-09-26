@@ -27,7 +27,10 @@ namespace QUp.Models
             try
             {
                 _con = new OracleConnection(QSettings.ConnentionString);
-                _con.Open();               
+                _con.Open();
+                OracleGlobalization info = _con.GetSessionInfo();
+                info.DateFormat = "dd.mm.yyyy";
+                _con.SetSessionInfo(info);
             }
             catch (Exception ex)
             {
@@ -50,29 +53,6 @@ namespace QUp.Models
             }
         }
 
-        #region SqlProc
-        //public static void ExecProc(string procName)
-        //{
-        //    try
-        //    {
-        //        using (OracleConnection _con = new OracleConnection(QSettings.ConnentionString))
-        //        {
-        //            using (OracleCommand cmd = new OracleCommand(procName, _con))
-        //            {
-        //                cmd.CommandType = CommandType.StoredProcedure;
-        //                cmd.Parameters.Add("count_of_deals", OracleDbType.Int32).Value = 1282;
-        //                _con.Open();
-        //                cmd.ExecuteNonQuery();
-        //            }
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Exception from ExecProc()" + ex.Message);
-        //    }
-        //}
-        #endregion
-
         #region PreCheck
         public static void PreCheck(string count)
         {
@@ -94,37 +74,7 @@ namespace QUp.Models
                 MessageBox.Show("Exception from PreCheck()" + ex.Message); 
             }
         }
-        #endregion
-
-        private static void ManagerDB_ProcDoneHandler()
-        {
-            GetResultFromDb();
-        }
-
-        private static void GetResultFromDb()
-        {
-            try
-            {
-                string query = "select t.comments from Q_REPORT t where t.done = 1";
-                string res = "";
-
-                using (OracleCommand cmd = new OracleCommand(query, _con))
-                {
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        res = reader[0].ToString();
-                    }
-                }
-                
-                _report = res;
-                ReportUpdated?.Invoke(UpdateResultReport());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Exception from GetResultFromDb()" + ex.Message);
-            }
-        }
+        #endregion        
 
         #region ResultWaiter
         private static void ResultWaiter()
@@ -161,6 +111,36 @@ namespace QUp.Models
                 MessageBox.Show("Exception from DispatcherTimer_Tick()" + ex.Message);
             }
         }
+
+        private static void ManagerDB_ProcDoneHandler()
+        {
+            GetResultFromDb();
+        }
+
+        private static void GetResultFromDb()
+        {
+            try
+            {
+                string query = "select t.comments from Q_REPORT t where t.done = 1";
+                string res = "";
+
+                using (OracleCommand cmd = new OracleCommand(query, _con))
+                {
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        res = reader[0].ToString();
+                    }
+                }
+
+                _report = res;
+                ReportUpdated?.Invoke(UpdateResultReport());
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from GetResultFromDb()" + ex.Message);
+            }
+        }
         #endregion
 
         #region RegInit
@@ -192,7 +172,6 @@ namespace QUp.Models
             }
         }
         #endregion
-
 
         #region FillTables
         public static void FillTables()
@@ -278,7 +257,6 @@ namespace QUp.Models
         }
         #endregion
 
-
         #region StatusR
         public static void StatusR()
         {
@@ -300,6 +278,7 @@ namespace QUp.Models
         }
         #endregion
 
+        #region CreateBackUp
         public static string GetBackUpName()
         {
             string name = "";
@@ -382,7 +361,6 @@ namespace QUp.Models
             {
                 using (OracleCommand cmd = new OracleCommand("select reg_upload.get_alias from dual", _con))
                 {
-                    //cmd.ExecuteNonQuery();
                     OracleDataReader reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
@@ -446,9 +424,27 @@ namespace QUp.Models
 
             return recordCount;
         }
+        #endregion
 
+        #region ChangeCurrency
+        public static void ChangeCurrency()
+        {
+            try
+            {
+                ResultWaiter();
 
-
+                using (OracleCommand cmd = new OracleCommand("reg_upload.ccy_update", _con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from ChangeCurrency()" + ex.Message);
+            }
+        }
+        #endregion
 
         private static string UpdateResultReport()
         {

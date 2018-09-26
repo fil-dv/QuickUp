@@ -145,7 +145,6 @@ namespace QUp.ViewModels
         }
         #endregion
 
-
         #region CreateBackUpCommand
         ICommand _createBackUpCommand;
         public ICommand CreateBackUpCommand
@@ -168,7 +167,6 @@ namespace QUp.ViewModels
             ManagerWin.CreateBackUpWin();
         }
         #endregion
-
 
         #region RegInitWindowCommand
         ICommand _regInitWindowCommand;
@@ -260,8 +258,8 @@ namespace QUp.ViewModels
 
         void ChangeCurrency()
         {
-             MessageBox.Show("ChangeCurrency");
-            
+            // MessageBox.Show("ChangeCurrency");
+            ManagerDB.ChangeCurrency();
         }
         #endregion
 
