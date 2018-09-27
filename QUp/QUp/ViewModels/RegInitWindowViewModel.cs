@@ -130,7 +130,10 @@ namespace QUp.ViewModels
                 } 
 
                 DateTime start = DateTime.Parse(StartDate);
-                DateTime stop = DateTime.Parse(StopDate);
+                if (RegName.ToUpper()[0] != 1060)
+                {
+                    DateTime stop = DateTime.Parse(StopDate);
+                }                
             }            
             catch (Exception)
             {

@@ -158,11 +158,15 @@ namespace QUp.Models
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("regLongName", OracleDbType.Varchar2).Value = regName;
                     cmd.Parameters.Add("payStart", OracleDbType.Date).Value = start;
-                    if (stopDate != null)
+                    if (!string.IsNullOrEmpty(stopDate))
                     {
                         DateTime stop = DateTime.Parse(stopDate);
                         cmd.Parameters.Add("payStop", OracleDbType.Date).Value = stop;
-                    }                  
+                    }
+                    else
+                    {
+                        cmd.Parameters.Add("payStop", OracleDbType.Date).Value = null;
+                    }                    
                     cmd.ExecuteNonQuery();
                 }
             }

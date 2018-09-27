@@ -205,7 +205,7 @@ namespace QUp.Models
                     }
                     pInfo.Arguments = "\"" + path + "\"";
                 }
-                pInfo.WorkingDirectory = @"x:\utils\Control-creator\c-creator\bin\Debug\c-creator.exe";
+                pInfo.WorkingDirectory = @"x:\utils\Control-creator\c-creator\bin\Release\c-creator.exe";
                 Process p = Process.Start(pInfo);
                 ReportUpdated?.Invoke(UpdateResultReport());
             }
