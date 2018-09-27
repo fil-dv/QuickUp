@@ -190,7 +190,7 @@ namespace QUp.Models
         {
             try
             {
-                _report = "Создание контрола...";
+                //_report = "Создание контрола...";
                 ReportUpdated?.Invoke(UpdateResultReport());
 
                 ProcessStartInfo pInfo = new ProcessStartInfo("c-creator.exe");
@@ -205,13 +205,18 @@ namespace QUp.Models
                     }
                     pInfo.Arguments = "\"" + path + "\"";
                 }
-                pInfo.WorkingDirectory = @"x:\utils\Control-creator\c-creator\bin\Release\c-creator.exe";
+
+                if (File.Exists(@"x:\utils\Control-creator\c-creator\bin\Release\c-creator.exe"))
+                {
+                    pInfo.WorkingDirectory = @"x:\utils\Control-creator\c-creator\bin\Debug\";
+                }                
+
                 Process p = Process.Start(pInfo);
                 ReportUpdated?.Invoke(UpdateResultReport());
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from RunCtrlCreator()" + ex.Message);
+                MessageBox.Show("Exception from RunCtrlCreator() " + ex.Message);
             }            
         }
         #endregion
