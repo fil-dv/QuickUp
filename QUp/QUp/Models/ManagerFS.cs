@@ -330,22 +330,34 @@ namespace QUp.Models
                         }
                         foreach (var item in filePathList)
                         {
-                            List<string> queryList = SplitFile(item);
+                           // List<string> queryList = SplitFile(item);
                             _report += Environment.NewLine + "Файл:\t\t" + item;
                             bool isOk = true;
-                            foreach (var query in queryList)
+                            string fileText = File.ReadAllText(item, Encoding.Default);
+                            try
                             {
-                                try
-                                {
-                                    ManagerDB.ExecCommand(query);
-                                    //_report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
-                                }
-                                catch (Exception ex)
-                                {
-                                    isOk = false;
-                                    //_report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
-                                }
+                                ManagerDB.ExecCommand(fileText);
+                                //_report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
                             }
+                            catch (Exception ex)
+                            {
+                                isOk = false;
+                                MessageBox.Show(ex.Message);
+                                //_report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                            }
+                            //foreach (var query in queryList)
+                            //{
+                            //    try
+                            //    {
+                            //        ManagerDB.ExecCommand(query);
+                            //        //_report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                            //    }
+                            //    catch (Exception ex)
+                            //    {
+                            //        isOk = false;
+                            //        //_report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                            //    }
+                            //}
                             _report += ("\t" + (isOk == true ? "отработал нормально." : "отработал с ошибками.") + Environment.NewLine);
                         }
                     }
