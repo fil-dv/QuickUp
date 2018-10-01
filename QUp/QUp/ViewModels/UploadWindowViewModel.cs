@@ -116,9 +116,9 @@ namespace QUp.ViewModels
 
         void OktelProg()
         {
-            MessageBox.Show("OktelProg");
-            //ResultText = String.Empty;
-            //ManagerFS.ProgsToExec(TaskName.Oktel);
+            //MessageBox.Show("OktelProg");
+            ResultText = String.Empty;
+            ManagerFS.ProgsToExec(TaskName.Oktel);
         }
         #endregion
 

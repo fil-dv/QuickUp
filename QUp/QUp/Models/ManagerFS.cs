@@ -329,35 +329,27 @@ namespace QUp.Models
                             return;
                         }
                         foreach (var item in filePathList)
-                        {
-                           // List<string> queryList = SplitFile(item);
+                        {                           
                             _report += Environment.NewLine + "Файл:\t\t" + item;
                             bool isOk = true;
                             string fileText = File.ReadAllText(item, Encoding.Default);
                             try
                             {
-                                ManagerDB.ExecCommand(fileText);
-                                //_report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
+                                if (fileText.ToLower().Contains("begin"))
+                                {
+                                    ManagerDB.ExecCommand(fileText);
+                                }
+                                else
+                                {
+                                    isOk = SplitAndExec(fileText);
+                                }
                             }
                             catch (Exception ex)
                             {
                                 isOk = false;
                                 MessageBox.Show(ex.Message);
-                                //_report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
                             }
-                            //foreach (var query in queryList)
-                            //{
-                            //    try
-                            //    {
-                            //        ManagerDB.ExecCommand(query);
-                            //        //_report += "Отработал код: " + Environment.NewLine + Environment.NewLine + query;
-                            //    }
-                            //    catch (Exception ex)
-                            //    {
-                            //        isOk = false;
-                            //        //_report += "Не отработал код: " + Environment.NewLine + Environment.NewLine + query;
-                            //    }
-                            //}
+                            
                             _report += ("\t" + (isOk == true ? "отработал нормально." : "отработал с ошибками.") + Environment.NewLine);
                         }
                     }
@@ -375,13 +367,62 @@ namespace QUp.Models
             }            
         }
 
-        private static List<string> SplitFile(string path)
+        private static bool SplitAndExec(string fileText)
+        {
+            try
+            {
+                bool isOk = true;
+                List<string> queryList = SplitQuery(fileText);
+                foreach (var query in queryList)
+                {
+                    try
+                    {
+                        ManagerDB.ExecCommand(query);
+                    }
+                    catch (Exception)
+                    {
+                        isOk = false;
+                    }
+                }
+                return isOk;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            
+        }
+
+        //private static List<string> SplitFile(string path)
+        //{
+        //    List<string> listStr = new List<string>();
+        //    try
+        //    {
+        //        string fileText = File.ReadAllText(path, Encoding.Default);
+        //        string[] queries = fileText.Trim().Split(';');                
+
+        //        foreach (var item in queries)
+        //        {
+        //            if (item.Trim().Length > 0)
+        //            {
+        //                listStr.Add(item.Trim());
+        //            }
+        //        }               
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Exception from SplitFile()" + ex.Message);
+        //    }
+        //    return listStr;
+        //}
+
+        private static List<string> SplitQuery(string query)
         {
             List<string> listStr = new List<string>();
             try
             {
-                string fileText = File.ReadAllText(path, Encoding.Default);
-                string[] queries = fileText.Trim().Split(';');                
+                //string fileText = File.ReadAllText(path, Encoding.Default);
+                string[] queries = query.Trim().Split(';');
 
                 foreach (var item in queries)
                 {
@@ -389,11 +430,11 @@ namespace QUp.Models
                     {
                         listStr.Add(item.Trim());
                     }
-                }               
+                }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from SplitFile()" + ex.Message);
+                MessageBox.Show("Exception from SplitQuery()" + ex.Message);
             }
             return listStr;
         }

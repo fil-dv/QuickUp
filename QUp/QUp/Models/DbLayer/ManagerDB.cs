@@ -28,19 +28,11 @@ namespace QUp.Models
             {
                 _con = new OracleConnection(QSettings.ConnentionString);
                 _con.Open();
+
                 OracleGlobalization info = _con.GetSessionInfo();
-                
-
-                MessageBox.Show("Language - " + info.Language);
-                MessageBox.Show("NumericCharacters - " + info.NumericCharacters);
-                MessageBox.Show("NCharConversionException - " + info.NCharConversionException);
-                MessageBox.Show("DateFormat - " + info.DateFormat);
-
+                info.NumericCharacters = ",.";
                 info.DateFormat = "dd.mm.yyyy";
                 info.Language = "UKRAINIAN";
-
-                MessageBox.Show("DateFormat - " + info.DateFormat);
-                MessageBox.Show("Language - " + info.Language);
 
                 _con.SetSessionInfo(info);
             }
