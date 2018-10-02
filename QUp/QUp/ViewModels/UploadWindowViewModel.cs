@@ -188,9 +188,9 @@ namespace QUp.ViewModels
         {
             ManagerFS.ReportUpdated += ReportUpdated;
             ManagerDB.ReportUpdated += ReportUpdated;
-            ResultText = String.Empty;
-            ManagerWin.CreateRegInitWin();
             ManagerDB.RegInitialized += ManagerDB_RegInitialized;
+            ResultText = String.Empty;
+            ManagerWin.CreateRegInitWin();            
         }
 
         private void ManagerDB_RegInitialized(bool obj)

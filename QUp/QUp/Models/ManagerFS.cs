@@ -1,4 +1,5 @@
 ﻿using QUp.Infrastr;
+using QUp.Models.DbLayer;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -307,6 +308,7 @@ namespace QUp.Models
                     if (taskName == TaskName.Oktel)
                     {
                         str = "\\post!\\oktel";
+                        DbNotification.ResultWaiter();
                     }
                     else
                     {
@@ -348,8 +350,7 @@ namespace QUp.Models
                             {
                                 isOk = false;
                                 MessageBox.Show(ex.Message);
-                            }
-                            
+                            }                            
                             _report += ("\t" + (isOk == true ? "отработал нормально." : "отработал с ошибками.") + Environment.NewLine);
                         }
                     }

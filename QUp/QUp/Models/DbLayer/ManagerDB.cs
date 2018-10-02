@@ -54,9 +54,26 @@ namespace QUp.Models
             catch (Exception)
             {
                 throw;
-                //MessageBox.Show("Exception from ExecCommand()" + ex.Message);
             }
         }
+
+        public static OracleDataReader GetReader(string query)
+        {
+            OracleDataReader read;
+            try
+            {
+                using (OracleCommand cmd = new OracleCommand(query, _con))
+                {
+                    read = cmd.ExecuteReader();
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return read;
+        }
+
 
         #region PreCheck
         public static void PreCheck(string count)
@@ -64,7 +81,7 @@ namespace QUp.Models
             try
             {
                 DbNotification.ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                DbNotification.ResultWaiter(_con);
+                DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.first_check", _con))
                 {
@@ -94,12 +111,11 @@ namespace QUp.Models
         {
             try
             {
-                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                DbNotification.ResultWaiter(_con);
+                DbNotification.ResultWaiter();
 
                 DateTime start = DateTime.Parse(startDate);              
 
-                 using (OracleCommand cmd = new OracleCommand("reg_upload.initReg", _con))
+                using (OracleCommand cmd = new OracleCommand("reg_upload.initReg", _con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.Add("regLongName", OracleDbType.Varchar2).Value = regName;
@@ -129,7 +145,7 @@ namespace QUp.Models
         {
             try
             {
-                DbNotification.ResultWaiter(_con);
+                DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.fill_suvd", _con))
                 {
@@ -149,8 +165,7 @@ namespace QUp.Models
         {
             try
             {
-                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                DbNotification.ResultWaiter(_con);
+                DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.step_by_step", _con))
                 {
@@ -170,8 +185,7 @@ namespace QUp.Models
         {
             try
             {
-                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                DbNotification.ResultWaiter(_con);
+                DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.finish_check", _con))
                 {
@@ -191,8 +205,7 @@ namespace QUp.Models
         {
             try
             {
-                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                DbNotification.ResultWaiter(_con);
+                DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.move_arc_and_lpd", _con))
                 {
@@ -212,8 +225,7 @@ namespace QUp.Models
         {
             try
             {
-                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                DbNotification.ResultWaiter(_con);
+                DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.set_r_status_loop", _con))
                 {
@@ -388,7 +400,7 @@ namespace QUp.Models
         {
             try
             {
-                DbNotification.ResultWaiter(_con);
+                DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.ccy_update", _con))
                 {
@@ -402,7 +414,6 @@ namespace QUp.Models
             }
         }
         #endregion
-
 
 
         private static string UpdateResultReport()

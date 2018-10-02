@@ -16,12 +16,10 @@ namespace QUp.Models.DbLayer
         #region ResultWaiter      
         
         static System.Windows.Threading.DispatcherTimer _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-        static OracleConnection _con;
         public static event Action ProcDoneHandler;
 
-        public static void ResultWaiter(OracleConnection con)
+        public static void ResultWaiter()
         {
-            _con = con;
             _dispatcherTimer.Tick += DispatcherTimer_Tick;
             _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
             _dispatcherTimer.Start();
@@ -31,23 +29,16 @@ namespace QUp.Models.DbLayer
         {
             try
             {
-                string query = "select count(*) from Q_REPORT t where t.done = 1";
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                string query = "select count(*) from Q_REPORT t where t.done = 1";                
+                OracleDataReader reader = ManagerDB.GetReader(query);
+                while (reader.Read())
                 {
-                    using (OracleCommand cmd = new OracleCommand(query, con))
+                    if (Convert.ToInt32(reader[0]) > 0)
                     {
-                        con.Open();
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            if (Convert.ToInt32(reader[0]) > 0)
-                            {
-                                _dispatcherTimer.Stop();
-                                ProcDoneHandler?.Invoke();
-                            }
-                        }
+                        _dispatcherTimer.Stop();
+                        ProcDoneHandler?.Invoke();
                     }
-                }
+                }                    
             }
             catch (Exception ex)
             {
@@ -60,16 +51,14 @@ namespace QUp.Models.DbLayer
             string res = "";
             try
             {
-                string query = "select t.comments from Q_REPORT t where t.done = 1";              
-
-                using (OracleCommand cmd = new OracleCommand(query, _con))
+                string query = "select t.comments from Q_REPORT t where t.done = 1";
+                
+                OracleDataReader reader = ManagerDB.GetReader(query);
+                while (reader.Read())
                 {
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        res = reader[0].ToString();
-                    }
+                    res = reader[0].ToString();
                 }
+               
             }
             catch (Exception ex)
             {                
