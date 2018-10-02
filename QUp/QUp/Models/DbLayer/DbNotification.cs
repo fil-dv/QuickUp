@@ -7,77 +7,76 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Windows;
 
 namespace QUp.Models.DbLayer
 {
     public static class DbNotification
     {
-        public static bool IsNotified = false;
+        #region ResultWaiter      
+        
+        static System.Windows.Threading.DispatcherTimer _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
+        static OracleConnection _con;
+        public static event Action ProcDoneHandler;
 
-        public static void Start()
+        public static void ResultWaiter(OracleConnection con)
         {
-            // To Run this sample, make sure that the change notification privilege is granted to you user.
-            OracleConnection _con = null;
-            OracleDependency _dep = null;
+            _con = con;
+            _dispatcherTimer.Tick += DispatcherTimer_Tick;
+            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
+            _dispatcherTimer.Start();
+        }
 
+        private static void DispatcherTimer_Tick(object sender, EventArgs e)
+        {
             try
             {
-                _con = new OracleConnection(QSettings.ConnentionString);
-                OracleCommand cmd = new OracleCommand("select * from q_report", _con);
-                _con.Open();
-
-                // Set the port number for the listener to listen for the notification request
-                OracleDependency.Port = 1521;// 1005;
-
-                // Create an OracleDependency instance and bind it to an OracleCommand instance.
-                // When an OracleDependency instance is bound to an OracleCommand instance, an OracleNotificationRequest is created and is set in the
-                // OracleCommand's Notification property. This indicates subsequent execution of command will register the notification.
-                // By default, the notification request is using the Database Change Notification.
-                _dep = new OracleDependency(cmd);
-
-                // Add the event handler to handle the notification. The 
-                // Dep_OnChange method will be invoked when a notification message
-                // is received from the database
-                _dep.OnChange += Dep_OnChange;
-
-                // The notification registration is created and the query result sets 
-                // associated with the command can be invalidated when there is a change.  When the first notification registration occurs, the 
-                // notification listener is started and the listener port number will be 1005.
-                cmd.ExecuteNonQuery();
-
-                // Updating emp table so that a notification can be received when
-                // the emp table is updated.
-                // Start a transaction to update emp table
-                OracleTransaction txn = _con.BeginTransaction();
-                // Create a new command which will update emp table
-                string updateCmdText = "update Q_REPORT t set t.done = 1";
-                OracleCommand updateCmd = new OracleCommand(updateCmdText, _con);
-                // Update the emp table
-                updateCmd.ExecuteNonQuery();
-                //When the transaction is committed, a notification will be sent from
-                //the database
-                txn.Commit();
+                string query = "select count(*) from Q_REPORT t where t.done = 1";
+                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
+                {
+                    using (OracleCommand cmd = new OracleCommand(query, con))
+                    {
+                        con.Open();
+                        OracleDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            if (Convert.ToInt32(reader[0]) > 0)
+                            {
+                                _dispatcherTimer.Stop();
+                                ProcDoneHandler?.Invoke();
+                            }
+                        }
+                    }
+                }
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                Console.WriteLine(e.Message);
+                MessageBox.Show("Exception from DispatcherTimer_Tick()" + ex.Message);
             }
+        }       
 
-            _con.Close();
-            
-            // Loop while waiting for notification
-            while (DbNotification.IsNotified == false)
-            {
-                Thread.Sleep(1000);
-            }
-        }
-
-        private static void Dep_OnChange(object sender, OracleNotificationEventArgs eventArgs)
+        public static string GetResultFromDb()
         {
-            Console.WriteLine("Notification Received");
-            DataTable changeDetails = eventArgs.Details;
-            Console.WriteLine("Data has changed in {0}", changeDetails.Rows[0]["ResourceName"]);
-            DbNotification.IsNotified = true;
+            string res = "";
+            try
+            {
+                string query = "select t.comments from Q_REPORT t where t.done = 1";              
+
+                using (OracleCommand cmd = new OracleCommand(query, _con))
+                {
+                    OracleDataReader reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        res = reader[0].ToString();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {                
+                MessageBox.Show("Exception from GetResultFromDb()" + ex.Message);
+            }
+            return res;
         }
+        #endregion
     }
 }

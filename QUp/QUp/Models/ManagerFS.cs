@@ -19,7 +19,7 @@ namespace QUp.Models
     {
         static string _report = "";
         static public event Action SplitCompletHandler;
-        static public event Action<bool> Initialized;
+        static public event Action<bool> Initialized;        
         public static event ResultIsReady ReportUpdated;
 
         #region InitializeApp

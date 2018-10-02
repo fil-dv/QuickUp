@@ -32,16 +32,16 @@ namespace QUp.ViewModels
             }
         }
 
-        //bool _regInit;
-        //public bool RegInit
-        //{
-        //    get { return _regInit; }
-        //    set
-        //    {
-        //        _regInit = value;
-        //        OnPropertyChanged();
-        //    }
-        //}
+        bool _regInit = false;
+        public bool RegInit
+        {
+            get { return _regInit; }
+            set
+            {
+                _regInit = value;
+                OnPropertyChanged();
+            }
+        }
         #endregion
 
 
@@ -190,7 +190,12 @@ namespace QUp.ViewModels
             ManagerDB.ReportUpdated += ReportUpdated;
             ResultText = String.Empty;
             ManagerWin.CreateRegInitWin();
-          //RegInit = true;
+            ManagerDB.RegInitialized += ManagerDB_RegInitialized;
+        }
+
+        private void ManagerDB_RegInitialized(bool obj)
+        {
+            RegInit = true;
         }
         #endregion
 

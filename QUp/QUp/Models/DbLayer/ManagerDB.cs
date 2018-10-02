@@ -9,18 +9,17 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Oracle.ManagedDataAccess.Client;
 using QUp.Infrastr;
+using QUp.Models.DbLayer;
 
 namespace QUp.Models
 {
     public static class ManagerDB
     {
         static OracleConnection _con;
-
-        static string _report = "";
-        static System.Windows.Threading.DispatcherTimer _dispatcherTimer = new System.Windows.Threading.DispatcherTimer();
-
-        static event Action ProcDoneHandler;
         public static event ResultIsReady ReportUpdated;
+        static public event Action<bool> RegInitialized;
+
+        static string _report = "";        
 
         static ManagerDB()
         {            
@@ -64,8 +63,8 @@ namespace QUp.Models
         {
             try
             {
-                ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                ResultWaiter();
+                DbNotification.ProcDoneHandler += ManagerDB_ProcDoneHandler;
+                DbNotification.ResultWaiter(_con);
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.first_check", _con))
                 {
@@ -80,74 +79,15 @@ namespace QUp.Models
                 MessageBox.Show("Exception from PreCheck()" + ex.Message); 
             }
         }
+
+
         #endregion        
-
-        #region ResultWaiter
-        private static void ResultWaiter()
-        {            
-            _dispatcherTimer.Tick += DispatcherTimer_Tick;
-            _dispatcherTimer.Interval = new TimeSpan(0, 0, 1);
-            _dispatcherTimer.Start();
-        }
-
-        private static void DispatcherTimer_Tick(object sender, EventArgs e)
-        {
-            try
-            {
-                string query = "select count(*) from Q_REPORT t where t.done = 1";
-                using (OracleConnection con = new OracleConnection(QSettings.ConnentionString))
-                {
-                    using (OracleCommand cmd = new OracleCommand(query, con))
-                    {
-                        con.Open();
-                        OracleDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            if (Convert.ToInt32(reader[0]) > 0)
-                            {
-                                _dispatcherTimer.Stop();
-                                ProcDoneHandler?.Invoke();
-                            }
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Exception from DispatcherTimer_Tick()" + ex.Message);
-            }
-        }
 
         private static void ManagerDB_ProcDoneHandler()
         {
-            GetResultFromDb();
+            _report = DbNotification.GetResultFromDb();
+            ReportUpdated?.Invoke(UpdateResultReport());
         }
-
-        private static void GetResultFromDb()
-        {
-            try
-            {
-                string query = "select t.comments from Q_REPORT t where t.done = 1";
-                string res = "";
-
-                using (OracleCommand cmd = new OracleCommand(query, _con))
-                {
-                    OracleDataReader reader = cmd.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        res = reader[0].ToString();
-                    }
-                }
-
-                _report = res;
-                ReportUpdated?.Invoke(UpdateResultReport());
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Exception from GetResultFromDb()" + ex.Message);
-            }
-        }
-        #endregion
 
         #region RegInit
         public static void RegInit(string regName, string startDate, string stopDate)
@@ -155,7 +95,7 @@ namespace QUp.Models
             try
             {
                 //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                ResultWaiter();
+                DbNotification.ResultWaiter(_con);
 
                 DateTime start = DateTime.Parse(startDate);              
 
@@ -180,6 +120,7 @@ namespace QUp.Models
             {
                 MessageBox.Show("Exception from RegInit()" + ex.Message);
             }
+            RegInitialized?.Invoke(true);
         }
         #endregion
 
@@ -188,8 +129,7 @@ namespace QUp.Models
         {
             try
             {
-                //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                ResultWaiter();
+                DbNotification.ResultWaiter(_con);
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.fill_suvd", _con))
                 {
@@ -210,7 +150,7 @@ namespace QUp.Models
             try
             {
                 //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                ResultWaiter();
+                DbNotification.ResultWaiter(_con);
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.step_by_step", _con))
                 {
@@ -231,7 +171,7 @@ namespace QUp.Models
             try
             {
                 //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                ResultWaiter();
+                DbNotification.ResultWaiter(_con);
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.finish_check", _con))
                 {
@@ -252,7 +192,7 @@ namespace QUp.Models
             try
             {
                 //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                ResultWaiter();
+                DbNotification.ResultWaiter(_con);
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.move_arc_and_lpd", _con))
                 {
@@ -273,7 +213,7 @@ namespace QUp.Models
             try
             {
                 //ProcDoneHandler += ManagerDB_ProcDoneHandler;
-                ResultWaiter();
+                DbNotification.ResultWaiter(_con);
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.set_r_status_loop", _con))
                 {
@@ -448,7 +388,7 @@ namespace QUp.Models
         {
             try
             {
-                ResultWaiter();
+                DbNotification.ResultWaiter(_con);
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.ccy_update", _con))
                 {
@@ -462,6 +402,8 @@ namespace QUp.Models
             }
         }
         #endregion
+
+
 
         private static string UpdateResultReport()
         {
