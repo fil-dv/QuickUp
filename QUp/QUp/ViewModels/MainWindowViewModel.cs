@@ -56,7 +56,6 @@ namespace QUp
             get { return _isCountEntered; }
             set
             {
-
                 _isCountEntered = value;
                 OnPropertyChanged();
             }

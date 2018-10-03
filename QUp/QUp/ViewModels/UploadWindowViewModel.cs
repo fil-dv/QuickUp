@@ -31,7 +31,7 @@ namespace QUp.ViewModels
                 OnPropertyChanged();
             }
         }
-
+        
         bool _regInit = false;
         public bool RegInit
         {
@@ -42,6 +42,139 @@ namespace QUp.ViewModels
                 OnPropertyChanged();
             }
         }
+
+        string _initRegButtonText = "Инициализация реестра";
+        public string InitRegButtonText
+        {
+            get { return _initRegButtonText; }
+            set
+            {
+                _initRegButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _predProgButtonText = "Запуск предпрограмм";
+        public string PredProgButtonText
+        {
+            get { return _predProgButtonText; }
+            set
+            {
+                _predProgButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _postProgButtonText = "Запуск постпрограмм";
+        public string PostProgButtonText
+        {
+            get { return _postProgButtonText; }
+            set
+            {
+                _postProgButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _oktelButtonText = "Октел";
+        public string OktelButtonText
+        {
+            get { return _oktelButtonText; }
+            set
+            {
+                _oktelButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _backUpButtonText = "Создание backUp";
+        public string BackUpButtonText
+        {
+            get { return _backUpButtonText; }
+            set
+            {
+                _backUpButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _adrButtonText = "Разбор адресов";
+        public string AdrButtonText
+        {
+            get { return _adrButtonText; }
+            set
+            {
+                _adrButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _fillProjButtonText = "Заливка в Projects";
+        public string FillProjButtonText
+        {
+            get { return _fillProjButtonText; }
+            set
+            {
+                _fillProjButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _ccyButtonText = "Перевод в валюту кредита";
+        public string CcyButtonText
+        {
+            get { return _ccyButtonText; }
+            set
+            {
+                _ccyButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _stepButtonText = "Заливка инфо";
+        public string StepButtonText
+        {
+            get { return _stepButtonText; }
+            set
+            {
+                _stepButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _finishButtonText = "Постпроверка";
+        public string FinishButtonText
+        {
+            get { return _finishButtonText; }
+            set
+            {
+                _finishButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _archButtonText = "Списание в архив";
+        public string ArchButtonText
+        {
+            get { return _archButtonText; }
+            set
+            {
+                _archButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
+        string _rButtonText = "Статус R";
+        public string RButtonText
+        {
+            get { return _rButtonText; }
+            set
+            {
+                _rButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
         #endregion
 
 
@@ -66,6 +199,7 @@ namespace QUp.ViewModels
             //MessageBox.Show("Pred");
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(TaskName.PredProgs);
+            PredProgButtonText += " (выполнено)";
         }
 
         private void ReportUpdated(string res)
@@ -87,7 +221,7 @@ namespace QUp.ViewModels
                     p => PostProg());
                 }
                 return _postProgCommand;
-            }
+            }            
         }
 
         void PostProg()
@@ -95,6 +229,7 @@ namespace QUp.ViewModels
             //MessageBox.Show("PostProgCommand");
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(TaskName.PostProgs);
+            PostProgButtonText += " (выполнено)";
         }
         #endregion
 
@@ -119,6 +254,7 @@ namespace QUp.ViewModels
             //MessageBox.Show("OktelProg");
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(TaskName.Oktel);
+            OktelButtonText += " (выполнено)";
         }
         #endregion
 
@@ -142,6 +278,7 @@ namespace QUp.ViewModels
         {
             ResultText = String.Empty;
             ManagerFS.SplitAdr();
+            AdrButtonText += " (выполнено)";
         }
         #endregion
 
@@ -165,6 +302,7 @@ namespace QUp.ViewModels
         {
             ResultText = String.Empty;
             ManagerWin.CreateBackUpWin();
+            BackUpButtonText += " (выполнено)";
         }
         #endregion
 
@@ -196,6 +334,10 @@ namespace QUp.ViewModels
         private void ManagerDB_RegInitialized(bool obj)
         {
             RegInit = true;
+            if (!InitRegButtonText.Contains("(выполнено)"))
+            {
+                InitRegButtonText += " (выполнено)";
+            }            
         }
         #endregion
 
@@ -218,7 +360,8 @@ namespace QUp.ViewModels
         void FillTables()
         {
             //MessageBox.Show("Fill");
-            ManagerDB.FillTables();            
+            ManagerDB.FillTables();
+            FillProjButtonText += " (выполнено)";
         }
         #endregion
 
@@ -242,6 +385,7 @@ namespace QUp.ViewModels
         {
            // MessageBox.Show("StepByStep");
             ManagerDB.StepByStep();
+            StepButtonText += " (выполнено)";
         }
         #endregion
 
@@ -265,6 +409,7 @@ namespace QUp.ViewModels
         {
             // MessageBox.Show("ChangeCurrency");
             ManagerDB.ChangeCurrency();
+            CcyButtonText += " (выполнено)";
         }
         #endregion
 
@@ -288,6 +433,7 @@ namespace QUp.ViewModels
         {
             //MessageBox.Show("FinishCheck");
             ManagerDB.FinishCheck();
+            FinishButtonText += " (выполнено)";
         }
         #endregion
 
@@ -311,6 +457,7 @@ namespace QUp.ViewModels
         {
             //MessageBox.Show("ToArchive");
             ManagerDB.ToArchive();
+            ArchButtonText += " (выполнено)";
         }
         #endregion
 
@@ -334,6 +481,7 @@ namespace QUp.ViewModels
         {
             //MessageBox.Show("StatusRCommand");
             ManagerDB.StatusR();
+            RButtonText += " (выполнено)";
         }
         #endregion
 

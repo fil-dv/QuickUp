@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QUp.ViewModels"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="Заливка реестра" Height="700" Width="1100" Icon="/Resources/Icon1.ico">
+        Title="Заливка реестра" Height="700" Width="1300" Icon="/Resources/Icon1.ico">
 
     <Window.DataContext>
         <local:UploadWindowViewModel />
@@ -106,29 +106,29 @@
 
         </Grid.RowDefinitions>
 
-        <Button Grid.Column="0" Grid.Row="0" Command="{Binding RegInitWindowCommand}" Style="{StaticResource TabButtonLast}" ToolTip="Ввод данных реестра.">Инициализация реестра</Button>
-        <Button Grid.Column="0" Grid.Row="1" Command="{Binding PredProgCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск предпрограмм.">Запуск предпрограмм</Button>
-        <Button Grid.Column="0" Grid.Row="2" Command="{Binding CreateBackUpCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Создание копии таблицы.">Создание backUp</Button>
-        <Button Grid.Column="0" Grid.Row="3" Command="{Binding SplitAdressCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск программы разбора адресов.">Разбор адресов</Button>
-        <Button Grid.Column="0" Grid.Row="4" Command="{Binding FillTablesCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.fill_suvd.">Заливка в projects</Button>
+        <Button Grid.Column="0" Grid.Row="0" Command="{Binding RegInitWindowCommand}" Style="{StaticResource TabButtonLast}" ToolTip="Ввод данных реестра." Content="{Binding InitRegButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="1" Command="{Binding PredProgCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск предпрограмм." Content="{Binding PredProgButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="2" Command="{Binding CreateBackUpCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Создание копии таблицы." Content="{Binding BackUpButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="3" Command="{Binding SplitAdressCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск программы разбора адресов." Content="{Binding AdrButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="4" Command="{Binding FillTablesCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.fill_suvd." Content="{Binding FillProjButtonText}"></Button>
 
         <Grid Grid.Column="0" Grid.Row="5">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="10*" />
                 <ColumnDefinition Width="1*" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="0" Command="{Binding ChangeCurrencyCommand}" IsEnabled="{Binding ElementName=check, Path=IsChecked }" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.ccy_update.">Перевод в валюту кредита</Button>
+            <Button Grid.Column="0" Command="{Binding ChangeCurrencyCommand}" IsEnabled="{Binding ElementName=check, Path=IsChecked }" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.ccy_update." Content="{Binding CcyButtonText}"></Button>
             <CheckBox Grid.Column="1" Name="check" Margin="3, 10, 3, 3" HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="False"></CheckBox>
         </Grid>
 
 
 
-        <Button Grid.Column="0" Grid.Row="6" Command="{Binding StepByStepCommand}"  IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.step_by_step.">Заливка инфо</Button>
-        <Button Grid.Column="0" Grid.Row="7" Command="{Binding PostProgCommand}"  IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск постпрограмм.">Запуск постпрограмм</Button>
-        <Button Grid.Column="0" Grid.Row="8" Command="{Binding FinishCheckCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.finish_check.">Постпроверка</Button>
-        <Button Grid.Column="0" Grid.Row="9" Command="{Binding ToArchiveCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.move_arc_and_lpd.">Списание в архив</Button>
-        <Button Grid.Column="0" Grid.Row="10" Command="{Binding OktelProgCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск программ заливки телефонов.">Октел</Button>
-        <Button Grid.Column="0" Grid.Row="11" Command="{Binding StatusRCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.set_r_status_loop.">Статус R</Button>
+        <Button Grid.Column="0" Grid.Row="6" Command="{Binding StepByStepCommand}"  IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.step_by_step." Content="{Binding StepButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="7" Command="{Binding PostProgCommand}"  IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск постпрограмм." Content="{Binding PostProgButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="8" Command="{Binding FinishCheckCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.finish_check." Content="{Binding FinishButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="9" Command="{Binding ToArchiveCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.move_arc_and_lpd." Content="{Binding ArchButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="10" Command="{Binding OktelProgCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск программ заливки телефонов." Content="{Binding OktelButtonText}"></Button>
+        <Button Grid.Column="0" Grid.Row="11" Command="{Binding StatusRCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.set_r_status_loop." Content="{Binding RButtonText}"></Button>
         
 
         <Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="12" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
