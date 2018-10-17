@@ -1,4 +1,5 @@
-﻿using QUp.Models;
+﻿using QUp.Infrastr;
+using QUp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -205,6 +206,7 @@ namespace QUp.ViewModels
         private void ReportUpdated(string res)
         {
             ResultText = res;
+            QLoger.AddRecordToLog(ResultText);
         }
         #endregion
 

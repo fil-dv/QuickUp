@@ -147,13 +147,11 @@ namespace QUp
             ManagerDB.ReportUpdated += ReportUpdated;
 
             ManagerFS.Initialize();
+            if (!String.IsNullOrEmpty(QMediator.PathToRegDest))
+            {
+                QLoger.AddRecordToLog("Заливаем реестр " + QMediator.PathToRegDest);
+            }
         }
-
-        //private void ManagerDB_ReportUpdated(string res)
-        //{
-           
-        //    ResultText = res;
-        //}
         #endregion
 
         #region CreateNewFilesCommand
@@ -177,6 +175,7 @@ namespace QUp
             ResultText = String.Empty;
             ManagerFS.CreateNewFiles();
             ManagerFS.RunFiles();
+            QLoger.AddRecordToLog(ResultText);
         }
         #endregion
 
@@ -199,7 +198,7 @@ namespace QUp
         void CreateCtrl()
         {
             ResultText = String.Empty;
-            ManagerFS.RunCtrlCreator();            
+            ManagerFS.RunCtrlCreator();
         }
         #endregion
 
@@ -268,8 +267,8 @@ namespace QUp
         {
             if (IsCountEntered)
             {
-                //MessageBox.Show("Check");
-                ManagerDB.PreCheck(DealCount);               
+                ManagerDB.PreCheck(DealCount);
+                QLoger.AddRecordToLog(ResultText);
             }
             else
             {

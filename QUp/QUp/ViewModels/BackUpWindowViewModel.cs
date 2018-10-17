@@ -1,4 +1,5 @@
-﻿using QUp.Models;
+﻿using QUp.Infrastr;
+using QUp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -69,14 +70,13 @@ namespace QUp.ViewModels
 
         void CreateBackUp()
         {
-           // MessageBox.Show("CreateBackUp");
             string str = ManagerDB.CreateBackUp(BackUpName);
+
             if (str.Length < 1) BackUpReport = "Таблица не создана.";
             else BackUpReport = "Таблица успешно создана. Количество записей - " + str;
 
+            QLoger.AddRecordToLog(BackUpName + "\t" + BackUpReport);
         }
         #endregion
-
-
     }
 }

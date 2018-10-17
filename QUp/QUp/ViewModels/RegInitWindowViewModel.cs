@@ -1,4 +1,5 @@
-﻿using QUp.Models;
+﻿using QUp.Infrastr;
+using QUp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -101,14 +102,14 @@ namespace QUp.ViewModels
 
             if (VerifyData())
             {
-                //MessageBox.Show("Init");
-                ManagerDB.RegInit(RegName, StartDate, StopDate);
+                ManagerDB.RegInit(RegName, StartDate, StopDate);                
             }
         }
 
         private void ManagerDB_ReportUpdated(string res)
         {
             ResultText = res;
+            QLoger.AddRecordToLog(ResultText);
         }
 
         private bool VerifyData()

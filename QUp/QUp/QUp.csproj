@@ -66,6 +66,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Infrastr\QLoger.cs" />
     <Compile Include="Infrastr\QSettings.cs" />
     <Compile Include="Models\DbLayer\DbNotification.cs" />
     <Compile Include="Models\DbLayer\ManagerDB.cs" />
