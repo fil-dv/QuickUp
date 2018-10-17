@@ -100,7 +100,7 @@
         </Grid.RowDefinitions>
 
         <Button Grid.Column="0" Grid.Row="0" Command="{Binding InitializeCommand}" Style="{StaticResource TabButtonLast}" ToolTip="Выбор папки в x:\Реєстри заливаемого реестра." >Инициализация</Button>
-        <Button Grid.Column="0" Grid.Row="1" Command="{Binding CreateNewFilesCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" ToolTip="Копирование файлов для заливки в x:\Реєстри, а так же файлов *.sql в x:\Progs\Registry из предыдущей папки данного контрагента.">Копирование файлов</Button>
+        <Button Grid.Column="0" Grid.Row="1" Command="{Binding CreateNewFilesCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" ToolTip="Копирование файлов для заливки в x:\Реєстри, а так же файлов *.sql в x:\Progs\Registry из предыдущей папки данного контрагента, запуск файлов *.xls и *.ctl">Подготовка файлов</Button>
         <Button Grid.Column="0" Grid.Row="2" Command="{Binding SearchCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" ToolTip="Подбор соответствующего по длинне контрола из предыдущих папок контрагента." >Подбор контрола</Button>
         <Button Grid.Column="0" Grid.Row="3" Command="{Binding CreateCtrlCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск программы создания контрола.">Создание контрола</Button>
         <Button Grid.Column="0" Grid.Row="4" Command="{Binding GetExcelPosCommand}" IsEnabled="{Binding IsInitialize}" Style="{StaticResource TabButtonLast}" ToolTip="Определение позиции колонки в excel файле по имени поля в контроле.">Позиция поля в Excel</Button>

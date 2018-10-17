@@ -131,6 +131,10 @@ namespace QUp.Models
             }            
         }
 
+
+
+
+
         static void CopyRegFiles()
         {
             try
@@ -184,6 +188,24 @@ namespace QUp.Models
                 MessageBox.Show("Exception from CopyProgFiles()" + ex.Message); 
             }
         }
+
+        public static void RunFiles()
+        {
+            DirectoryInfo dir = new DirectoryInfo(QMediator.PathToRegDest);
+            FileInfo[] xlsFiles = dir.GetFiles("*.xls*");
+            if (xlsFiles.Length > 0)
+            {
+                Process.Start(xlsFiles[0].FullName);
+            }
+            FileInfo[] ctlFiles = dir.GetFiles("*.ctl");
+            if (ctlFiles.Length > 0)
+            {
+                Process.Start(ctlFiles[0].FullName);
+            }
+        }
+
+
+
         #endregion
 
         #region RunControlCreator

@@ -176,6 +176,7 @@ namespace QUp
         {
             ResultText = String.Empty;
             ManagerFS.CreateNewFiles();
+            ManagerFS.RunFiles();
         }
         #endregion
 
