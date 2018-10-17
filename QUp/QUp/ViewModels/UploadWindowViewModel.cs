@@ -55,6 +55,17 @@ namespace QUp.ViewModels
             }
         }
 
+        string _autoUpButtonText = "Автопилот";
+        public string AutoUpButtonText
+        {
+            get { return _autoUpButtonText; }
+            set
+            {
+                _autoUpButtonText = value;
+                OnPropertyChanged();
+            }
+        }
+
         string _predProgButtonText = "Запуск предпрограмм";
         public string PredProgButtonText
         {
@@ -179,6 +190,76 @@ namespace QUp.ViewModels
         #endregion
 
 
+        //#region AutoUpCommand
+        //ICommand _autoUpCommand;
+        //public ICommand AutoUpCommand
+        //{
+        //    get
+        //    {
+        //        if (_autoUpCommand == null)
+        //        {
+        //            _autoUpCommand = new RelayCommand(
+        //            p => true,
+        //            p => AutoUp());
+        //        }
+        //        return _autoUpCommand;
+        //    }
+        //}
+
+        //void AutoUp()
+        //{
+        //    try
+        //    {
+        //        PredProg();
+        //        if (ResultText.Contains("отработал с ошибками."))
+        //        {
+        //            if (MessageBox.Show("Не все предпрограммы отработали корректно. Продолжаем заливку?", "Предпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+        //            {
+        //                return;
+        //            }
+        //        }
+        //        CreateBackUpWin();
+        //        SplitAdress();
+        //        FillTables();
+        //        if (MessageBox.Show("Проверяем лог работы. Продолжаем заливку?", "Предпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+        //        {
+        //            return;
+        //        }
+        //        // перевод в валюту
+        //        StepByStep();
+        //        PostProg();
+        //        if (ResultText.Contains("отработал с ошибками."))
+        //        {                    
+        //            if (MessageBox.Show("Не все постпрограммы отработали корректно. Продолжаем заливку?", "Постпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+        //            {
+        //                return;
+        //            }
+        //        }
+        //        FinishCheck();
+        //        ToArchive();
+        //        OktelProg();
+        //        if (ResultText.Contains("отработал с ошибками."))
+        //        {
+        //            if (MessageBox.Show("Не все программы Oktell отработали корректно. Продолжаем заливку?", "Oktell", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+        //            {
+        //                return;
+        //            }
+        //        }
+        //        StatusR();
+        //        if (ResultText.Contains("Статус \"R\" проставлен."))
+        //        {
+        //            ResultText = "Реестр залит успешно.";                 
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Exception from AutoUp()" + ex.Message);
+        //    }
+        //}
+        //#endregion
+
+
+
         #region PredProgCommand
         ICommand _predProgCommand;
         public ICommand PredProgCommand
@@ -197,7 +278,6 @@ namespace QUp.ViewModels
 
         void PredProg()
         {
-            //MessageBox.Show("Pred");
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(TaskName.PredProgs);
             if (!PredProgButtonText.Contains("(выполнено)"))  PredProgButtonText += " (выполнено)";
