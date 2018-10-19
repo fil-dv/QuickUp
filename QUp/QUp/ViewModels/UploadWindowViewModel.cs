@@ -44,6 +44,17 @@ namespace QUp.ViewModels
             }
         }
 
+        string _currentPath = QMediator.PathToRegDest;
+        public string CurrentPath
+        {
+            get { return _currentPath; }
+            set
+            {
+                _currentPath = value;
+                OnPropertyChanged();
+            }
+        }
+
         string _initRegButtonText = "Инициализация реестра";
         public string InitRegButtonText
         {

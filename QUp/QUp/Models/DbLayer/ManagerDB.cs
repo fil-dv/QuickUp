@@ -103,7 +103,7 @@ namespace QUp.Models
         private static void ManagerDB_ProcDoneHandler()
         {
             _report = DbNotification.GetResultFromDb();
-            ReportUpdated?.Invoke(UpdateResultReport());
+            ReportUpdated?.Invoke(_report);
         }
 
         #region RegInit
@@ -416,9 +416,9 @@ namespace QUp.Models
         #endregion
 
 
-        private static string UpdateResultReport()
-        {
-            return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
-        }
+        //private static string UpdateResultReport()
+        //{
+        //    return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
+        //}
     }
 }

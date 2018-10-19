@@ -32,7 +32,6 @@ namespace QUp.Models
         {
             BackUpWindow win = new BackUpWindow();
             win.ShowDialog();
-        }
-        
+        }        
     }
 }

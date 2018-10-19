@@ -42,7 +42,7 @@ namespace QUp.Models
                         Initialized?.Invoke(true);
                     }
                 }
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace QUp.Models
                 FindSource(QMediator.PathToRegDest, FileType.Reg);
                 FindSource(QMediator.PathToProgDest, FileType.Prog);
 
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
             }
             catch (Exception ex)
             {
@@ -214,7 +214,7 @@ namespace QUp.Models
             try
             {
                 //_report = "Создание контрола...";
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
 
                 ProcessStartInfo pInfo = new ProcessStartInfo("c-creator.exe");
                 if (QMediator.PathToRegDest != null)
@@ -235,7 +235,7 @@ namespace QUp.Models
                 }                
 
                 Process p = Process.Start(pInfo);
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
             }
             catch (Exception ex)
             {
@@ -250,7 +250,7 @@ namespace QUp.Models
             try
             {
                 _report = "\n\n\t  Разбивка адресов...";
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
 
                 SplitCompletHandler += UpdateReport;
 
@@ -279,7 +279,7 @@ namespace QUp.Models
             try
             {
                 _report = ReadLog();
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
             }
             catch (Exception ex)
             {
@@ -323,7 +323,7 @@ namespace QUp.Models
             try
             {
                 _report = "Выполнение программ...\n\n";
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
                 if (QMediator.PathToProgDest != null)
                 {
                     string str;
@@ -349,7 +349,7 @@ namespace QUp.Models
                         if (filePathList.Count < 1)
                         {
                             _report = "Нет программ для выполнения.";
-                            ReportUpdated?.Invoke(UpdateResultReport());
+                            ReportUpdated?.Invoke(_report);
                             return;
                         }
                         foreach (var item in filePathList)
@@ -382,7 +382,7 @@ namespace QUp.Models
                     _report = "Не определен путь к программам.";
                 }
 
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
             }
             catch (Exception ex)
             {
@@ -491,14 +491,14 @@ namespace QUp.Models
             try
             {
                 _report = "Подбор контрола..." + Environment.NewLine;
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
 
                 DirectoryInfo di = new DirectoryInfo(QMediator.PathToRegDest);
                 FileInfo[] fArr = di.GetFiles("imp.xls*");
                 if (fArr.Length < 1)
                 {
                     _report = string.Format("В папке {0} не найден файл imp.xls* ", di.FullName);
-                    ReportUpdated?.Invoke(UpdateResultReport());
+                    ReportUpdated?.Invoke(_report);
                     return;
                 }
                 string pathToImp = fArr[0].FullName;
@@ -509,7 +509,7 @@ namespace QUp.Models
                 if (csvCheckedList.Count < 1)
                 {
                     _report += "Нет подходящего контрола.";
-                    ReportUpdated?.Invoke(UpdateResultReport());
+                    ReportUpdated?.Invoke(_report);
                     return;
                 }
 
@@ -536,7 +536,7 @@ namespace QUp.Models
                 //    _report += (item.FullName + "\t" + "в контроле строк: " + GetCsvRowCount(item) + "   " + item.LastWriteTime + Environment.NewLine);
                 //}
 
-                ReportUpdated?.Invoke(UpdateResultReport());
+                ReportUpdated?.Invoke(_report);
             }
             catch (Exception ex)
             {
@@ -679,13 +679,13 @@ namespace QUp.Models
         }
         #endregion
 
-        
 
 
 
-        private static string UpdateResultReport()
-        {
-            return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
-        }
+
+        //private static string UpdateResultReport()
+        //{
+        //    return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
+        //}
     }
 }
