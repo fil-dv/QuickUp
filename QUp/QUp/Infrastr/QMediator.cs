@@ -16,6 +16,8 @@ namespace QUp.Infrastr
         public static string PathToProgSource { get { return _pathToProgSource; } set { _pathToProgSource = value; } }
         public static string PathToProgDest { get; set; }
 
-        public static string ResultReport { get; set; }        
+        public static string ResultReport { get; set; }     
+        
+        public static bool IsAuto { get; set; }
     }
 }

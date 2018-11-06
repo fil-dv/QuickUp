@@ -12,16 +12,21 @@ using System.Windows.Forms;
 
 namespace QUp.Models
 {
-    public enum TaskName { PredProgs, PostProgs, Oktel };
-    public delegate void ResultIsReady(string res);
-    
+    public enum TaskName { PredProgs, BackUp, AdrSplit, FillProj, CurrChange, StepByStep, PostProgs, MoveToArc, Oktel, StateR };
+    enum FileType { Reg, Prog };
+    public enum ExecProgsType { PredProgs, PostProgs, Oktel };
+
+    //public delegate void ResultIsReady(string res);    
 
     public static class ManagerFS
     {
         static string _report = "";
         static public event Action SplitCompletHandler;
         static public event Action<bool> Initialized;        
-        public static event ResultIsReady ReportUpdated;
+        public static event Action<string> ReportUpdated;
+        static public event Action<TaskName> TaskFinished;
+
+
 
         #region InitializeApp
         static public void Initialize()
@@ -47,18 +52,13 @@ namespace QUp.Models
             catch (Exception ex)
             {
                 MessageBox.Show("Exception from Initialize()" + ex.Message); ;
-            }
-            
+            }            
         }
 
         #endregion
 
         #region creating files
-        enum FileType
-        {
-            Reg,
-            Prog
-        };
+
         
         public static void CreateNewFiles()
         {
@@ -203,9 +203,6 @@ namespace QUp.Models
                 Process.Start(ctlFiles[0].FullName);
             }
         }
-
-
-
         #endregion
 
         #region RunControlCreator
@@ -318,7 +315,7 @@ namespace QUp.Models
         #endregion
 
         #region ProgsToExexute
-        public static void ProgsToExec(TaskName taskName)
+        public static void ProgsToExec(ExecProgsType taskName)
         {
             try
             {
@@ -327,14 +324,14 @@ namespace QUp.Models
                 if (QMediator.PathToProgDest != null)
                 {
                     string str;
-                    if (taskName == TaskName.Oktel)
+                    if (taskName == ExecProgsType.Oktel)
                     {
                         str = "\\post!\\oktel";
                         DbNotification.ResultWaiter();
                     }
                     else
                     {
-                        str = taskName == TaskName.PredProgs ? "\\!pred" : "\\post!";
+                        str = taskName == ExecProgsType.PredProgs ? "\\!pred" : "\\post!";
                     }
 
                     string path = QMediator.PathToProgDest + str;
@@ -350,6 +347,8 @@ namespace QUp.Models
                         {
                             _report = "Нет программ для выполнения.";
                             ReportUpdated?.Invoke(_report);
+                            if (taskName == ExecProgsType.PredProgs) TaskFinished?.Invoke(TaskName.PredProgs);
+                            else TaskFinished?.Invoke(TaskName.PostProgs);
                             return;
                         }
                         foreach (var item in filePathList)
@@ -383,6 +382,8 @@ namespace QUp.Models
                 }
 
                 ReportUpdated?.Invoke(_report);
+                if (taskName == ExecProgsType.PredProgs) TaskFinished?.Invoke(TaskName.PredProgs);
+                else TaskFinished?.Invoke(TaskName.PostProgs);
             }
             catch (Exception ex)
             {

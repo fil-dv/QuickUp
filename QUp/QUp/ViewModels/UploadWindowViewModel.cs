@@ -201,73 +201,133 @@ namespace QUp.ViewModels
         #endregion
 
 
-        //#region AutoUpCommand
-        //ICommand _autoUpCommand;
-        //public ICommand AutoUpCommand
-        //{
-        //    get
-        //    {
-        //        if (_autoUpCommand == null)
-        //        {
-        //            _autoUpCommand = new RelayCommand(
-        //            p => true,
-        //            p => AutoUp());
-        //        }
-        //        return _autoUpCommand;
-        //    }
-        //}
+        #region AutoUpCommand
+        ICommand _autoUpCommand;
+        public ICommand AutoUpCommand
+        {
+            get
+            {
+                if (_autoUpCommand == null)
+                {
+                    _autoUpCommand = new RelayCommand(
+                    p => true,
+                    p => AutoUp());
+                }
+                return _autoUpCommand;
+            }
+        }
 
-        //void AutoUp()
-        //{
-        //    try
-        //    {
-        //        PredProg();
-        //        if (ResultText.Contains("отработал с ошибками."))
-        //        {
-        //            if (MessageBox.Show("Не все предпрограммы отработали корректно. Продолжаем заливку?", "Предпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-        //            {
-        //                return;
-        //            }
-        //        }
-        //        CreateBackUpWin();
-        //        SplitAdress();
-        //        FillTables();
-        //        if (MessageBox.Show("Проверяем лог работы. Продолжаем заливку?", "Предпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-        //        {
-        //            return;
-        //        }
-        //        // перевод в валюту
-        //        StepByStep();
-        //        PostProg();
-        //        if (ResultText.Contains("отработал с ошибками."))
-        //        {                    
-        //            if (MessageBox.Show("Не все постпрограммы отработали корректно. Продолжаем заливку?", "Постпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-        //            {
-        //                return;
-        //            }
-        //        }
-        //        FinishCheck();
-        //        ToArchive();
-        //        OktelProg();
-        //        if (ResultText.Contains("отработал с ошибками."))
-        //        {
-        //            if (MessageBox.Show("Не все программы Oktell отработали корректно. Продолжаем заливку?", "Oktell", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-        //            {
-        //                return;
-        //            }
-        //        }
-        //        StatusR();
-        //        if (ResultText.Contains("Статус \"R\" проставлен."))
-        //        {
-        //            ResultText = "Реестр залит успешно.";                 
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Exception from AutoUp()" + ex.Message);
-        //    }
-        //}
-        //#endregion
+
+        private void ManagerFS_TaskFinished(TaskName taskName)
+        {
+            if (QMediator.IsAuto)
+            {
+                bool isContinue = true;
+
+                switch (taskName)
+                {
+
+                    case TaskName.PredProgs:
+                        MessageBox.Show("PredProgs finished");
+                        isContinue = CheckTaskResult("Запуск предпрограмм", "Не все предпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
+                        if (!isContinue)
+                        {
+                            QMediator.IsAuto = false;
+                        }
+                        else
+                        {
+                            CreateBackUpAuto();
+                        }
+                        break;
+
+                    case TaskName.BackUp:
+                        MessageBox.Show("BackUp table finished");
+                        isContinue = CheckTaskResult("Запуск предпрограмм", "Не все предпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
+                        if (!isContinue)
+                        {
+                            QMediator.IsAuto = false;
+                        }
+                        else
+                        {
+                            CreateBackUpWin();
+                        }
+                        break;
+                }
+            }
+        }
+
+        private void CreateBackUpAuto()
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool CheckTaskResult(string taskName, string message, string checkString)
+        {
+            if (ResultText.Contains(checkString))
+            {
+                if (MessageBox.Show(message, taskName, MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    return false;
+                }                
+            }
+            return true;
+        }
+
+
+        void AutoUp()
+        {
+            try
+            {
+                QMediator.IsAuto = true;
+                ManagerFS.TaskFinished += ManagerFS_TaskFinished;
+                PredProg();
+                
+
+
+
+
+
+                //CreateBackUpWin();
+                SplitAdress();
+                FillTables();
+                if (MessageBox.Show("Проверяем лог работы. Продолжаем заливку?", "Предпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    return;
+                }
+                // перевод в валюту
+                StepByStep();
+                PostProg();
+                if (ResultText.Contains("отработал с ошибками."))
+                {
+                    if (MessageBox.Show("Не все постпрограммы отработали корректно. Продолжаем заливку?", "Постпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    {
+                        return;
+                    }
+                }
+                FinishCheck();
+                ToArchive();
+                OktelProg();
+                if (ResultText.Contains("отработал с ошибками."))
+                {
+                    if (MessageBox.Show("Не все программы Oktell отработали корректно. Продолжаем заливку?", "Oktell", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    {
+                        return;
+                    }
+                }
+                StatusR();
+                if (ResultText.Contains("Статус \"R\" проставлен."))
+                {
+                    ResultText = "Реестр залит успешно.";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from AutoUp()" + ex.Message);
+            }
+        }
+
+
+        #endregion
 
 
         #region PredProgCommand
@@ -289,7 +349,7 @@ namespace QUp.ViewModels
         void PredProg()
         {
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(TaskName.PredProgs);
+            ManagerFS.ProgsToExec(ExecProgsType.PredProgs);
             if (!PredProgButtonText.Contains("(выполнено)"))  PredProgButtonText += " (выполнено)";
         }
 
@@ -320,7 +380,7 @@ namespace QUp.ViewModels
         {
             //MessageBox.Show("PostProgCommand");
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(TaskName.PostProgs);
+            ManagerFS.ProgsToExec(ExecProgsType.PostProgs);
             if (!PostProgButtonText.Contains("(выполнено)")) PostProgButtonText += " (выполнено)"; 
         }
         #endregion
@@ -345,7 +405,7 @@ namespace QUp.ViewModels
         {
             //MessageBox.Show("OktelProg");
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(TaskName.Oktel);
+            ManagerFS.ProgsToExec(ExecProgsType.Oktel);
             if (!OktelButtonText.Contains("(выполнено)")) OktelButtonText += " (выполнено)";
         }
         #endregion

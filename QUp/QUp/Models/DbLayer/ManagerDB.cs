@@ -16,7 +16,7 @@ namespace QUp.Models
     public static class ManagerDB
     {
         static OracleConnection _con;
-        public static event ResultIsReady ReportUpdated;
+        public static event Action<string> ReportUpdated;
         static public event Action<bool> RegInitialized;
 
         static string _report = "";        
