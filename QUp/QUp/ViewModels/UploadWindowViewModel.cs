@@ -270,7 +270,6 @@ namespace QUp.ViewModels
         //#endregion
 
 
-
         #region PredProgCommand
         ICommand _predProgCommand;
         public ICommand PredProgCommand
