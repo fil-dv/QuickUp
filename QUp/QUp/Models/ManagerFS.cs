@@ -12,20 +12,17 @@ using System.Windows.Forms;
 
 namespace QUp.Models
 {
-    public enum TaskName { PredProgs, BackUp, AdrSplit, FillProj, CurrChange, StepByStep, PostProgs, MoveToArc, Oktel, StateR };
+    public enum TaskName { PredProgs, BackUp, AdrSplit, FillProj, CurrChange, StepByStep, PostProgs, FinishCheck, MoveToArc, Oktel, StateR };
     enum FileType { Reg, Prog };
     public enum ExecProgsType { PredProgs, PostProgs, Oktel };
 
-    //public delegate void ResultIsReady(string res);    
-
-    public static class ManagerFS
+     public static class ManagerFS
     {
         static string _report = "";
         static public event Action SplitCompletHandler;
         static public event Action<bool> Initialized;        
         public static event Action<string> ReportUpdated;
         static public event Action<TaskName> TaskFinished;
-
 
 
         #region InitializeApp
@@ -277,6 +274,7 @@ namespace QUp.Models
             {
                 _report = ReadLog();
                 ReportUpdated?.Invoke(_report);
+                TaskFinished?.Invoke(TaskName.AdrSplit);
             }
             catch (Exception ex)
             {
@@ -679,14 +677,5 @@ namespace QUp.Models
             return list;
         }
         #endregion
-
-
-
-
-
-        //private static string UpdateResultReport()
-        //{
-        //    return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
-        //}
     }
 }

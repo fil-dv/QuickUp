@@ -18,6 +18,7 @@ namespace QUp.Models
         static OracleConnection _con;
         public static event Action<string> ReportUpdated;
         static public event Action<bool> RegInitialized;
+        static public event Action<TaskName> TaskFinished;
 
         static string _report = "";        
 
@@ -41,6 +42,7 @@ namespace QUp.Models
             }
         }
 
+        #region Suport
         public static void ExecCommand(string command)
         {
             try
@@ -73,7 +75,7 @@ namespace QUp.Models
             }
             return read;
         }
-
+        #endregion
 
         #region PreCheck
         public static void PreCheck(string count)
@@ -262,6 +264,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
+                QMediator.IsAuto = false;
                 MessageBox.Show("Exception from GetBackUpName()" + ex.Message); 
             }
             return name;
@@ -388,6 +391,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
+                QMediator.IsAuto = false;
                 MessageBox.Show("Exception from CreateBackUp()" + ex.Message);
             }
 
@@ -415,10 +419,5 @@ namespace QUp.Models
         }
         #endregion
 
-
-        //private static string UpdateResultReport()
-        //{
-        //    return Environment.NewLine + "   " + _report.Replace(Environment.NewLine, Environment.NewLine + "   ");
-        //}
     }
 }

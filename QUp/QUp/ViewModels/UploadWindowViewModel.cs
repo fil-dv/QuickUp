@@ -3,6 +3,7 @@ using QUp.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -40,6 +41,17 @@ namespace QUp.ViewModels
             set
             {
                 _regInit = value;
+                OnPropertyChanged();
+            }
+        }
+
+        bool _curNeedToChange = false;
+        public bool CurNeedToChange
+        {
+            get { return _curNeedToChange; }
+            set
+            {
+                _curNeedToChange = value;
                 OnPropertyChanged();
             }
         }
@@ -217,8 +229,22 @@ namespace QUp.ViewModels
             }
         }
 
+        void AutoUp()
+        {
+            try
+            {
+                QMediator.IsAuto = true;
+                ManagerFS.TaskFinished += TaskFinished;
+                ManagerDB.TaskFinished += TaskFinished;
+                PredProg();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Exception from AutoUp()" + ex.Message);
+            }
+        }
 
-        private void ManagerFS_TaskFinished(TaskName taskName)
+        private void TaskFinished(TaskName taskName)
         {
             if (QMediator.IsAuto)
             {
@@ -233,6 +259,7 @@ namespace QUp.ViewModels
                         if (!isContinue)
                         {
                             QMediator.IsAuto = false;
+                            return;
                         }
                         else
                         {
@@ -242,15 +269,85 @@ namespace QUp.ViewModels
 
                     case TaskName.BackUp:
                         MessageBox.Show("BackUp table finished");
-                        isContinue = CheckTaskResult("Запуск предпрограмм", "Не все предпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
-                        if (!isContinue)
+                        SplitAdress();
+                        break;
+
+                    case TaskName.AdrSplit:
+                        MessageBox.Show("AdrSplit finished");
+                        FillTables();
+                        break;
+
+                    case TaskName.FillProj:
+                        MessageBox.Show("Feel tables finished");
+                        if (CurNeedToChange)
                         {
-                            QMediator.IsAuto = false;
+                            ChangeCurrency();
                         }
                         else
                         {
-                            CreateBackUpWin();
+                            StepByStep();
+                        }                        
+                        break;
+
+                    case TaskName.CurrChange:
+                        MessageBox.Show("CurrChange finished");
+                        StepByStep();
+                        break;
+
+                    case TaskName.StepByStep:
+                        MessageBox.Show("StepByStep finished");
+                        isContinue = CheckTaskResult("Заливка инфо", "Надо проанализировать результаты, продолжаем заливку?", "---");
+                        if (!isContinue)
+                        {
+                            QMediator.IsAuto = false;
+                            return;
                         }
+                        else
+                        {
+                            PostProg();
+                        }
+                        break;
+
+                    case TaskName.PostProgs:
+                        MessageBox.Show("PostProgs finished");
+                        isContinue = CheckTaskResult("Запуск постпрограмм", "Не все постпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
+                        if (!isContinue)
+                        {
+                            QMediator.IsAuto = false;
+                            return;
+                        }
+                        else
+                        {
+                            FinishCheck();
+                        }
+                        break;
+                    case TaskName.FinishCheck:
+                        MessageBox.Show("FinishCheck finished");
+                        isContinue = CheckTaskResult("Окончательная проверка", "Что-то не залито или залито не корректно, продолжаем заливку?", "Есть");
+                        if (!isContinue)
+                        {
+                            QMediator.IsAuto = false;
+                            return;
+                        }
+                        else
+                        {
+                            ToArchive();
+                        }
+                        break;
+
+                    case TaskName.MoveToArc:
+                        MessageBox.Show("MoveToArc finished");
+                        OktelProg();
+                        break;
+
+                    case TaskName.Oktel:
+                        MessageBox.Show("Oktel finished");
+                        StatusR();
+                        break;
+
+                    case TaskName.StateR:
+                        MessageBox.Show("StatusR finished");
+                        ResultText = "Реестр успешно залит. Путь к лог-файлу:" + Path.Combine(QMediator.PathToRegDest, "_upload.log") + ".";
                         break;
                 }
             }
@@ -258,7 +355,13 @@ namespace QUp.ViewModels
 
         private void CreateBackUpAuto()
         {
-            throw new NotImplementedException();
+            string backUpTableName = ManagerDB.GetBackUpName();
+            string count = ManagerDB.CreateBackUp(backUpTableName);
+            ResultText = "Создана таблица " + backUpTableName  + ", количество записей - " + count + ".";
+            if (backUpTableName.Length > 0 && count.Length > 0 && QMediator.IsAuto)
+            {
+                SplitAdress();
+            }
         }
 
         private bool CheckTaskResult(string taskName, string message, string checkString)
@@ -272,61 +375,6 @@ namespace QUp.ViewModels
             }
             return true;
         }
-
-
-        void AutoUp()
-        {
-            try
-            {
-                QMediator.IsAuto = true;
-                ManagerFS.TaskFinished += ManagerFS_TaskFinished;
-                PredProg();
-                
-
-
-
-
-
-                //CreateBackUpWin();
-                SplitAdress();
-                FillTables();
-                if (MessageBox.Show("Проверяем лог работы. Продолжаем заливку?", "Предпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-                {
-                    return;
-                }
-                // перевод в валюту
-                StepByStep();
-                PostProg();
-                if (ResultText.Contains("отработал с ошибками."))
-                {
-                    if (MessageBox.Show("Не все постпрограммы отработали корректно. Продолжаем заливку?", "Постпрограммы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-                    {
-                        return;
-                    }
-                }
-                FinishCheck();
-                ToArchive();
-                OktelProg();
-                if (ResultText.Contains("отработал с ошибками."))
-                {
-                    if (MessageBox.Show("Не все программы Oktell отработали корректно. Продолжаем заливку?", "Oktell", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
-                    {
-                        return;
-                    }
-                }
-                StatusR();
-                if (ResultText.Contains("Статус \"R\" проставлен."))
-                {
-                    ResultText = "Реестр залит успешно.";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Exception from AutoUp()" + ex.Message);
-            }
-        }
-
-
         #endregion
 
 

@@ -18,7 +18,7 @@ namespace QUp.Infrastr
                 {
                     return;
                 }
-                string path = Path.Combine(QMediator.PathToRegDest, "_upload_log.txt");
+                string path = Path.Combine(QMediator.PathToRegDest, "_upload.log");
                 if (!File.Exists(path))
                 {
                     File.Create(path).Close();
