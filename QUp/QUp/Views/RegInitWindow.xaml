@@ -99,22 +99,24 @@
 
     </Window.Resources>
 
-    <Grid FocusManager.FocusedElement="{Binding ElementName=RegName}">
+
+    <Border  BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="7,3,7,3">
+        <Grid FocusManager.FocusedElement="{Binding ElementName=RegName}">
         <Grid.RowDefinitions>
-            <RowDefinition Height=".5*"/>
+            <RowDefinition Height=".7*"/>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height=".5*"/>
+            <RowDefinition Height=".7*"/>
             <RowDefinition Height="1*"/>
             <RowDefinition Height=".7*"/>
             <RowDefinition Height="8*"/>
-            <RowDefinition Height=".8*"/>
+            <!--<RowDefinition Height=".8*"/>-->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
             <ColumnDefinition Width="1*"/>
         </Grid.ColumnDefinitions>
 
-        <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="18" Content="Название реестра:" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+            <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="0" BorderBrush="Black" BorderThickness="1,1,.5,.5" Style="{StaticResource MyLowLabelStyle}" Margin="10,7,10,0" FontFamily="Calibri" FontSize="18" Content="Название реестра:" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
 
             <Label.Resources>
                 <Style TargetType="TextBlock">
@@ -129,7 +131,7 @@
             </Label.Background>
         </Label>
 
-        <TextBox  Name="RegName" Grid.Row="1" Grid.ColumnSpan="2"  FontFamily="Calibri" FontSize="21" Margin="10,9,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding RegName, Mode=TwoWay}" >
+            <TextBox  Name="RegName" Grid.Row="1" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1,1,.5,.5" FontFamily="Calibri" FontSize="21" Margin="10,9,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding RegName, Mode=TwoWay}" >
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="7,3,7,3"/>
@@ -173,7 +175,22 @@
             </Label.Background>
         </Label>
 
-        <TextBox  Grid.Row="3" Grid.Column="0" FontFamily="Calibri" FontSize="21" Margin="10,10,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding StartDate, Mode=TwoWay}" >
+        <TextBox  Grid.Row="3" Grid.Column="0" BorderBrush="Black" BorderThickness="1,1,.5,.5" FontFamily="Calibri" FontSize="21" Margin="10,10,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding StartDate, Mode=TwoWay}" >
+            <TextBox.Resources>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="CornerRadius" Value="7,3,7,3"/>
+
+                    </Style>
+            </TextBox.Resources>
+            <TextBox.Background>
+                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                    <GradientStop Color="#999999" Offset="0"/>
+                    <GradientStop Color="White" Offset="1"/>
+                </LinearGradientBrush>
+            </TextBox.Background>
+        </TextBox>
+
+            <TextBox  Grid.Row="3" Grid.Column="1" BorderBrush="Black" BorderThickness="1,1,.5,.5" FontFamily="Calibri" FontSize="21" Margin="10,10,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding StopDate, Mode=TwoWay}" >
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="7,3,7,3"/>
@@ -187,21 +204,7 @@
             </TextBox.Background>
         </TextBox>
 
-        <TextBox  Grid.Row="3" Grid.Column="1" FontFamily="Calibri" FontSize="21" Margin="10,10,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding StopDate, Mode=TwoWay}" >
-            <TextBox.Resources>
-                <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="7,3,7,3"/>
-                </Style>
-            </TextBox.Resources>
-            <TextBox.Background>
-                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
-                    <GradientStop Color="#999999" Offset="0"/>
-                    <GradientStop Color="White" Offset="1"/>
-                </LinearGradientBrush>
-            </TextBox.Background>
-        </TextBox>
-
-        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Command="{Binding RegInitCommand}" Style="{StaticResource TabButtonLast}" >Инициализировать реестр</Button>
+            <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" BorderBrush="Black" BorderThickness="1,1,.5,.5" Command="{Binding RegInitCommand}" Style="{StaticResource TabButtonLast}" >Инициализировать реестр</Button>
 
         <!--<Label Grid.Column="0" Grid.Row="5" Padding="10" Grid.ColumnSpan="2" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>
@@ -218,7 +221,7 @@
             </Label.Background>
         </Label>-->
 
-        <TextBox Name="MainText" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" FontFamily="Calibri" FontSize="16" Margin="10,13,10,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True">
+            <TextBox Name="MainText" Grid.Column="0" Grid.Row="5" Grid.ColumnSpan="2" BorderBrush="Black" BorderThickness="1,1,.5,.5" FontFamily="Calibri" FontSize="16" Margin="10,13,10,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True">
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="15,7,15,7"/>
@@ -232,7 +235,8 @@
             </TextBox.Background>
         </TextBox>
 
-        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Click="Close" Style="{StaticResource TabButtonLast}" Margin="10, 0, 10, 10">Ok</Button>
+        <!--<Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Click="Close" Style="{StaticResource TabButtonLast}" Margin="10, 0, 10, 10">Ok</Button>-->
         
     </Grid>
+    </Border>
 </Window>

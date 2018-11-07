@@ -82,7 +82,8 @@
 
     </Window.Resources>
 
-    <Grid>
+    <Border  BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="7,3,7,3">
+        <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
@@ -121,4 +122,5 @@
         </TextBox>
 
     </Grid>
+    </Border>
 </Window>

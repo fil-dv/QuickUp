@@ -25,7 +25,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="10,3,10,3" Background="#999999" BorderBrush="Black" BorderThickness="1,1,.5,.5" >
+                        <Border CornerRadius="7,3,7,3" Background="#999999" BorderBrush="Black" BorderThickness="1,1,.5,.5" >
                             <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                     </ControlTemplate>
@@ -71,7 +71,7 @@
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 Background="{TemplateBinding Background}" 
                                 SnapsToDevicePixels="true" 
-                                CornerRadius="10, 3, 10, 3">
+                                CornerRadius="7, 3, 7, 3">
                             <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                     </ControlTemplate>
@@ -105,6 +105,7 @@
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
+            <RowDefinition Height=".3*"/>
             <RowDefinition Height="1*" />
 
 
@@ -165,7 +166,7 @@
         <TextBox Name="MainText" Grid.Column="2" Grid.Row="0" Grid.RowSpan="13" BorderBrush="Black" BorderThickness=".5" FontFamily="Calibri" FontSize="16" Margin="10,13,10,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True">
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
-                    <Setter Property="CornerRadius" Value="15,7,15,7"/>
+                    <Setter Property="CornerRadius" Value="12,7,12,7"/>
                 </Style>
             </TextBox.Resources>
             <TextBox.Background>
@@ -176,7 +177,9 @@
             </TextBox.Background>
         </TextBox>
 
-        <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="13" BorderBrush="Black" BorderThickness=".5"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+            <Label Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0,0,0,1"  Margin="13,0,13,0"  />
+        
+            <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="14" BorderBrush="Black" BorderThickness=".5" Margin="10,10,10,0" Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
 
             <Label.Resources>
                 <Style TargetType="TextBlock">
