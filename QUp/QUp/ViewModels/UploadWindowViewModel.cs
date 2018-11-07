@@ -252,9 +252,7 @@ namespace QUp.ViewModels
 
                 switch (taskName)
                 {
-
                     case TaskName.PredProgs:
-                        MessageBox.Show("PredProgs finished");
                         isContinue = CheckTaskResult("Запуск предпрограмм", "Не все предпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
                         if (!isContinue)
                         {
@@ -267,18 +265,11 @@ namespace QUp.ViewModels
                         }
                         break;
 
-                    case TaskName.BackUp:
-                        MessageBox.Show("BackUp table finished");
-                        SplitAdress();
-                        break;
-
                     case TaskName.AdrSplit:
-                        MessageBox.Show("AdrSplit finished");
                         FillTables();
                         break;
 
                     case TaskName.FillProj:
-                        MessageBox.Show("Feel tables finished");
                         if (CurNeedToChange)
                         {
                             ChangeCurrency();
@@ -290,12 +281,10 @@ namespace QUp.ViewModels
                         break;
 
                     case TaskName.CurrChange:
-                        MessageBox.Show("CurrChange finished");
                         StepByStep();
                         break;
 
                     case TaskName.StepByStep:
-                        MessageBox.Show("StepByStep finished");
                         isContinue = CheckTaskResult("Заливка инфо", "Надо проанализировать результаты, продолжаем заливку?", "---");
                         if (!isContinue)
                         {
@@ -309,7 +298,6 @@ namespace QUp.ViewModels
                         break;
 
                     case TaskName.PostProgs:
-                        MessageBox.Show("PostProgs finished");
                         isContinue = CheckTaskResult("Запуск постпрограмм", "Не все постпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
                         if (!isContinue)
                         {
@@ -322,7 +310,6 @@ namespace QUp.ViewModels
                         }
                         break;
                     case TaskName.FinishCheck:
-                        MessageBox.Show("FinishCheck finished");
                         isContinue = CheckTaskResult("Окончательная проверка", "Что-то не залито или залито не корректно, продолжаем заливку?", "Есть");
                         if (!isContinue)
                         {
@@ -336,18 +323,20 @@ namespace QUp.ViewModels
                         break;
 
                     case TaskName.MoveToArc:
-                        MessageBox.Show("MoveToArc finished");
                         OktelProg();
                         break;
 
                     case TaskName.Oktel:
-                        MessageBox.Show("Oktel finished");
                         StatusR();
                         break;
 
                     case TaskName.StateR:
-                        MessageBox.Show("StatusR finished");
                         ResultText = "Реестр успешно залит. Путь к лог-файлу:" + Path.Combine(QMediator.PathToRegDest, "_upload.log") + ".";
+                        QMediator.CurrentTaskName = TaskName.Default;
+                        break;
+
+                    default:
+                        ResultText = "Текущая задача не определена.";
                         break;
                 }
             }
@@ -355,13 +344,34 @@ namespace QUp.ViewModels
 
         private void CreateBackUpAuto()
         {
-            string backUpTableName = ManagerDB.GetBackUpName();
-            string count = ManagerDB.CreateBackUp(backUpTableName);
-            ResultText = "Создана таблица " + backUpTableName  + ", количество записей - " + count + ".";
-            if (backUpTableName.Length > 0 && count.Length > 0 && QMediator.IsAuto)
+            if (IsIceNotExists())
+            {
+                string backUpTableName = ManagerDB.GetBackUpName();
+                string count = ManagerDB.CreateBackUp(backUpTableName);
+                ResultText = "Создана таблица " + backUpTableName + ", количество записей - " + count + ".";
+                if (backUpTableName.Length > 0 && count.Length > 0 && QMediator.IsAuto)
+                {
+                    SplitAdress();
+                }
+            }
+            else
             {
                 SplitAdress();
             }
+        }
+
+        private bool IsIceNotExists()
+        {
+            bool res = true;
+            if (QMediator.PathToRegDest.Contains("ПУМБ") || QMediator.PathToRegDest.Contains("Simple money (Foxtrot)"))
+            {
+                string message = "Если требуется создание новой ICE таблицы нажмите \"YES\" \n или долейте данные в существующюю таблицу в ручную и нажмите \"NO\".";
+                if (MessageBox.Show(message, "Создание backup таблицы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                {
+                    res = false;
+                }                
+            }
+            return res;
         }
 
         private bool CheckTaskResult(string taskName, string message, string checkString)

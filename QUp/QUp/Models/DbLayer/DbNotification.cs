@@ -11,7 +11,7 @@ using System.Windows;
 
 namespace QUp.Models.DbLayer
 {
-    public static class DbNotification
+    public class DbNotification : QManagerBase
     {
         #region ResultWaiter      
         
@@ -42,7 +42,7 @@ namespace QUp.Models.DbLayer
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from DispatcherTimer_Tick()" + ex.Message);
+                ExceptionHandler("DispatcherTimer_Tick()", ex.Message);
             }
         }       
 
@@ -52,17 +52,18 @@ namespace QUp.Models.DbLayer
             try
             {
                 string query = "select t.comments from Q_REPORT t where t.done = 1";
-                
-                OracleDataReader reader = ManagerDB.GetReader(query);
-                while (reader.Read())
+
+                using (OracleDataReader reader = ManagerDB.GetReader(query))
                 {
-                    res = reader[0].ToString();
-                }
-               
+                    while (reader.Read())
+                    {
+                        res = reader[0].ToString();
+                    }
+                }               
             }
             catch (Exception ex)
-            {                
-                MessageBox.Show("Exception from GetResultFromDb()" + ex.Message);
+            {
+                ExceptionHandler("GetResultFromDb()", ex.Message);
             }
             return res;
         }

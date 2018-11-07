@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QUp.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,5 +20,7 @@ namespace QUp.Infrastr
         public static string ResultReport { get; set; }     
         
         public static bool IsAuto { get; set; }
+
+        public static TaskName CurrentTaskName { get; set; }
     }
 }

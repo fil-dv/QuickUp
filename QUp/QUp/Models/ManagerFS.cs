@@ -12,18 +12,17 @@ using System.Windows.Forms;
 
 namespace QUp.Models
 {
-    public enum TaskName { PredProgs, BackUp, AdrSplit, FillProj, CurrChange, StepByStep, PostProgs, FinishCheck, MoveToArc, Oktel, StateR };
+    public enum TaskName { PredProgs, BackUp, AdrSplit, FillProj, CurrChange, StepByStep, PostProgs, FinishCheck, MoveToArc, Oktel, StateR, Default };
     enum FileType { Reg, Prog };
     public enum ExecProgsType { PredProgs, PostProgs, Oktel };
 
-     public static class ManagerFS
+     public class ManagerFS : QManagerBase
     {
         static string _report = "";
         static public event Action SplitCompletHandler;
         static public event Action<bool> Initialized;        
         public static event Action<string> ReportUpdated;
         static public event Action<TaskName> TaskFinished;
-
 
         #region InitializeApp
         static public void Initialize()
@@ -48,14 +47,12 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from Initialize()" + ex.Message); ;
+                ExceptionHandler("Initialize()", ex.Message);
             }            
         }
-
         #endregion
 
         #region creating files
-
         
         public static void CreateNewFiles()
         {
@@ -69,7 +66,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from CreateNewFiles()" + ex.Message);
+                ExceptionHandler("CreateNewFiles()", ex.Message);
             }
         }
 
@@ -124,13 +121,9 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from FindSource()" + ex.Message);
+                ExceptionHandler("FindSource()", ex.Message);
             }            
         }
-
-
-
-
 
         static void CopyRegFiles()
         {
@@ -161,7 +154,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from CopyRegFiles()" + ex.Message);
+                ExceptionHandler("CopyRegFiles()", ex.Message);
             }            
         }
 
@@ -182,7 +175,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from CopyProgFiles()" + ex.Message); 
+                ExceptionHandler("CopyProgFiles()", ex.Message);
             }
         }
 
@@ -233,7 +226,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from RunCtrlCreator() " + ex.Message);
+                ExceptionHandler("RunCtrlCreator", ex.Message);
             }            
         }
         #endregion
@@ -258,10 +251,10 @@ namespace QUp.Models
                 process.Exited += SplitFinished;
             }
             catch (Exception ex)
-            {
-                MessageBox.Show("Exception from SplitAdr()" + ex.Message);
+            {                
+                ExceptionHandler("SplitAdr()", ex.Message);
             }            
-        }
+        }        
 
         private static void SplitFinished(object sender, EventArgs e)
         {
@@ -278,7 +271,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from UpdateReport()" + ex.Message);
+                ExceptionHandler("UpdateReport()", ex.Message);
             }            
         }
 
@@ -293,9 +286,7 @@ namespace QUp.Models
         //   // process.Exited += SplitFinished;
         //    process.Close();
         //}
-
-
-
+        
         private static string ReadLog()
         {
             string str = File.ReadAllText("log.txt");
@@ -306,7 +297,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from ReadLog()" + ex.Message);
+                ExceptionHandler("ReadLog()", ex.Message);
             }
             return str;
         }
@@ -325,6 +316,7 @@ namespace QUp.Models
                     if (taskName == ExecProgsType.Oktel)
                     {
                         str = "\\post!\\oktel";
+                        QMediator.CurrentTaskName = TaskName.Oktel;
                         DbNotification.ResultWaiter();
                     }
                     else
@@ -368,14 +360,14 @@ namespace QUp.Models
                             catch (Exception ex)
                             {
                                 isOk = false;
-                                MessageBox.Show(ex.Message);
+                                ExceptionHandler("ProgsToExec()", ex.Message);
                             }                            
                             _report += ("\t" + (isOk == true ? "отработал нормально." : "отработал с ошибками.") + Environment.NewLine);
                         }
                     }
                 }
                 else
-                {
+                {                   
                     _report = "Не определен путь к программам.";
                 }
 
@@ -385,7 +377,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from ProgsToExec()" + ex.Message);
+                ExceptionHandler("ProgsToExec()", ex.Message);
             }            
         }
 
@@ -433,7 +425,7 @@ namespace QUp.Models
         //    }
         //    catch (Exception ex)
         //    {
-        //        MessageBox.Show("Exception from SplitFile()" + ex.Message);
+        //        ExceptionHandler("SplitFile()", ex.Message);      
         //    }
         //    return listStr;
         //}
@@ -456,7 +448,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from SplitQuery()" + ex.Message);
+                ExceptionHandler("SplitQuery()", ex.Message);                
             }
             return listStr;
         }
@@ -478,7 +470,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from Method()" + ex.Message);
+                ExceptionHandler("GetFilesForExec()", ex.Message);
             }
             return fileList;
         }
@@ -539,7 +531,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from SearchCtrl()" + ex.Message);
+                ExceptionHandler("SearchCtrl()", ex.Message);
             }
             
         }
@@ -559,7 +551,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from GetCheckedList()" + ex.Message);
+                ExceptionHandler("GetCheckedList()", ex.Message);
             }            
             return resList;
         }
@@ -583,7 +575,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from GetCsvRowCount()" + ex.Message);
+                ExceptionHandler("GetCsvRowCount()", ex.Message);
             }
             return count;
         }
@@ -598,7 +590,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from GetCsvList()" + ex.Message);
+                ExceptionHandler("GetCsvList()", ex.Message);
             }
             return di.GetFiles("*.ctl", SearchOption.AllDirectories);
         }
@@ -650,7 +642,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from GetNumberFromCtl()" + ex.Message);
+                ExceptionHandler("GetNumberFromCtl()", ex.Message);
             }            
             return res;
         }
@@ -671,7 +663,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from GetCleanList()" + ex.Message);
+                ExceptionHandler("GetCleanList()", ex.Message);
             }
             
             return list;

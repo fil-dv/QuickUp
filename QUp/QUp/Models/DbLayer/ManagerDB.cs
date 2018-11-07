@@ -13,7 +13,7 @@ using QUp.Models.DbLayer;
 
 namespace QUp.Models
 {
-    public static class ManagerDB
+    public class ManagerDB : QManagerBase
     {
         static OracleConnection _con;
         public static event Action<string> ReportUpdated;
@@ -106,6 +106,7 @@ namespace QUp.Models
         {
             _report = DbNotification.GetResultFromDb();
             ReportUpdated?.Invoke(_report);
+            TaskFinished?.Invoke(QMediator.CurrentTaskName);
         }
 
         #region RegInit
@@ -147,6 +148,7 @@ namespace QUp.Models
         {
             try
             {
+                QMediator.CurrentTaskName = TaskName.FillProj;
                 DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.fill_suvd", _con))
@@ -167,6 +169,7 @@ namespace QUp.Models
         {
             try
             {
+                QMediator.CurrentTaskName = TaskName.StepByStep;
                 DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.step_by_step", _con))
@@ -187,6 +190,7 @@ namespace QUp.Models
         {
             try
             {
+                QMediator.CurrentTaskName = TaskName.FinishCheck;
                 DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.finish_check", _con))
@@ -207,6 +211,7 @@ namespace QUp.Models
         {
             try
             {
+                QMediator.CurrentTaskName = TaskName.MoveToArc;
                 DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.move_arc_and_lpd", _con))
@@ -227,6 +232,7 @@ namespace QUp.Models
         {
             try
             {
+                QMediator.CurrentTaskName = TaskName.StateR;
                 DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.set_r_status_loop", _con))
@@ -404,6 +410,7 @@ namespace QUp.Models
         {
             try
             {
+                QMediator.CurrentTaskName = TaskName.CurrChange;
                 DbNotification.ResultWaiter();
 
                 using (OracleCommand cmd = new OracleCommand("reg_upload.ccy_update", _con))

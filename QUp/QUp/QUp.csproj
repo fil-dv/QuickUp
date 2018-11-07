@@ -73,6 +73,7 @@
     <Compile Include="Models\ManagerFS.cs" />
     <Compile Include="Models\ManagerWin.cs" />
     <Compile Include="Models\ManagerXls.cs" />
+    <Compile Include="Models\QManagerBase.cs" />
     <Compile Include="ViewModels\BackUpWindowViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
     <Compile Include="ViewModels\RegInitWindowViewModel.cs" />
