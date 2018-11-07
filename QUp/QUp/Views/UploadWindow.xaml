@@ -25,7 +25,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
-                        <Border CornerRadius="10,3,10,3" Background="#999999" BorderBrush="White" BorderThickness="2,2,1,1" >
+                        <Border CornerRadius="10,3,10,3" Background="#999999" BorderBrush="Black" BorderThickness="1,1,.5,.5" >
                             <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
                         </Border>
                     </ControlTemplate>
@@ -82,9 +82,12 @@
 
     </Window.Resources>
 
+    <Border  BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="7,3,7,3">
+    
     <Grid Background="White" Margin="0,10,0,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.7*" />
+            <ColumnDefinition Width="0.01*" />
             <ColumnDefinition Width="1.3*" />
         </Grid.ColumnDefinitions>
 
@@ -140,7 +143,9 @@
         <Button Grid.Column="0" Grid.Row="10" Command="{Binding ToArchiveCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.move_arc_and_lpd." Content="{Binding ArchButtonText}"></Button>
         <Button Grid.Column="0" Grid.Row="11" Command="{Binding OktelProgCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск программ заливки телефонов." Content="{Binding OktelButtonText}"></Button>
         <Button Grid.Column="0" Grid.Row="12" Command="{Binding StatusRCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.set_r_status_loop." Content="{Binding RButtonText}"></Button>
-        
+
+
+        <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="13" BorderBrush="Gray" BorderThickness="0,0,1,0" Padding="5,0,-5,0"  />
 
         <!--<Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="12" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>
@@ -157,7 +162,7 @@
             </Label.Background>
         </Label>-->
 
-        <TextBox Name="MainText" Grid.Column="1" Grid.Row="0" Grid.RowSpan="13" FontFamily="Calibri" FontSize="16" Margin="10,13,10,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True">
+        <TextBox Name="MainText" Grid.Column="2" Grid.Row="0" Grid.RowSpan="13" BorderBrush="Black" BorderThickness=".5" FontFamily="Calibri" FontSize="16" Margin="10,13,10,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" TextWrapping="Wrap" VerticalScrollBarVisibility="Auto" AcceptsReturn="True">
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="15,7,15,7"/>
@@ -171,7 +176,7 @@
             </TextBox.Background>
         </TextBox>
 
-        <Label Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="13"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
+        <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="13" BorderBrush="Black" BorderThickness=".5"  Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
 
             <Label.Resources>
                 <Style TargetType="TextBlock">
@@ -187,4 +192,5 @@
         </Label>
 
     </Grid>
+    </Border>
 </Window>
