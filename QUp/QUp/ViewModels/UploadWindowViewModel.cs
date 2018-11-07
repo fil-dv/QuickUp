@@ -212,7 +212,6 @@ namespace QUp.ViewModels
 
         #endregion
 
-
         #region AutoUpCommand
         ICommand _autoUpCommand;
         public ICommand AutoUpCommand
@@ -261,15 +260,18 @@ namespace QUp.ViewModels
                         }
                         else
                         {
+                            if (!PredProgButtonText.Contains("(выполнено)")) PredProgButtonText += " (выполнено)";
                             CreateBackUpAuto();
                         }
                         break;
 
                     case TaskName.AdrSplit:
+                        if (!AdrButtonText.Contains("(выполнено)")) AdrButtonText += " (выполнено)";
                         FillTables();
                         break;
 
                     case TaskName.FillProj:
+                        if (!FillProjButtonText.Contains("(выполнено)")) FillProjButtonText += " (выполнено)";
                         if (CurNeedToChange)
                         {
                             ChangeCurrency();
@@ -281,6 +283,7 @@ namespace QUp.ViewModels
                         break;
 
                     case TaskName.CurrChange:
+                        if (!CcyButtonText.Contains("(выполнено)")) CcyButtonText += " (выполнено)";
                         StepByStep();
                         break;
 
@@ -293,6 +296,7 @@ namespace QUp.ViewModels
                         }
                         else
                         {
+                            if (!StepButtonText.Contains("(выполнено)")) StepButtonText += " (выполнено)";
                             PostProg();
                         }
                         break;
@@ -306,6 +310,7 @@ namespace QUp.ViewModels
                         }
                         else
                         {
+                            if (!PostProgButtonText.Contains("(выполнено)")) PostProgButtonText += " (выполнено)";
                             FinishCheck();
                         }
                         break;
@@ -318,19 +323,23 @@ namespace QUp.ViewModels
                         }
                         else
                         {
+                            if (!FinishButtonText.Contains("(выполнено)")) FinishButtonText += " (выполнено)";
                             ToArchive();
                         }
                         break;
 
                     case TaskName.MoveToArc:
+                        if (!ArchButtonText.Contains("(выполнено)")) ArchButtonText += " (выполнено)";
                         OktelProg();
                         break;
 
                     case TaskName.Oktel:
+                        if (!OktelButtonText.Contains("(выполнено)")) OktelButtonText += " (выполнено)";
                         StatusR();
                         break;
 
                     case TaskName.StateR:
+                        if (!RButtonText.Contains("(выполнено)")) RButtonText += " (выполнено)";
                         ResultText = "Реестр успешно залит. Путь к лог-файлу:" + Path.Combine(QMediator.PathToRegDest, "_upload.log") + ".";
                         QMediator.CurrentTaskName = TaskName.Default;
                         break;
@@ -351,11 +360,13 @@ namespace QUp.ViewModels
                 ResultText = "Создана таблица " + backUpTableName + ", количество записей - " + count + ".";
                 if (backUpTableName.Length > 0 && count.Length > 0 && QMediator.IsAuto)
                 {
+                    if (!BackUpButtonText.Contains("(выполнено)")) BackUpButtonText += " (выполнено)";
                     SplitAdress();
                 }
             }
             else
             {
+                if (!BackUpButtonText.Contains("(выполнено)")) BackUpButtonText += " (выполнено)";
                 SplitAdress();
             }
         }
@@ -365,7 +376,7 @@ namespace QUp.ViewModels
             bool res = true;
             if (QMediator.PathToRegDest.Contains("ПУМБ") || QMediator.PathToRegDest.Contains("Simple money (Foxtrot)"))
             {
-                string message = "Если требуется создание новой ICE таблицы нажмите \"YES\" \n или долейте данные в существующюю таблицу в ручную и нажмите \"NO\".";
+                string message = "Если требуется создание новой ICE таблицы нажмите \"YES\" \nили долейте данные в существующюю таблицу в ручную и нажмите \"NO\".";
                 if (MessageBox.Show(message, "Создание backup таблицы", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                 {
                     res = false;
@@ -387,7 +398,6 @@ namespace QUp.ViewModels
         }
         #endregion
 
-
         #region PredProgCommand
         ICommand _predProgCommand;
         public ICommand PredProgCommand
@@ -407,8 +417,7 @@ namespace QUp.ViewModels
         void PredProg()
         {
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(ExecProgsType.PredProgs);
-            if (!PredProgButtonText.Contains("(выполнено)"))  PredProgButtonText += " (выполнено)";
+            ManagerFS.ProgsToExec(ExecProgsType.PredProgs);            
         }
 
         private void ReportUpdated(string res)
@@ -436,10 +445,8 @@ namespace QUp.ViewModels
 
         void PostProg()
         {
-            //MessageBox.Show("PostProgCommand");
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(ExecProgsType.PostProgs);
-            if (!PostProgButtonText.Contains("(выполнено)")) PostProgButtonText += " (выполнено)"; 
+            ManagerFS.ProgsToExec(ExecProgsType.PostProgs);            
         }
         #endregion
 
@@ -461,10 +468,8 @@ namespace QUp.ViewModels
 
         void OktelProg()
         {
-            //MessageBox.Show("OktelProg");
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(ExecProgsType.Oktel);
-            if (!OktelButtonText.Contains("(выполнено)")) OktelButtonText += " (выполнено)";
+            ManagerFS.ProgsToExec(ExecProgsType.Oktel);            
         }
         #endregion
 
@@ -487,8 +492,7 @@ namespace QUp.ViewModels
         void SplitAdress()
         {
             ResultText = String.Empty;
-            ManagerFS.SplitAdr();
-            if (!AdrButtonText.Contains("(выполнено)")) AdrButtonText += " (выполнено)";
+            ManagerFS.SplitAdr();            
         }
         #endregion
 
@@ -511,8 +515,7 @@ namespace QUp.ViewModels
         void CreateBackUpWin()
         {
             ResultText = String.Empty;
-            ManagerWin.CreateBackUpWin();
-            if (!BackUpButtonText.Contains("(выполнено)")) BackUpButtonText += " (выполнено)";
+            ManagerWin.CreateBackUpWin();            
         }
         #endregion
 
@@ -569,9 +572,7 @@ namespace QUp.ViewModels
 
         void FillTables()
         {
-            //MessageBox.Show("Fill");
-            ManagerDB.FillTables();
-            if (!FillProjButtonText.Contains("(выполнено)")) FillProjButtonText += " (выполнено)";
+            ManagerDB.FillTables();            
         }
         #endregion
 
@@ -593,9 +594,7 @@ namespace QUp.ViewModels
 
         void StepByStep()
         {
-           // MessageBox.Show("StepByStep");
-            ManagerDB.StepByStep();
-            if (!StepButtonText.Contains("(выполнено)")) StepButtonText += " (выполнено)";
+            ManagerDB.StepByStep();            
         }
         #endregion
 
@@ -617,9 +616,7 @@ namespace QUp.ViewModels
 
         void ChangeCurrency()
         {
-            // MessageBox.Show("ChangeCurrency");
-            ManagerDB.ChangeCurrency();
-            if (!CcyButtonText.Contains("(выполнено)")) CcyButtonText += " (выполнено)";
+            ManagerDB.ChangeCurrency();           
         }
         #endregion
 
@@ -641,9 +638,7 @@ namespace QUp.ViewModels
 
         void FinishCheck()
         {
-            //MessageBox.Show("FinishCheck");
-            ManagerDB.FinishCheck();
-            if (!FinishButtonText.Contains("(выполнено)")) FinishButtonText += " (выполнено)";
+            ManagerDB.FinishCheck();            
         }
         #endregion
 
@@ -665,9 +660,7 @@ namespace QUp.ViewModels
 
         void ToArchive()
         {
-            //MessageBox.Show("ToArchive");
-            ManagerDB.ToArchive();
-            if (!ArchButtonText.Contains("(выполнено)")) ArchButtonText += " (выполнено)";
+            ManagerDB.ToArchive();            
         }
         #endregion
 
@@ -689,11 +682,8 @@ namespace QUp.ViewModels
 
         void StatusR()
         {
-            //MessageBox.Show("StatusRCommand");
-            ManagerDB.StatusR();
-            if (!RButtonText.Contains("(выполнено)")) RButtonText += " (выполнено)";
+            ManagerDB.StatusR();            
         }
         #endregion
-
     }
 }

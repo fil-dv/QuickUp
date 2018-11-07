@@ -38,7 +38,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from ManagerDB()" + ex.Message);
+                ExceptionHandler("ManagerDB()", ex.Message);
             }
         }
 
@@ -95,7 +95,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from PreCheck()" + ex.Message); 
+                ExceptionHandler("PreCheck()", ex.Message);
             }
         }
 
@@ -137,7 +137,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from RegInit()" + ex.Message);
+                ExceptionHandler("RegInit()", ex.Message);
             }
             RegInitialized?.Invoke(true);
         }
@@ -159,7 +159,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from FillTables()" + ex.Message);
+                ExceptionHandler("FillTables()", ex.Message);
             }
         }
         #endregion
@@ -180,7 +180,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from StepByStep()" + ex.Message);
+                ExceptionHandler("StepByStep()", ex.Message);
             }
         }
         #endregion
@@ -201,7 +201,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from FinishCheck()" + ex.Message);
+                ExceptionHandler("FinishCheck()", ex.Message);
             }
         }
         #endregion
@@ -222,7 +222,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from ToArchive()" + ex.Message);
+                ExceptionHandler("ToArchive()", ex.Message);
             }
         }
         #endregion
@@ -243,7 +243,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from StatusR()" + ex.Message);
+                ExceptionHandler("StatusR()", ex.Message);
             }
         }
         #endregion
@@ -270,8 +270,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                QMediator.IsAuto = false;
-                MessageBox.Show("Exception from GetBackUpName()" + ex.Message); 
+                ExceptionHandler("GetBackUpName()", ex.Message);
             }
             return name;
         }
@@ -287,7 +286,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from GetRegNumbers()" + ex.Message); 
+                ExceptionHandler("GetRegNumbers()", ex.Message);
             }
             return regNums;
         }
@@ -305,7 +304,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from UpdateStopDate()" + ex.Message);
+                ExceptionHandler("UpdateStopDate()", ex.Message);
             }
             return res;
         }
@@ -327,7 +326,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from GetStopDate()" + ex.Message);
+                ExceptionHandler("GetStopDate()", ex.Message);
             }
             return stopDate;
         }
@@ -348,7 +347,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from GetAlias()" + ex.Message);
+                ExceptionHandler("GetAlias()", ex.Message);
             }
             return alias;
         }
@@ -397,8 +396,7 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                QMediator.IsAuto = false;
-                MessageBox.Show("Exception from CreateBackUp()" + ex.Message);
+                ExceptionHandler("CreateBackUp()", ex.Message);
             }
 
             return recordCount;
@@ -421,10 +419,9 @@ namespace QUp.Models
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Exception from ChangeCurrency()" + ex.Message);
+                ExceptionHandler("ChangeCurrency()", ex.Message);
             }
         }
         #endregion
-
     }
 }

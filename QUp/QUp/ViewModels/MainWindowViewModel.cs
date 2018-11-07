@@ -104,10 +104,6 @@ namespace QUp
             }
         }
 
-
-
-
-
         private void ReportUpdated(string res)
         {
             if (res.Contains("По количеству дел и по контролу все норм."))

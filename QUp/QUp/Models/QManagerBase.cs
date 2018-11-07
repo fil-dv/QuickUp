@@ -10,13 +10,13 @@ namespace QUp.Models
 {
     public class QManagerBase
     {
-
-
         #region ExceptionHandler
         public static void ExceptionHandler(string methodName, string exMessage)
         {
             QMediator.IsAuto = false;
-            MessageBox.Show("Exception from " + methodName + " " + exMessage);
+            string message = "Exception from " + methodName + Environment.NewLine + exMessage;
+            QLoger.AddRecordToLog(message);
+            MessageBox.Show(message);
         }
         #endregion
     }
