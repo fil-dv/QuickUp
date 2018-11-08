@@ -22,5 +22,7 @@ namespace QUp.Infrastr
         public static bool IsAuto { get; set; }
 
         public static TaskName CurrentTaskName { get; set; }
+
+        public static MashinState CurrentState { get; set; }
     }
 }

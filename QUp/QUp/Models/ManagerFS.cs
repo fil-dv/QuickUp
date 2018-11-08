@@ -12,7 +12,8 @@ using System.Windows.Forms;
 
 namespace QUp.Models
 {
-    public enum TaskName { PredProgs, BackUp, AdrSplit, FillProj, CurrChange, StepByStep, PostProgs, FinishCheck, MoveToArc, Oktel, StateR, Default };
+    public enum TaskName { PredProgs, BackUp, AdrSplit, FillProj, CurrChange, StepByStep, PostProgs, FinishCheck, MoveToArc, Oktel, StateR, NoTask };
+    public enum MashinState { PredProgsState, BackUpState, AdrSplitState, FillProjState, CurrChangeState, StepByStepState, PostProgsState, FinishCheckState, MoveToArcState, OktelState, StatusRState, StopState };
     enum FileType { Reg, Prog };
     public enum ExecProgsType { PredProgs, PostProgs, Oktel };
 

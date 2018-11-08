@@ -235,6 +235,8 @@ namespace QUp.ViewModels
                 QMediator.IsAuto = true;
                 ManagerFS.TaskFinished += TaskFinished;
                 ManagerDB.TaskFinished += TaskFinished;
+                QMediator.CurrentState = MashinState.PredProgsState;
+                PredProgButtonText += " (выполняется...)";
                 PredProg();
             }
             catch (Exception ex)
@@ -252,103 +254,207 @@ namespace QUp.ViewModels
                 switch (taskName)
                 {
                     case TaskName.PredProgs:
-                        isContinue = CheckTaskResult("Запуск предпрограмм", "Не все предпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
-                        if (!isContinue)
+                        if (QMediator.CurrentState == MashinState.PredProgsState)
                         {
-                            QMediator.IsAuto = false;
-                            return;
+                            isContinue = CheckTaskResult("Запуск предпрограмм", "Не все предпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
+                            if (!isContinue)
+                            {
+                                QMediator.IsAuto = false;
+                                return;
+                            }
+                            else
+                            {
+                                PredProgButtonText = PredProgButtonText.Replace(" (выполняется...)", " (выполнено)");
+                                BackUpButtonText += " (выполняется...)";
+                                QMediator.CurrentState = MashinState.BackUpState;
+                                CreateBackUpAuto();
+                            }
                         }
                         else
                         {
-                            if (!PredProgButtonText.Contains("(выполнено)")) PredProgButtonText += " (выполнено)";
-                            CreateBackUpAuto();
+                            StopAutoUpload();
                         }
                         break;
 
                     case TaskName.AdrSplit:
-                        if (!AdrButtonText.Contains("(выполнено)")) AdrButtonText += " (выполнено)";
-                        FillTables();
+                        if (QMediator.CurrentState == MashinState.AdrSplitState)
+                        {
+                            AdrButtonText = AdrButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            QMediator.CurrentState = MashinState.FillProjState;
+                            FillProjButtonText += " (выполняется...)";
+                            FillTables();
+                        }
+                        else
+                        {
+                            StopAutoUpload();
+                        }
                         break;
 
                     case TaskName.FillProj:
-                        if (!FillProjButtonText.Contains("(выполнено)")) FillProjButtonText += " (выполнено)";
-                        if (CurNeedToChange)
+                        if (QMediator.CurrentState == MashinState.FillProjState)
                         {
-                            ChangeCurrency();
+                            FillProjButtonText = FillProjButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            if (CurNeedToChange)
+                            {
+                                QMediator.CurrentState = MashinState.CurrChangeState;
+                                CcyButtonText += " (выполняется...)";
+                                ChangeCurrency();
+                            }
+                            else
+                            {
+                                QMediator.CurrentState = MashinState.StepByStepState;
+                                StepButtonText += " (выполняется...)";
+                                StepByStep();
+                            }
                         }
                         else
                         {
-                            StepByStep();
-                        }                        
+                            StopAutoUpload();
+                        }
                         break;
 
                     case TaskName.CurrChange:
-                        if (!CcyButtonText.Contains("(выполнено)")) CcyButtonText += " (выполнено)";
-                        StepByStep();
-                        break;
-
-                    case TaskName.StepByStep:
-                        isContinue = CheckTaskResult("Заливка инфо", "Надо проанализировать результаты, продолжаем заливку?", "---");
-                        if (!isContinue)
+                        if (QMediator.CurrentState == MashinState.CurrChangeState)
                         {
-                            QMediator.IsAuto = false;
-                            return;
+                            CcyButtonText = CcyButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            QMediator.CurrentState = MashinState.StepByStepState;
+                            StepButtonText += " (выполняется...)";
+                            StepByStep();
                         }
                         else
                         {
-                            if (!StepButtonText.Contains("(выполнено)")) StepButtonText += " (выполнено)";
-                            PostProg();
+                            StopAutoUpload();
+                        }
+                        break;
+
+                    case TaskName.StepByStep:
+                        if (QMediator.CurrentState == MashinState.StepByStepState)
+                        {
+                            isContinue = CheckTaskResult("Заливка инфо", "Надо проанализировать результаты, продолжаем заливку?", "---");
+                            if (!isContinue)
+                            {
+                                QMediator.IsAuto = false;
+                                return;
+                            }
+                            else
+                            {
+                                StepButtonText = StepButtonText.Replace(" (выполняется...)", " (выполнено)");
+                                QMediator.CurrentState = MashinState.PostProgsState;
+                                PostProgButtonText += " (выполняется...)";
+                                PostProg();
+                            }
+                        }
+                        else
+                        {
+                            StopAutoUpload();
                         }
                         break;
 
                     case TaskName.PostProgs:
-                        isContinue = CheckTaskResult("Запуск постпрограмм", "Не все постпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
-                        if (!isContinue)
+                        if (QMediator.CurrentState == MashinState.PostProgsState)
                         {
-                            QMediator.IsAuto = false;
-                            return;
+                            isContinue = CheckTaskResult("Запуск постпрограмм", "Не все постпрограммы отработали корректно, продолжаем заливку?", "отработал с ошибками.");
+                            if (!isContinue)
+                            {
+                                QMediator.IsAuto = false;
+                                return;
+                            }
+                            else
+                            {
+                                PostProgButtonText = PostProgButtonText.Replace(" (выполняется...)", " (выполнено)");
+                                QMediator.CurrentState = MashinState.FinishCheckState;
+                                FinishButtonText += " (выполняется...)";
+                                FinishCheck();
+                            }
                         }
                         else
                         {
-                            if (!PostProgButtonText.Contains("(выполнено)")) PostProgButtonText += " (выполнено)";
-                            FinishCheck();
+                            StopAutoUpload();
                         }
                         break;
                     case TaskName.FinishCheck:
-                        isContinue = CheckTaskResult("Окончательная проверка", "Что-то не залито или залито не корректно, продолжаем заливку?", "Есть");
-                        if (!isContinue)
+                        if (QMediator.CurrentState == MashinState.FinishCheckState)
                         {
-                            QMediator.IsAuto = false;
-                            return;
+                            isContinue = CheckTaskResult("Окончательная проверка", "Что-то не залито или залито не корректно, продолжаем заливку?", "Есть");
+                            if (!isContinue)
+                            {
+                                QMediator.IsAuto = false;
+                                return;
+                            }
+                            else
+                            {
+                                FinishButtonText = FinishButtonText.Replace(" (выполняется...)", " (выполнено)");
+                                QMediator.CurrentState = MashinState.MoveToArcState;
+                                ArchButtonText += " (выполняется...)";
+                                ToArchive();
+                            }
                         }
                         else
                         {
-                            if (!FinishButtonText.Contains("(выполнено)")) FinishButtonText += " (выполнено)";
-                            ToArchive();
-                        }
+                            StopAutoUpload();
+                        }                        
                         break;
 
                     case TaskName.MoveToArc:
-                        if (!ArchButtonText.Contains("(выполнено)")) ArchButtonText += " (выполнено)";
-                        OktelProg();
+                        if (QMediator.CurrentState == MashinState.MoveToArcState)
+                        {
+                            ArchButtonText = ArchButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            QMediator.CurrentState = MashinState.OktelState;
+                            OktelButtonText += " (выполняется...)";
+                            OktelProg();
+                        }
+                        else
+                        {
+                            StopAutoUpload();
+                        }
                         break;
 
                     case TaskName.Oktel:
-                        if (!OktelButtonText.Contains("(выполнено)")) OktelButtonText += " (выполнено)";
-                        StatusR();
+                        if (QMediator.CurrentState == MashinState.OktelState)
+                        {
+                            OktelButtonText = OktelButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            QMediator.CurrentState = MashinState.StatusRState;
+                            RButtonText += " (выполняется...)";
+                            StatusR();
+                        }
+                        else
+                        {
+                            StopAutoUpload();
+                        }
                         break;
 
                     case TaskName.StateR:
-                        if (!RButtonText.Contains("(выполнено)")) RButtonText += " (выполнено)";
-                        ResultText = "Реестр успешно залит. Путь к лог-файлу:" + Path.Combine(QMediator.PathToRegDest, "_upload.log") + ".";
-                        QMediator.CurrentTaskName = TaskName.Default;
+                        if (QMediator.CurrentState == MashinState.StatusRState)
+                        {
+                            RButtonText = RButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            ResultText = "Реестр успешно залит. Путь к лог-файлу:" + Path.Combine(QMediator.PathToRegDest, "_upload.log") + ".";
+                            QMediator.CurrentTaskName = TaskName.NoTask;
+                            QMediator.CurrentState = MashinState.StopState;
+                        }
+                        else
+                        {
+                            StopAutoUpload();
+                        }
                         break;
 
                     default:
-                        ResultText = "Текущая задача не определена.";
+                        StopAutoUpload();
                         break;
                 }
             }
+            else
+            {
+                ResultText = "Автоматическая заливка остановлена.";
+                QMediator.CurrentState = MashinState.StopState;
+                QMediator.CurrentTaskName = TaskName.NoTask;
+            }
+        }
+
+        private void StopAutoUpload()
+        {
+            QMediator.IsAuto = false;
+            ResultText = "Автоматическая заливка перешла в некорректное состояние. Текущее состояние - " + QMediator.CurrentState.ToString() + ". Заливка остановлена.";
+            QMediator.CurrentState = MashinState.StopState;            
         }
 
         private void CreateBackUpAuto()
@@ -360,15 +466,21 @@ namespace QUp.ViewModels
                 ResultText = "Создана таблица " + backUpTableName + ", количество записей - " + count + ".";
                 if (backUpTableName.Length > 0 && count.Length > 0 && QMediator.IsAuto)
                 {
-                    if (!BackUpButtonText.Contains("(выполнено)")) BackUpButtonText += " (выполнено)";
-                    SplitAdress();
+                    StartAdrSplit();                    
                 }
             }
             else
             {
-                if (!BackUpButtonText.Contains("(выполнено)")) BackUpButtonText += " (выполнено)";
-                SplitAdress();
+                StartAdrSplit();
             }
+        }
+
+        private void StartAdrSplit()
+        {
+            BackUpButtonText = BackUpButtonText.Replace(" (выполняется...)", " (выполнено)");
+            QMediator.CurrentState = MashinState.AdrSplitState;
+            AdrButtonText += " (выполняется...)";
+            SplitAdress();
         }
 
         private bool IsIceNotExists()
