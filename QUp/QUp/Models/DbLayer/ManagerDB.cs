@@ -398,9 +398,9 @@ namespace QUp.Models
                     }
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                ExceptionHandler("CreateBackUp()", ex.Message);
+                throw;
             }
 
             return recordCount;

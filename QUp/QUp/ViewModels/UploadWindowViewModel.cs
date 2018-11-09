@@ -235,6 +235,7 @@ namespace QUp.ViewModels
                 QMediator.IsAuto = true;
                 ManagerFS.TaskFinished += TaskFinished;
                 ManagerDB.TaskFinished += TaskFinished;
+                BackUpWindowViewModel.TaskFinished += TaskFinished;
                 QMediator.CurrentState = MashinState.PredProgsState;
                 PredProgButtonText += " (выполняется...)";
                 PredProg();
@@ -269,6 +270,20 @@ namespace QUp.ViewModels
                                 QMediator.CurrentState = MashinState.BackUpState;
                                 CreateBackUpAuto();
                             }
+                        }
+                        else
+                        {
+                            StopAutoUpload();
+                        }
+                        break;
+
+                    case TaskName.BackUp:
+                        if (QMediator.CurrentState == MashinState.BackUpState)
+                        {
+                            BackUpButtonText = CcyButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            QMediator.CurrentState = MashinState.AdrSplitState;
+                            AdrButtonText += " (выполняется...)";
+                            SplitAdress();
                         }
                         else
                         {
@@ -461,13 +476,21 @@ namespace QUp.ViewModels
         {
             if (IsIceNotExists())
             {
-                string backUpTableName = ManagerDB.GetBackUpName();
-                string count = ManagerDB.CreateBackUp(backUpTableName);
-                QLoger.AddRecordToLog("Создана таблица " + backUpTableName + ", количество записей - " + count + ".");
-                if (backUpTableName.Length > 0 && count.Length > 0 && QMediator.IsAuto)
+                try
                 {
-                    StartAdrSplit();                    
+                    string backUpTableName = ManagerDB.GetBackUpName();
+                    string count = ManagerDB.CreateBackUp(backUpTableName);
+                    QLoger.AddRecordToLog("Создана таблица " + backUpTableName + ", количество записей - " + count + ".");
+                    if (backUpTableName.Length > 0 && count.Length > 0 && QMediator.IsAuto)
+                    {
+                        StartAdrSplit();
+                    }
                 }
+                catch (Exception)
+                {
+
+                    CreateBackUpWin();
+                }                
             }
             else
             {

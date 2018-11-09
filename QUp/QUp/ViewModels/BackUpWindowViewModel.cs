@@ -14,6 +14,8 @@ namespace QUp.ViewModels
 {
     class BackUpWindowViewModel : INotifyPropertyChanged
     {
+        static public event Action<TaskName> TaskFinished;
+
         public BackUpWindowViewModel()
         {
             BackUpName = ManagerDB.GetBackUpName();
@@ -76,6 +78,10 @@ namespace QUp.ViewModels
             else BackUpReport = "Таблица успешно создана. Количество записей - " + str;
 
             QLoger.AddRecordToLog(BackUpName + "\t" + BackUpReport);
+            if (QMediator.IsAuto)
+            {
+                TaskFinished?.Invoke(TaskName.BackUp);
+            }
         }
         #endregion
     }

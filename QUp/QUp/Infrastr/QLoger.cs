@@ -30,9 +30,9 @@ namespace QUp.Infrastr
                     File.AppendAllText(path, textToAdd);                    
                 }
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show(ex.Message);
+                throw;
             }
         }
     }
