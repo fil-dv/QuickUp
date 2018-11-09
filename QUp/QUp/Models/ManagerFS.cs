@@ -338,8 +338,11 @@ namespace QUp.Models
                         {
                             _report = "Нет программ для выполнения.";
                             ReportUpdated?.Invoke(_report);
+
                             if (taskName == ExecProgsType.PredProgs) TaskFinished?.Invoke(TaskName.PredProgs);
-                            else TaskFinished?.Invoke(TaskName.PostProgs);
+                            else if (taskName == ExecProgsType.PostProgs) TaskFinished?.Invoke(TaskName.PostProgs);
+                            else TaskFinished?.Invoke(TaskName.Oktel);
+
                             return;
                         }
                         foreach (var item in filePathList)

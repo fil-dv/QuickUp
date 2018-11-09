@@ -463,7 +463,7 @@ namespace QUp.ViewModels
             {
                 string backUpTableName = ManagerDB.GetBackUpName();
                 string count = ManagerDB.CreateBackUp(backUpTableName);
-                ResultText = "Создана таблица " + backUpTableName + ", количество записей - " + count + ".";
+                QLoger.AddRecordToLog("Создана таблица " + backUpTableName + ", количество записей - " + count + ".");
                 if (backUpTableName.Length > 0 && count.Length > 0 && QMediator.IsAuto)
                 {
                     StartAdrSplit();                    

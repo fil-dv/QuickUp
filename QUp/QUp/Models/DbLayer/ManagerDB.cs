@@ -105,8 +105,12 @@ namespace QUp.Models
         private static void ManagerDB_ProcDoneHandler()
         {
             _report = DbNotification.GetResultFromDb();
-            ReportUpdated?.Invoke(_report);            
-            TaskFinished?.Invoke(QMediator.CurrentTaskName);
+            ReportUpdated?.Invoke(_report);
+            if (QMediator.IsAuto)
+            {
+                TaskFinished?.Invoke(QMediator.CurrentTaskName);
+            }
+            
         }
 
         #region RegInit
