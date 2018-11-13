@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -265,6 +266,7 @@ namespace QUp.ViewModels
                             }
                             else
                             {
+                                Thread.Sleep(1000);
                                 PredProgButtonText = PredProgButtonText.Replace(" (выполняется...)", " (выполнено)");
                                 BackUpButtonText += " (выполняется...)";
                                 QMediator.CurrentState = MashinState.BackUpState;
@@ -280,6 +282,7 @@ namespace QUp.ViewModels
                     case TaskName.BackUp:
                         if (QMediator.CurrentState == MashinState.BackUpState)
                         {
+                            Thread.Sleep(1000);
                             BackUpButtonText = CcyButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.AdrSplitState;
                             AdrButtonText += " (выполняется...)";
@@ -331,6 +334,7 @@ namespace QUp.ViewModels
                     case TaskName.CurrChange:
                         if (QMediator.CurrentState == MashinState.CurrChangeState)
                         {
+                            Thread.Sleep(1000);
                             CcyButtonText = CcyButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.StepByStepState;
                             StepButtonText += " (выполняется...)";
@@ -376,6 +380,7 @@ namespace QUp.ViewModels
                             }
                             else
                             {
+                                Thread.Sleep(1000);
                                 PostProgButtonText = PostProgButtonText.Replace(" (выполняется...)", " (выполнено)");
                                 QMediator.CurrentState = MashinState.FinishCheckState;
                                 FinishButtonText += " (выполняется...)";
@@ -398,6 +403,7 @@ namespace QUp.ViewModels
                             }
                             else
                             {
+                                Thread.Sleep(1000);
                                 FinishButtonText = FinishButtonText.Replace(" (выполняется...)", " (выполнено)");
                                 QMediator.CurrentState = MashinState.MoveToArcState;
                                 ArchButtonText += " (выполняется...)";
@@ -413,6 +419,7 @@ namespace QUp.ViewModels
                     case TaskName.MoveToArc:
                         if (QMediator.CurrentState == MashinState.MoveToArcState)
                         {
+                            Thread.Sleep(1000);
                             ArchButtonText = ArchButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.OktelState;
                             OktelButtonText += " (выполняется...)";
@@ -427,6 +434,7 @@ namespace QUp.ViewModels
                     case TaskName.Oktel:
                         if (QMediator.CurrentState == MashinState.OktelState)
                         {
+                            Thread.Sleep(1000);
                             OktelButtonText = OktelButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.StatusRState;
                             RButtonText += " (выполняется...)";
@@ -441,6 +449,7 @@ namespace QUp.ViewModels
                     case TaskName.StateR:
                         if (QMediator.CurrentState == MashinState.StatusRState)
                         {
+                            Thread.Sleep(1000);
                             RButtonText = RButtonText.Replace(" (выполняется...)", " (выполнено)");
                             ResultText = "Реестр успешно залит. Путь к лог-файлу:" + Path.Combine(QMediator.PathToRegDest, "_upload.log") + ".";
                             QMediator.CurrentTaskName = TaskName.NoTask;
