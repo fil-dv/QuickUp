@@ -243,28 +243,28 @@ namespace QUp
         }
         #endregion
 
-        #region SemaCommand
-        ICommand _semaCommand;
-        public ICommand SemaCommand
-        {
-            get
-            {
-                if (_semaCommand == null)
-                {
-                    _semaCommand = new RelayCommand(
-                    p => true,
-                    p => StartSema());
-                }
-                return _semaCommand;
-            }
-        }
+        //#region SemaCommand
+        //ICommand _semaCommand;
+        //public ICommand SemaCommand
+        //{
+        //    get
+        //    {
+        //        if (_semaCommand == null)
+        //        {
+        //            _semaCommand = new RelayCommand(
+        //            p => true,
+        //            p => StartSema());
+        //        }
+        //        return _semaCommand;
+        //    }
+        //}
 
-        void StartSema()
-        {
-            ResultText = String.Empty;
-            ManagerFS.RunSema();
-        }
-        #endregion
+        //void StartSema()
+        //{
+        //    ResultText = String.Empty;
+        //    ManagerFS.RunSema();
+        //}
+        //#endregion
 
         #region CheckCommand
         ICommand _checkCommand;

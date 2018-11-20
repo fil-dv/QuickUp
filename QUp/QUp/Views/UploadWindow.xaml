@@ -87,7 +87,7 @@
     <Grid Background="White" Margin="0,10,0,10">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="0.7*" />
-            <ColumnDefinition Width="0.01*" />
+            <ColumnDefinition Width="0.02*" />
             <ColumnDefinition Width="1.3*" />
         </Grid.ColumnDefinitions>
 
@@ -146,9 +146,12 @@
         <Button Grid.Column="0" Grid.Row="12" Command="{Binding StatusRCommand}" IsEnabled="{Binding RegInit}" Style="{StaticResource TabButtonLast}" ToolTip="Запуск процедуры reg_upload.set_r_status_loop." Content="{Binding RButtonText}"></Button>
 
 
-        <Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="13" BorderBrush="Gray" BorderThickness="0,0,1,0" Margin="0,10,0,0" Padding="5,0,-5,0"  />
+        <!--<Label Grid.Row="0" Grid.Column="1" Grid.RowSpan="13" BorderBrush="Gray" BorderThickness="0,0,1,0" Margin="0,10,0,0" Padding="5,0,-5,0"  />-->
+            <StackPanel Grid.Row="0" Grid.Column="1" Grid.RowSpan ="13" Orientation="Horizontal" Margin="7,10,0,0">
+            <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+        </StackPanel>
 
-        <!--<Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="12" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
+            <!--<Label Grid.Column="1" Grid.Row="0" Grid.RowSpan="12" Style="{StaticResource MyLabelStyle}" FontFamily="Calibri" FontSize="14" Content="{Binding Path=ResultText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Label.Resources>
                 <Style TargetType="TextBlock">
                     <Setter Property="TextWrapping" Value="Wrap" />
@@ -177,7 +180,8 @@
             </TextBox.Background>
         </TextBox>
 
-            <Label Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0,0,0,1"  Margin="13,0,13,0"  />
+            <!--<Label Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" BorderBrush="Gray" BorderThickness="0,0,0,1"  Margin="13,0,13,0"  />-->
+            <Separator Grid.Row="13" Grid.Column="0" Grid.ColumnSpan="3" Margin="13,10,13,0" />
         
             <Label Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="14" BorderBrush="Black" BorderThickness=".5" Margin="10,10,10,0" Style="{StaticResource MyLowLabelStyle}"  FontFamily="Calibri" FontSize="14" Content="{Binding CurrentPath}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center">
 

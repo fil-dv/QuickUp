@@ -675,24 +675,24 @@ namespace QUp.Models
         }
         #endregion
 
-        #region Sema
-        public static void RunSema()
-        {
-            try
-            {
-                DirectoryInfo di = new DirectoryInfo(QMediator.PathToRegDest);
-                var files = di.GetFiles("0_Sema.exe", SearchOption.TopDirectoryOnly);
-                if (files.Length > 0)
-                {
-                    Process.Start(files[0].FullName);
-                }
-            }
-            catch (Exception ex)
-            {
-                ExceptionHandler("RunSema()", ex.Message);
-            }            
-        }
+        //#region Sema
+        //public static void RunSema()
+        //{
+        //    try
+        //    {
+        //        DirectoryInfo di = new DirectoryInfo(QMediator.PathToRegDest);
+        //        var files = di.GetFiles("0_Sema.exe", SearchOption.TopDirectoryOnly);
+        //        if (files.Length > 0)
+        //        {
+        //            Process.Start(files[0].FullName);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        ExceptionHandler("RunSema()", ex.Message);
+        //    }            
+        //}
 
-        #endregion
+        //#endregion
     }
 }
