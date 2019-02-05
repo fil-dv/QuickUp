@@ -24,7 +24,7 @@ namespace QUp.ViewModels
         }
 
         #region properties
-        string _resultText;
+        string _resultText = QMediator.TmpMessage;
         public string ResultText
         {
             get { return _resultText; }
@@ -35,7 +35,7 @@ namespace QUp.ViewModels
             }
         }
         
-        bool _regInit = false;
+        bool _regInit = true;
         public bool RegInit
         {
             get { return _regInit; }
@@ -229,11 +229,24 @@ namespace QUp.ViewModels
             }
         }
 
+
+        void SetTextResultHandler()
+        {
+            ManagerDB.ReportUpdated += ManagerDB_ReportUpdated;
+        }
+
+        private void ManagerDB_ReportUpdated(string res)
+        {
+            ResultText = res;
+            QLoger.AddRecordToLog(ResultText);
+        }
+
         void AutoUp()
         {
             try
             {
                 QMediator.IsAuto = true;
+                SetTextResultHandler();
                 ManagerFS.TaskFinished += TaskFinished;
                 ManagerDB.TaskFinished += TaskFinished;
                 BackUpWindowViewModel.TaskFinished += TaskFinished;
@@ -560,6 +573,7 @@ namespace QUp.ViewModels
 
         void PredProg()
         {
+            SetTextResultHandler();
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(ExecProgsType.PredProgs);            
         }
@@ -663,40 +677,40 @@ namespace QUp.ViewModels
         }
         #endregion
 
-        #region RegInitWindowCommand
-        ICommand _regInitWindowCommand;
-        public ICommand RegInitWindowCommand
-        {
-            get
-            {
-                if (_regInitWindowCommand == null)
-                {
-                    _regInitWindowCommand = new RelayCommand(
-                    p => true,
-                    p => RegInitWindow());
-                }
-                return _regInitWindowCommand;
-            }
-        }
+        //#region RegInitWindowCommand
+        //ICommand _regInitWindowCommand;
+        //public ICommand RegInitWindowCommand
+        //{
+        //    get
+        //    {
+        //        if (_regInitWindowCommand == null)
+        //        {
+        //            _regInitWindowCommand = new RelayCommand(
+        //            p => true,
+        //            p => RegInitWindow());
+        //        }
+        //        return _regInitWindowCommand;
+        //    }
+        //}
 
-        void RegInitWindow()
-        {
-            ManagerFS.ReportUpdated += ReportUpdated;
-            ManagerDB.ReportUpdated += ReportUpdated;
-            ManagerDB.RegInitialized += ManagerDB_RegInitialized;
-            ResultText = String.Empty;
-            ManagerWin.CreateRegInitWin();            
-        }
+        //void RegInitWindow()
+        //{
+        //    ManagerFS.ReportUpdated += ReportUpdated;
+        //    ManagerDB.ReportUpdated += ReportUpdated;
+        //    ManagerDB.RegInitialized += ManagerDB_RegInitialized;
+        //    ResultText = String.Empty;
+        //    ManagerWin.CreateRegInitWin();            
+        //}
 
-        private void ManagerDB_RegInitialized(bool obj)
-        {
-            RegInit = true;
-            if (!InitRegButtonText.Contains("(выполнено)"))
-            {
-                InitRegButtonText += " (выполнено)";
-            }            
-        }
-        #endregion
+        //private void ManagerDB_RegInitialized(bool obj)
+        //{
+        //    RegInit = true;
+        //    if (!InitRegButtonText.Contains("(выполнено)"))
+        //    {
+        //        InitRegButtonText += " (выполнено)";
+        //    }            
+        //}
+        //#endregion
 
         #region FillTablesCommand
         ICommand _fillTablesCommand;

@@ -296,27 +296,57 @@ namespace QUp
         }
         #endregion
 
-        #region NextCommand
-        ICommand _nextCommand;
-        public ICommand NextCommand
+        //#region NextCommand
+        //ICommand _nextCommand;
+        //public ICommand NextCommand
+        //{
+        //    get
+        //    {
+        //        if (_nextCommand == null)
+        //        {
+        //            _nextCommand = new RelayCommand(
+        //            p => true,
+        //            p => Next());
+        //        }
+        //        return _nextCommand;
+        //    }
+        //}
+
+        //void Next()
+        //{
+        //    //MessageBox.Show("Next");
+        //    ManagerWin.CreateRegUploadWin();
+        //}
+        //#endregion
+
+
+        #region RegInitWindowCommand
+        ICommand _regInitWindowCommand;
+        public ICommand RegInitWindowCommand
         {
             get
             {
-                if (_nextCommand == null)
+                if (_regInitWindowCommand == null)
                 {
-                    _nextCommand = new RelayCommand(
+                    _regInitWindowCommand = new RelayCommand(
                     p => true,
-                    p => Next());
+                    p => RegInitWindow());
                 }
-                return _nextCommand;
+                return _regInitWindowCommand;
             }
         }
 
-        void Next()
+        void RegInitWindow()
         {
-            //MessageBox.Show("Next");
-            ManagerWin.CreateRegUploadWin();
+            //ManagerFS.ReportUpdated += ReportUpdated;
+            //ManagerDB.ReportUpdated += ReportUpdated;
+            //ManagerDB.RegInitialized += ManagerDB_RegInitialized;
+            ResultText = String.Empty;
+            ManagerWin.CreateRegInitWin();
         }
+
+
         #endregion
+
     }
 }

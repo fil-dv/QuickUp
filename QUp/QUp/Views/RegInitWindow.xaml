@@ -5,8 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:QUp.ViewModels"
         mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        Title="Инициализация реестра" Height="720" Width="700">
+        WindowStartupLocation="CenterScreen"        
+        Title="Инициализация реестра" Height="720" Width="700" Icon="/Resources/Icon1.ico">
 
 
     <Window.DataContext>
@@ -107,7 +107,7 @@
             <RowDefinition Height="1*"/>
             <RowDefinition Height=".7*"/>
             <RowDefinition Height="8*"/>
-            <!--<RowDefinition Height=".8*"/>-->
+            <RowDefinition Height=".8*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*"/>
@@ -174,7 +174,7 @@
             </TextBox.Background>
         </TextBox>
 
-        <!--<Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="6" Click="Close" Style="{StaticResource TabButtonLast}" Margin="10, 0, 10, 10">Ok</Button>-->
+        <Button Grid.Column="0" Grid.ColumnSpan="2" Grid.Row="4" Command="{Binding CloseCommand}" Style="{StaticResource TabButtonLast}" ToolTip="Нажимать, когда добавлены все заливаемые реестры" Margin="10, 0, 10, 10">Ok</Button>
         
     </Grid>
     </Border>

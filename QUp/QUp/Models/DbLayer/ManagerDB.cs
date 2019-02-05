@@ -109,8 +109,7 @@ namespace QUp.Models
             if (QMediator.IsAuto)
             {
                 TaskFinished?.Invoke(QMediator.CurrentTaskName);
-            }
-            
+            }            
         }
 
         #region RegInit

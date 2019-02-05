@@ -111,12 +111,37 @@ namespace QUp.ViewModels
             catch (Exception)
             {
                 res = false;
-                //ResultText += "\n\tНекорректный формат даты.";
             }
             return res;
         }
         #endregion
 
+        
+        #region CloseCommand
+        ICommand _closeCommand;
+        public ICommand CloseCommand
+        {
+            get
+            {
+                if (_closeCommand == null)
+                {
+                    _closeCommand = new RelayCommand(
+                    p => true,
+                    p => StartUploadForm());
+                }
+                return _closeCommand;
+            }
+        }
 
+        void StartUploadForm()
+        {
+            if (VerifyData())
+            {
+                ManagerDB.RegInit(RegName);
+                QMediator.TmpMessage = ResultText;
+                ManagerWin.CreateRegUploadWin();
+            }
+        }
+        #endregion
     }
 }
