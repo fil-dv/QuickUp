@@ -40,29 +40,7 @@ namespace QUp.ViewModels
             get { return _regName; }
             set
             {
-                _regName = value;
-                OnPropertyChanged();
-            }
-        }
-
-        string _startDate = String.Empty;
-        public string StartDate
-        {
-            get { return _startDate; }
-            set
-            {
-                _startDate = value.Trim();
-                OnPropertyChanged();
-            }
-        }
-
-        string _stopDate = String.Empty;
-        public string StopDate
-        {
-            get { return _stopDate; }
-            set
-            {
-                _stopDate = value.Trim();
+                _regName = value.Trim();
                 OnPropertyChanged();
             }
         }
@@ -102,7 +80,7 @@ namespace QUp.ViewModels
 
             if (VerifyData())
             {
-                ManagerDB.RegInit(RegName, StartDate, StopDate);                
+                ManagerDB.RegInit(RegName);                
             }
         }
 
@@ -128,18 +106,12 @@ namespace QUp.ViewModels
                 {
                     res = false;
                     ResultText += "\n\tИмя реестра должно содержать скобки.";
-                } 
-
-                DateTime start = DateTime.Parse(StartDate);
-                if (RegName.ToUpper()[0] != 1060)
-                {
-                    DateTime stop = DateTime.Parse(StopDate);
-                }                
+                }                              
             }            
             catch (Exception)
             {
                 res = false;
-                ResultText += "\n\tНекорректный формат даты.";
+                //ResultText += "\n\tНекорректный формат даты.";
             }
             return res;
         }

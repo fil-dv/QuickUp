@@ -114,28 +114,16 @@ namespace QUp.Models
         }
 
         #region RegInit
-        public static void RegInit(string regName, string startDate, string stopDate)
+        public static void RegInit(string regName)
         {
             try
             {
-                DbNotification.ResultWaiter();
+                DbNotification.ResultWaiter();        
 
-                DateTime start = DateTime.Parse(startDate);              
-
-                using (OracleCommand cmd = new OracleCommand("reg_upload.initReg", _con))
+                using (OracleCommand cmd = new OracleCommand("reg_upload.initRegNew", _con))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.Add("regLongName", OracleDbType.Varchar2).Value = regName;
-                    cmd.Parameters.Add("payStart", OracleDbType.Date).Value = start;
-                    if (!string.IsNullOrEmpty(stopDate))
-                    {
-                        DateTime stop = DateTime.Parse(stopDate);
-                        cmd.Parameters.Add("payStop", OracleDbType.Date).Value = stop;
-                    }
-                    else
-                    {
-                        cmd.Parameters.Add("payStop", OracleDbType.Date).Value = null;
-                    }                    
+                    cmd.Parameters.Add("regLongName", OracleDbType.Varchar2).Value = regName;                                   
                     cmd.ExecuteNonQuery();
                 }
             }
