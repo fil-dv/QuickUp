@@ -25,6 +25,8 @@ namespace QUp
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public Action CloseAction { get; set; }
+
         #region properties
 
         string _resultText;
@@ -341,8 +343,9 @@ namespace QUp
             //ManagerFS.ReportUpdated += ReportUpdated;
             //ManagerDB.ReportUpdated += ReportUpdated;
             //ManagerDB.RegInitialized += ManagerDB_RegInitialized;
-            ResultText = String.Empty;
+            ResultText = String.Empty;            
             ManagerWin.CreateRegInitWin();
+            CloseAction();
         }
 
 

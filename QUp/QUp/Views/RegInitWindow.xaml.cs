@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QUp.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,11 +23,15 @@ namespace QUp.Views
         public RegInitWindow()
         {
             InitializeComponent();
+            RegInitWindowViewModel vm = new RegInitWindowViewModel();
+            this.DataContext = vm;
+            if (vm.CloseAction == null)
+                vm.CloseAction = new Action(this.Close);
         }
 
-        private void Close(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
+        //private void Close(object sender, RoutedEventArgs e)
+        //{
+        //    this.Close();
+        //}
     }
 }

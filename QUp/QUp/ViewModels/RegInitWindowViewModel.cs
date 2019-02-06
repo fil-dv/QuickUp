@@ -21,6 +21,8 @@ namespace QUp.ViewModels
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        public Action CloseAction { get; set; }
+
         #region properties
 
         string _resultText;
@@ -140,6 +142,7 @@ namespace QUp.ViewModels
                 ManagerDB.RegInit(RegName);
                 QMediator.TmpMessage = ResultText;
                 ManagerWin.CreateRegUploadWin();
+                CloseAction();
             }
         }
         #endregion

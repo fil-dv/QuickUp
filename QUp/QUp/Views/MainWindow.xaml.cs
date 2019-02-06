@@ -29,6 +29,10 @@ namespace QUp
         public MainWindow()
         {
             InitializeComponent();
+            MainWindowViewModel vm = new MainWindowViewModel();
+            this.DataContext = vm;
+            if (vm.CloseAction == null)
+                vm.CloseAction = new Action(this.Close);
         }
     }
 }
