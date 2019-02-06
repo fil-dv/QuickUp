@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace QUp.Models
 {
@@ -31,18 +32,35 @@ namespace QUp.Models
             try
             {
                 _report = "";
-                using (var fbd = new FolderBrowserDialog())
-                {
-                    //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
-                    fbd.SelectedPath = @"x:\Реєстри\ЯЯЯTest\1  1111";
-                    DialogResult result = fbd.ShowDialog();
 
-                    if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
-                    {
-                        QMediator.PathToRegDest = fbd.SelectedPath;
-                        QMediator.PathToProgDest = QMediator.PathToRegDest.Replace("Реєстри", "Progs\\Registry");
-                        Initialized?.Invoke(true);
-                    }
+
+                //using (var fbd = new FolderBrowserDialog())
+                //{
+                //    //fbd.SelectedPath = @"x:\Реєстри\ЄАПБ (Факторинг)\";
+                //    fbd.SelectedPath = @"x:\Реєстри\ЯЯЯTest\1  1111";
+                //    DialogResult result = fbd.ShowDialog();
+
+                //    if (result == System.Windows.Forms.DialogResult.OK && !string.IsNullOrWhiteSpace(fbd.SelectedPath))
+                //    {
+                //        QMediator.PathToRegDest = fbd.SelectedPath;
+                //        QMediator.PathToProgDest = QMediator.PathToRegDest.Replace("Реєстри", "Progs\\Registry");
+                //        Initialized?.Invoke(true);
+                //    }
+                //}
+                //ReportUpdated?.Invoke(_report);
+                
+
+                CommonOpenFileDialog dialog = new CommonOpenFileDialog
+                {
+                    InitialDirectory = @"x:\Реєстри",
+                    IsFolderPicker = true
+                };
+
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    QMediator.PathToRegDest = dialog.FileName;
+                    QMediator.PathToProgDest = QMediator.PathToRegDest.Replace("Реєстри", "Progs\\Registry");
+                    Initialized?.Invoke(true);
                 }
                 ReportUpdated?.Invoke(_report);
             }
