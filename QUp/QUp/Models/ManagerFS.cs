@@ -48,7 +48,8 @@ namespace QUp.Models
                 //    }
                 //}
                 //ReportUpdated?.Invoke(_report);
-                
+
+             
 
                 CommonOpenFileDialog dialog = new CommonOpenFileDialog
                 {

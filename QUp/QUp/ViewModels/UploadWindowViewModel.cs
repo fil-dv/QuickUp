@@ -296,7 +296,7 @@ namespace QUp.ViewModels
                         if (QMediator.CurrentState == MashinState.BackUpState)
                         {
                             Thread.Sleep(1000);
-                            BackUpButtonText = CcyButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            BackUpButtonText = BackUpButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.AdrSplitState;
                             AdrButtonText += " (выполняется...)";
                             SplitAdress();
@@ -510,7 +510,6 @@ namespace QUp.ViewModels
                 }
                 catch (Exception)
                 {
-
                     CreateBackUpWin();
                 }                
             }
@@ -528,7 +527,7 @@ namespace QUp.ViewModels
             SplitAdress();
         }
 
-        private bool IsIceNotExists()
+        private bool IsIceNotExists() /////////////////////////////////////////////////////////////////////////////////////////////////
         {
             bool res = true;
             if (QMediator.PathToRegDest.Contains("ПУМБ") || QMediator.PathToRegDest.Contains("Simple money (Foxtrot)"))
@@ -575,7 +574,8 @@ namespace QUp.ViewModels
         {
             SetTextResultHandler();
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(ExecProgsType.PredProgs);            
+            ManagerFS.ProgsToExec(ExecProgsType.PredProgs);
+            PredProgButtonText += " (выполнено)";
         }
 
         private void ReportUpdated(string res)
@@ -604,7 +604,8 @@ namespace QUp.ViewModels
         void PostProg()
         {
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(ExecProgsType.PostProgs);            
+            ManagerFS.ProgsToExec(ExecProgsType.PostProgs);
+            PostProgButtonText += " (выполнено)";
         }
         #endregion
 
@@ -627,7 +628,8 @@ namespace QUp.ViewModels
         void OktelProg()
         {
             ResultText = String.Empty;
-            ManagerFS.ProgsToExec(ExecProgsType.Oktel);            
+            ManagerFS.ProgsToExec(ExecProgsType.Oktel);
+            OktelButtonText += " (выполнено)";
         }
         #endregion
 
@@ -650,7 +652,8 @@ namespace QUp.ViewModels
         void SplitAdress()
         {
             ResultText = String.Empty;
-            ManagerFS.SplitAdr();            
+            ManagerFS.SplitAdr();
+            AdrButtonText += " (выполнено)";
         }
         #endregion
 
@@ -673,7 +676,8 @@ namespace QUp.ViewModels
         void CreateBackUpWin()
         {
             ResultText = String.Empty;
-            ManagerWin.CreateBackUpWin();            
+            ManagerWin.CreateBackUpWin();
+            BackUpButtonText += " (выполнено)";
         }
         #endregion
 
@@ -730,7 +734,8 @@ namespace QUp.ViewModels
 
         void FillTables()
         {
-            ManagerDB.FillTables();            
+            ManagerDB.FillTables();
+            FillProjButtonText += " (выполнено)";
         }
         #endregion
 
@@ -752,7 +757,8 @@ namespace QUp.ViewModels
 
         void StepByStep()
         {
-            ManagerDB.StepByStep();            
+            ManagerDB.StepByStep();
+            StepButtonText += " (выполнено)";
         }
         #endregion
 
@@ -774,7 +780,8 @@ namespace QUp.ViewModels
 
         void ChangeCurrency()
         {
-            ManagerDB.ChangeCurrency();           
+            ManagerDB.ChangeCurrency();
+            CcyButtonText += " (выполнено)";
         }
         #endregion
 
@@ -796,7 +803,8 @@ namespace QUp.ViewModels
 
         void FinishCheck()
         {
-            ManagerDB.FinishCheck();            
+            ManagerDB.FinishCheck();
+            FinishButtonText += " (выполнено)";
         }
         #endregion
 
@@ -818,7 +826,8 @@ namespace QUp.ViewModels
 
         void ToArchive()
         {
-            ManagerDB.ToArchive();            
+            ManagerDB.ToArchive();
+            ArchButtonText += " (выполнено)";
         }
         #endregion
 
@@ -840,7 +849,8 @@ namespace QUp.ViewModels
 
         void StatusR()
         {
-            ManagerDB.StatusR();            
+            ManagerDB.StatusR();
+            RButtonText += " (выполнено)";
         }
         #endregion
     }
