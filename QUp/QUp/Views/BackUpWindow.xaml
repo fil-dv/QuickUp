@@ -83,7 +83,7 @@
     </Window.Resources>
 
     <Border  BorderBrush="Gray" BorderThickness="1" Margin="5" CornerRadius="7,3,7,3">
-        <Grid>
+        <Grid FocusManager.FocusedElement="{Binding ElementName=BackUpName}">
         <Grid.RowDefinitions>
             <RowDefinition Height="1*" />
             <RowDefinition Height="1*" />
@@ -91,7 +91,7 @@
         </Grid.RowDefinitions>
 
 
-        <TextBox  Grid.Row="0" FontFamily="Calibri" FontSize="21" Margin="10,12,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding BackUpName, Mode=TwoWay}" >
+            <TextBox Name="BackUpName" Grid.Row="0" FontFamily="Calibri" FontSize="21" Margin="10,12,10,12" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Text="{Binding BackUpName, Mode=TwoWay}" >
             <TextBox.Resources>
                 <Style TargetType="{x:Type Border}">
                     <Setter Property="CornerRadius" Value="7,3,7,3"/>

@@ -251,7 +251,7 @@ namespace QUp.ViewModels
                 ManagerDB.TaskFinished += TaskFinished;
                 BackUpWindowViewModel.TaskFinished += TaskFinished;
                 QMediator.CurrentState = MashinState.PredProgsState;
-                PredProgButtonText += " (выполняется...)";
+                //PredProgButtonText += " (выполняется...)";
                 PredProg();
             }
             catch (Exception ex)
@@ -280,8 +280,8 @@ namespace QUp.ViewModels
                             else
                             {
                                 Thread.Sleep(1000);
-                                PredProgButtonText = PredProgButtonText.Replace(" (выполняется...)", " (выполнено)");
-                                BackUpButtonText += " (выполняется...)";
+                                //PredProgButtonText = PredProgButtonText.Replace(" (выполняется...)", " (выполнено)");
+                                //BackUpButtonText += " (выполняется...)";
                                 QMediator.CurrentState = MashinState.BackUpState;
                                 CreateBackUpAuto();
                             }
@@ -296,9 +296,9 @@ namespace QUp.ViewModels
                         if (QMediator.CurrentState == MashinState.BackUpState)
                         {
                             Thread.Sleep(1000);
-                            BackUpButtonText = BackUpButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            //BackUpButtonText = BackUpButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.AdrSplitState;
-                            AdrButtonText += " (выполняется...)";
+                            //AdrButtonText += " (выполняется...)";
                             SplitAdress();
                         }
                         else
@@ -310,9 +310,9 @@ namespace QUp.ViewModels
                     case TaskName.AdrSplit:
                         if (QMediator.CurrentState == MashinState.AdrSplitState)
                         {
-                            AdrButtonText = AdrButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            //AdrButtonText = AdrButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.FillProjState;
-                            FillProjButtonText += " (выполняется...)";
+                            //FillProjButtonText += " (выполняется...)";
                             FillTables();
                         }
                         else
@@ -324,17 +324,17 @@ namespace QUp.ViewModels
                     case TaskName.FillProj:
                         if (QMediator.CurrentState == MashinState.FillProjState)
                         {
-                            FillProjButtonText = FillProjButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            //FillProjButtonText = FillProjButtonText.Replace(" (выполняется...)", " (выполнено)");
                             if (CurNeedToChange)
                             {
                                 QMediator.CurrentState = MashinState.CurrChangeState;
-                                CcyButtonText += " (выполняется...)";
+                                //CcyButtonText += " (выполняется...)";
                                 ChangeCurrency();
                             }
                             else
                             {
                                 QMediator.CurrentState = MashinState.StepByStepState;
-                                StepButtonText += " (выполняется...)";
+                                //StepButtonText += " (выполняется...)";
                                 StepByStep();
                             }
                         }
@@ -348,9 +348,9 @@ namespace QUp.ViewModels
                         if (QMediator.CurrentState == MashinState.CurrChangeState)
                         {
                             Thread.Sleep(1000);
-                            CcyButtonText = CcyButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            //CcyButtonText = CcyButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.StepByStepState;
-                            StepButtonText += " (выполняется...)";
+                            //StepButtonText += " (выполняется...)";
                             StepByStep();
                         }
                         else
@@ -370,9 +370,9 @@ namespace QUp.ViewModels
                             }
                             else
                             {
-                                StepButtonText = StepButtonText.Replace(" (выполняется...)", " (выполнено)");
+                                //StepButtonText = StepButtonText.Replace(" (выполняется...)", " (выполнено)");
                                 QMediator.CurrentState = MashinState.PostProgsState;
-                                PostProgButtonText += " (выполняется...)";
+                                //PostProgButtonText += " (выполняется...)";
                                 PostProg();
                             }
                         }
@@ -394,9 +394,9 @@ namespace QUp.ViewModels
                             else
                             {
                                 Thread.Sleep(1000);
-                                PostProgButtonText = PostProgButtonText.Replace(" (выполняется...)", " (выполнено)");
+                                //PostProgButtonText = PostProgButtonText.Replace(" (выполняется...)", " (выполнено)");
                                 QMediator.CurrentState = MashinState.FinishCheckState;
-                                FinishButtonText += " (выполняется...)";
+                                //FinishButtonText += " (выполняется...)";
                                 FinishCheck();
                             }
                         }
@@ -417,9 +417,9 @@ namespace QUp.ViewModels
                             else
                             {
                                 Thread.Sleep(1000);
-                                FinishButtonText = FinishButtonText.Replace(" (выполняется...)", " (выполнено)");
+                                //FinishButtonText = FinishButtonText.Replace(" (выполняется...)", " (выполнено)");
                                 QMediator.CurrentState = MashinState.MoveToArcState;
-                                ArchButtonText += " (выполняется...)";
+                                //ArchButtonText += " (выполняется...)";
                                 ToArchive();
                             }
                         }
@@ -433,9 +433,9 @@ namespace QUp.ViewModels
                         if (QMediator.CurrentState == MashinState.MoveToArcState)
                         {
                             Thread.Sleep(1000);
-                            ArchButtonText = ArchButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            //ArchButtonText = ArchButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.OktelState;
-                            OktelButtonText += " (выполняется...)";
+                            //OktelButtonText += " (выполняется...)";
                             OktelProg();
                         }
                         else
@@ -448,9 +448,9 @@ namespace QUp.ViewModels
                         if (QMediator.CurrentState == MashinState.OktelState)
                         {
                             Thread.Sleep(1000);
-                            OktelButtonText = OktelButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            //OktelButtonText = OktelButtonText.Replace(" (выполняется...)", " (выполнено)");
                             QMediator.CurrentState = MashinState.StatusRState;
-                            RButtonText += " (выполняется...)";
+                            //RButtonText += " (выполняется...)";
                             StatusR();
                         }
                         else
@@ -463,7 +463,7 @@ namespace QUp.ViewModels
                         if (QMediator.CurrentState == MashinState.StatusRState)
                         {
                             Thread.Sleep(1000);
-                            RButtonText = RButtonText.Replace(" (выполняется...)", " (выполнено)");
+                            //RButtonText = RButtonText.Replace(" (выполняется...)", " (выполнено)");
                             ResultText = "Реестр успешно залит. Путь к лог-файлу:" + Path.Combine(QMediator.PathToRegDest, "_upload.log") + ".";
                             QMediator.CurrentTaskName = TaskName.NoTask;
                             QMediator.CurrentState = MashinState.StopState;
@@ -521,9 +521,9 @@ namespace QUp.ViewModels
 
         private void StartAdrSplit()
         {
-            BackUpButtonText = BackUpButtonText.Replace(" (выполняется...)", " (выполнено)");
+            //BackUpButtonText = BackUpButtonText.Replace(" (выполняется...)", " (выполнено)");
             QMediator.CurrentState = MashinState.AdrSplitState;
-            AdrButtonText += " (выполняется...)";
+            //AdrButtonText += " (выполняется...)";
             SplitAdress();
         }
 
@@ -575,7 +575,7 @@ namespace QUp.ViewModels
             SetTextResultHandler();
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(ExecProgsType.PredProgs);
-            PredProgButtonText += " (выполнено)";
+            if (!PredProgButtonText.Contains("(выполнено)")) PredProgButtonText += " (выполнено)";
         }
 
         private void ReportUpdated(string res)
@@ -605,7 +605,7 @@ namespace QUp.ViewModels
         {
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(ExecProgsType.PostProgs);
-            PostProgButtonText += " (выполнено)";
+            if (!PostProgButtonText.Contains("(выполнено)")) PostProgButtonText += " (выполнено)";
         }
         #endregion
 
@@ -629,7 +629,7 @@ namespace QUp.ViewModels
         {
             ResultText = String.Empty;
             ManagerFS.ProgsToExec(ExecProgsType.Oktel);
-            OktelButtonText += " (выполнено)";
+            if (!OktelButtonText.Contains("(выполнено)")) OktelButtonText += " (выполнено)";
         }
         #endregion
 
@@ -653,7 +653,7 @@ namespace QUp.ViewModels
         {
             ResultText = String.Empty;
             ManagerFS.SplitAdr();
-            AdrButtonText += " (выполнено)";
+            if (!AdrButtonText.Contains("(выполнено)")) AdrButtonText += " (выполнено)";
         }
         #endregion
 
@@ -677,44 +677,10 @@ namespace QUp.ViewModels
         {
             ResultText = String.Empty;
             ManagerWin.CreateBackUpWin();
-            BackUpButtonText += " (выполнено)";
+            if (!BackUpButtonText.Contains("(выполнено)")) BackUpButtonText += " (выполнено)";
         }
         #endregion
 
-        //#region RegInitWindowCommand
-        //ICommand _regInitWindowCommand;
-        //public ICommand RegInitWindowCommand
-        //{
-        //    get
-        //    {
-        //        if (_regInitWindowCommand == null)
-        //        {
-        //            _regInitWindowCommand = new RelayCommand(
-        //            p => true,
-        //            p => RegInitWindow());
-        //        }
-        //        return _regInitWindowCommand;
-        //    }
-        //}
-
-        //void RegInitWindow()
-        //{
-        //    ManagerFS.ReportUpdated += ReportUpdated;
-        //    ManagerDB.ReportUpdated += ReportUpdated;
-        //    ManagerDB.RegInitialized += ManagerDB_RegInitialized;
-        //    ResultText = String.Empty;
-        //    ManagerWin.CreateRegInitWin();            
-        //}
-
-        //private void ManagerDB_RegInitialized(bool obj)
-        //{
-        //    RegInit = true;
-        //    if (!InitRegButtonText.Contains("(выполнено)"))
-        //    {
-        //        InitRegButtonText += " (выполнено)";
-        //    }            
-        //}
-        //#endregion
 
         #region FillTablesCommand
         ICommand _fillTablesCommand;
@@ -735,7 +701,7 @@ namespace QUp.ViewModels
         void FillTables()
         {
             ManagerDB.FillTables();
-            FillProjButtonText += " (выполнено)";
+            if (!FillProjButtonText.Contains("(выполнено)")) FillProjButtonText += " (выполнено)";
         }
         #endregion
 
@@ -758,7 +724,7 @@ namespace QUp.ViewModels
         void StepByStep()
         {
             ManagerDB.StepByStep();
-            StepButtonText += " (выполнено)";
+            if (!StepButtonText.Contains("(выполнено)")) StepButtonText += " (выполнено)";
         }
         #endregion
 
@@ -781,7 +747,7 @@ namespace QUp.ViewModels
         void ChangeCurrency()
         {
             ManagerDB.ChangeCurrency();
-            CcyButtonText += " (выполнено)";
+            if (!CcyButtonText.Contains("(выполнено)")) CcyButtonText += " (выполнено)";
         }
         #endregion
 
@@ -804,7 +770,7 @@ namespace QUp.ViewModels
         void FinishCheck()
         {
             ManagerDB.FinishCheck();
-            FinishButtonText += " (выполнено)";
+            if (!FinishButtonText.Contains("(выполнено)")) FinishButtonText += " (выполнено)";
         }
         #endregion
 
@@ -827,7 +793,7 @@ namespace QUp.ViewModels
         void ToArchive()
         {
             ManagerDB.ToArchive();
-            ArchButtonText += " (выполнено)";
+            if (!ArchButtonText.Contains("(выполнено)")) ArchButtonText += " (выполнено)";
         }
         #endregion
 
@@ -850,7 +816,7 @@ namespace QUp.ViewModels
         void StatusR()
         {
             ManagerDB.StatusR();
-            RButtonText += " (выполнено)";
+            if(!RButtonText.Contains("(выполнено)")) RButtonText += " (выполнено)";
         }
         #endregion
     }

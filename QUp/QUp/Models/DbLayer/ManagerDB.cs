@@ -263,7 +263,7 @@ namespace QUp.Models
             {
                 ExceptionHandler("GetBackUpName()", ex.Message);
             }
-            return name;
+            return name.Replace('.', '_');
         }
 
         private static string GetRegNumbers()
@@ -343,28 +343,6 @@ namespace QUp.Models
             return alias;
         }
 
-
-        //private static string GetAlias()
-        //{
-        //    string alias = "";
-        //    try
-        //    {
-        //        using (OracleCommand cmd = new OracleCommand("reg_upload.get_alias", _con))
-        //        {
-        //            cmd.CommandType = CommandType.StoredProcedure;
-        //            cmd.Parameters.Add("v_alias", OracleDbType.Varchar2);
-        //            cmd.Parameters["v_alias"].Direction = ParameterDirection.ReturnValue;
-        //            cmd.ExecuteNonQuery();
-
-        //            alias = Convert.ToString(cmd.Parameters["v_alias"].Value);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        MessageBox.Show("Exception from GetAlias()" + ex.Message);
-        //    }
-        //    return alias;
-        //}
 
         public static string CreateBackUp(string tableName)
         {
